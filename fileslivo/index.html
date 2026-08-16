@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0E5C48">
 <title>Livo — Schweizer Marktplatz</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@450;550;650;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@450;550;650;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --bg:#FAFAF8;
   --surface:#FFFFFF;
+  --surface-2:#F4F3EF;
   --ink:#15171B;
   --stone:#6E6B64;
   --stone-light:#9C988E;
@@ -19,11 +21,12 @@
   --accent:#0E5C48;
   --accent-ink:#0B4638;
   --accent-tint:#E8F1EC;
+  --danger:#B33A32;
   --gold:#A9822E;
-  --danger:#A33A32;
-  --shadow:0 8px 30px rgba(21,23,27,.06);
-  --radius:14px;
-  --radius-lg:22px;
+  --shadow:0 1px 2px rgba(21,23,27,.04),0 12px 30px rgba(21,23,27,.06);
+  --radius-s:8px;
+  --radius-m:14px;
+  --radius-l:22px;
 }
 
 *{
@@ -46,13 +49,13 @@ body{
 
 button,
 input,
-textarea{
+textarea,
+select{
   font:inherit;
 }
 
-button,
-a{
-  -webkit-tap-highlight-color:transparent;
+button{
+  cursor:pointer;
 }
 
 a{
@@ -62,15 +65,16 @@ a{
 
 .display{
   font-family:'Instrument Sans',sans-serif;
-  letter-spacing:-.02em;
+  letter-spacing:-.025em;
 }
 
 .mono{
   font-family:'IBM Plex Mono',monospace;
 }
 
-.hidden{
-  display:none!important;
+.wrap{
+  width:min(1180px,calc(100% - 40px));
+  margin:auto;
 }
 
 /* =========================
@@ -81,31 +85,26 @@ header{
   position:sticky;
   top:0;
   z-index:100;
-  height:68px;
   background:rgba(250,250,248,.92);
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
 }
 
 .header-inner{
-  max-width:1180px;
-  height:100%;
-  margin:auto;
-  padding:0 32px;
+  height:68px;
   display:flex;
   align-items:center;
-  gap:30px;
+  gap:28px;
 }
 
 .logo{
   display:flex;
   align-items:center;
   gap:8px;
-  font-family:'Instrument Sans',sans-serif;
-  font-weight:650;
-  font-size:19px;
-  cursor:pointer;
-  white-space:nowrap;
+  font-family:'Instrument Sans';
+  font-weight:700;
+  font-size:20px;
+  flex-shrink:0;
 }
 
 .logo-dot{
@@ -115,59 +114,92 @@ header{
   background:var(--accent);
 }
 
-.main-nav{
+.nav{
   display:flex;
   align-items:center;
-  gap:25px;
+  gap:24px;
   flex:1;
 }
 
-.nav-link{
+.nav button{
+  background:none;
+  border:0;
   color:var(--stone);
   font-size:14px;
-  cursor:pointer;
-  transition:.15s;
 }
 
-.nav-link:hover,
-.nav-link.active{
+.nav button:hover,
+.nav button.active{
   color:var(--ink);
 }
 
 .header-search{
-  width:270px;
+  width:260px;
   height:38px;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:999px;
   display:flex;
   align-items:center;
   gap:8px;
-  padding:0 14px;
-  color:var(--stone-light);
-  cursor:pointer;
+  padding:0 13px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:999px;
+}
+
+.header-search input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:none;
   font-size:13px;
 }
 
 .header-actions{
   display:flex;
-  gap:10px;
+  gap:9px;
   align-items:center;
+}
+
+.icon-btn{
+  width:38px;
+  height:38px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:50%;
+  position:relative;
+}
+
+.icon-btn:hover{
+  border-color:var(--accent);
+}
+
+.badge{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:99px;
+  background:var(--accent);
+  color:#fff;
+  font-size:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .btn{
   border:1px solid transparent;
   border-radius:999px;
   padding:10px 18px;
-  font-family:'Instrument Sans',sans-serif;
-  font-weight:600;
+  font-family:'Instrument Sans';
+  font-weight:650;
   font-size:14px;
-  cursor:pointer;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:7px;
-  transition:.15s;
+  transition:.18s;
 }
 
 .btn-primary{
@@ -181,34 +213,16 @@ header{
 }
 
 .btn-ghost{
-  background:#fff;
+  background:var(--surface);
   border-color:var(--border);
-  color:var(--ink);
 }
 
 .btn-ghost:hover{
   border-color:var(--stone-light);
 }
 
-@media(max-width:900px){
-  .main-nav,
-  .header-search{
-    display:none;
-  }
-
-  .header-inner{
-    justify-content:space-between;
-  }
-}
-
-@media(max-width:500px){
-  .header-actions .btn-ghost{
-    display:none;
-  }
-
-  .header-inner{
-    padding:0 18px;
-  }
+.mobile-menu{
+  display:none;
 }
 
 /* =========================
@@ -225,17 +239,11 @@ header{
 }
 
 /* =========================
-   HOME
+   HERO
 ========================= */
 
 .hero{
-  padding:82px 0 68px;
-}
-
-.wrap{
-  max-width:1180px;
-  margin:auto;
-  padding:0 32px;
+  padding:82px 0 70px;
 }
 
 .hero-grid{
@@ -251,26 +259,37 @@ header{
   gap:8px;
   background:var(--accent-tint);
   color:var(--accent-ink);
-  border-radius:999px;
   padding:7px 12px;
+  border-radius:999px;
   font-size:12px;
-  font-weight:600;
+  font-weight:650;
   margin-bottom:20px;
 }
 
 .flag{
   width:12px;
-  height:9px;
+  height:8px;
   border-radius:2px;
-  background:linear-gradient(#D52B1E 50%,#fff 50%);
+  background:#D52B1E;
+  position:relative;
+}
+
+.flag:after{
+  content:"";
+  position:absolute;
+  left:2px;
+  top:3px;
+  width:8px;
+  height:2px;
+  background:#fff;
 }
 
 .hero h1{
-  font-family:'Instrument Sans',sans-serif;
-  font-size:clamp(42px,5vw,62px);
-  line-height:1.02;
-  letter-spacing:-.035em;
-  font-weight:650;
+  font-family:'Instrument Sans';
+  font-size:clamp(42px,6vw,66px);
+  line-height:1;
+  letter-spacing:-.045em;
+  font-weight:700;
 }
 
 .hero h1 em{
@@ -279,205 +298,182 @@ header{
 }
 
 .hero-sub{
-  max-width:500px;
+  max-width:550px;
+  margin-top:22px;
   color:var(--stone);
   font-size:17px;
   line-height:1.6;
-  margin-top:20px;
 }
 
-.smart-search{
+.search-box{
   margin-top:30px;
-  max-width:530px;
-  background:#fff;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  border-radius:18px;
+  max-width:560px;
   padding:7px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
   display:flex;
   gap:7px;
 }
 
-.smart-search input{
+.search-box input{
+  min-width:0;
   flex:1;
   border:0;
   outline:0;
-  background:transparent;
-  padding:12px 13px;
-  font-size:14px;
-  min-width:0;
+  padding:12px 14px;
+  background:none;
 }
 
-.smart-search button{
+.search-button{
   border:0;
-  border-radius:12px;
+  border-radius:13px;
   background:var(--ink);
   color:#fff;
   padding:0 20px;
-  cursor:pointer;
-  font-weight:600;
+  font-family:'Instrument Sans';
+  font-weight:650;
 }
 
 .search-hint{
-  margin:9px 0 0 5px;
   color:var(--stone-light);
-  font-size:12.5px;
-}
-
-.search-hint b{
-  color:var(--stone);
+  font-size:12px;
+  margin:10px 4px 0;
 }
 
 .hero-buttons{
   display:flex;
   gap:10px;
-  margin-top:27px;
+  margin-top:26px;
   flex-wrap:wrap;
 }
 
-.btn-large{
-  padding:13px 23px;
-  border-radius:13px;
-  font-size:15px;
-}
-
-.trust{
+.hero-trust{
   display:flex;
   gap:22px;
   flex-wrap:wrap;
-  margin-top:36px;
+  margin-top:32px;
   color:var(--stone);
-  font-size:12.5px;
+  font-size:12px;
 }
 
-.trust span{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-.trust i{
-  color:var(--accent);
-  font-style:normal;
-  font-weight:700;
-}
-
-/* Hero card */
+/* Hero product */
 
 .hero-card{
   position:relative;
-  max-width:410px;
-  width:100%;
-  margin:auto;
-  background:#fff;
+  background:var(--surface);
   border:1px solid var(--border);
-  border-radius:22px;
-  padding:27px;
+  border-radius:24px;
+  padding:22px;
   box-shadow:var(--shadow);
 }
 
 .product-image{
-  width:100%;
-  aspect-ratio:4/3;
-  border-radius:14px;
+  height:300px;
+  border-radius:17px;
   background:
-    linear-gradient(135deg,#e8e5dd,#f8f7f3);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#aaa59a;
-  font-size:13px;
+    radial-gradient(circle at 50% 40%,#d8d5cd 0 13%,transparent 14%),
+    linear-gradient(145deg,#eeeae2,#d7d3c9);
+  position:relative;
+  overflow:hidden;
 }
 
-.product-image::after{
-  content:"MacBook";
-  font-family:'Instrument Sans';
-  font-size:25px;
-  color:#aaa59a;
+.product-image:after{
+  content:"";
+  position:absolute;
+  width:55%;
+  height:40%;
+  left:22%;
+  bottom:13%;
+  border-radius:10px;
+  background:linear-gradient(145deg,#33363a,#15171b);
+  box-shadow:0 20px 30px rgba(0,0,0,.18);
+}
+
+.product-info{
+  padding-top:17px;
 }
 
 .product-title{
-  font-size:17px;
   font-family:'Instrument Sans';
-  font-weight:600;
-  margin-top:16px;
+  font-weight:650;
+  font-size:18px;
 }
 
 .product-location{
-  font-size:12px;
   color:var(--stone-light);
-  margin-top:3px;
+  font-size:12px;
+  margin-top:4px;
 }
 
-.product-price{
+.product-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:13px;
+}
+
+.price{
+  font-family:'IBM Plex Mono';
   font-size:20px;
-  margin-top:10px;
 }
 
 .score{
+  background:var(--accent-tint);
+  color:var(--accent-ink);
+  border-radius:999px;
+  padding:6px 9px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.favorite{
   position:absolute;
-  top:-20px;
-  right:-20px;
-  width:125px;
-  height:125px;
-  background:#fff;
+  top:32px;
+  right:32px;
+  z-index:2;
+  width:40px;
+  height:40px;
+  border-radius:50%;
   border:1px solid var(--border);
-  border-radius:50%;
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  background:#fff;
+  font-size:18px;
 }
 
-.score-number{
-  font-size:27px;
-  font-weight:500;
+.favorite.active{
+  color:#B33A32;
 }
 
-.score-label{
-  color:var(--stone-light);
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-
-.score-ring{
-  position:absolute;
-  inset:11px;
-  border-radius:50%;
-  border:6px solid var(--border);
-  border-top-color:var(--accent);
-  border-right-color:var(--accent);
-  transform:rotate(-30deg);
-}
-
-/* Stats */
+/* =========================
+   STATS
+========================= */
 
 .stats{
-  background:#fff;
+  background:var(--surface);
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
 }
 
-.stats-inner{
+.stats-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
 }
 
 .stat{
-  padding:27px 20px;
+  padding:27px 10px;
+  text-align:center;
   border-right:1px solid var(--border);
 }
 
 .stat:last-child{
-  border-right:0;
+  border:0;
 }
 
 .stat-number{
   font-family:'Instrument Sans';
-  font-weight:650;
-  font-size:26px;
+  font-size:27px;
+  font-weight:700;
 }
 
 .stat-label{
@@ -486,180 +482,547 @@ header{
   margin-top:3px;
 }
 
-/* Sections */
+/* =========================
+   SECTIONS
+========================= */
 
 .section{
   padding:82px 0;
 }
 
 .section-head{
-  max-width:580px;
-  margin-bottom:45px;
+  max-width:600px;
+  margin-bottom:35px;
 }
 
 .section-eyebrow{
   color:var(--accent-ink);
   font-size:12px;
-  font-weight:650;
   text-transform:uppercase;
   letter-spacing:.07em;
-  margin-bottom:10px;
+  font-weight:700;
+  margin-bottom:11px;
 }
 
 .section-title{
-  font-size:38px;
-  line-height:1.08;
-  font-weight:650;
+  font-family:'Instrument Sans';
+  font-weight:700;
+  font-size:clamp(29px,4vw,40px);
+  letter-spacing:-.035em;
 }
 
 .section-desc{
-  margin-top:13px;
   color:var(--stone);
   line-height:1.6;
-  font-size:15px;
-}
-
-.flow{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  border:1px solid var(--border);
-  border-radius:20px;
-  overflow:hidden;
-  gap:1px;
-  background:var(--border);
-}
-
-.flow-step{
-  background:#fff;
-  padding:28px 23px;
-}
-
-.flow-number{
-  color:var(--stone-light);
-  font-size:12px;
-}
-
-.flow-title{
-  font-size:16px;
-  font-weight:600;
   margin-top:12px;
 }
 
-.flow-desc{
-  color:var(--stone);
-  font-size:13px;
-  line-height:1.5;
-  margin-top:6px;
-}
+/* =========================
+   CATEGORIES
+========================= */
 
-.categories{
+.category-grid{
   display:grid;
   grid-template-columns:repeat(6,1fr);
   gap:12px;
 }
 
 .category{
-  background:#fff;
+  background:var(--surface);
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:20px 15px;
+  border-radius:15px;
+  padding:20px 16px;
   cursor:pointer;
-  transition:.15s;
+  transition:.18s;
 }
 
 .category:hover{
   border-color:var(--accent);
   transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+
+.category-icon{
+  font-size:25px;
 }
 
 .category-name{
+  font-weight:650;
   font-size:13.5px;
-  font-weight:600;
+  margin-top:20px;
 }
 
 .category-count{
-  margin-top:20px;
   color:var(--stone-light);
   font-size:11px;
+  margin-top:4px;
 }
 
 /* =========================
-   DISCOVER / CHAT
+   FLOW
 ========================= */
 
-.discover-wrap{
-  max-width:1050px;
-  margin:40px auto;
-  padding:0 20px;
+.flow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  background:var(--border);
 }
 
-.chat-shell{
-  height:690px;
+.flow-item{
+  background:var(--surface);
+  padding:27px;
+}
+
+.flow-number{
+  color:var(--stone-light);
+  font-family:'IBM Plex Mono';
+  font-size:11px;
+}
+
+.flow-title{
+  font-family:'Instrument Sans';
+  font-size:17px;
+  font-weight:650;
+  margin-top:14px;
+}
+
+.flow-text{
+  color:var(--stone);
+  font-size:13px;
+  line-height:1.5;
+  margin-top:6px;
+}
+
+/* =========================
+   DISCOVER
+========================= */
+
+.page-top{
+  padding:42px 0 25px;
+}
+
+.page-top-row{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.page-title{
+  font-family:'Instrument Sans';
+  font-size:38px;
+  font-weight:700;
+  letter-spacing:-.035em;
+}
+
+.page-sub{
+  color:var(--stone);
+  font-size:14px;
+  margin-top:7px;
+}
+
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:22px 0;
+}
+
+.filter{
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:12px;
+}
+
+.filter.active{
+  border-color:var(--accent);
+  background:var(--accent-tint);
+  color:var(--accent-ink);
+}
+
+.listing-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  padding-bottom:70px;
+}
+
+.listing{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:17px;
+  overflow:hidden;
+  transition:.18s;
+  cursor:pointer;
+}
+
+.listing:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow);
+}
+
+.listing-photo{
+  height:210px;
+  background:linear-gradient(145deg,#e9e6df,#d8d5cd);
+  position:relative;
+}
+
+.listing-photo.mac{
+  background:linear-gradient(145deg,#d9dde0,#aeb4b8);
+}
+
+.listing-photo.bike{
+  background:linear-gradient(145deg,#dce4dd,#aab8aa);
+}
+
+.listing-photo.sofa{
+  background:linear-gradient(145deg,#e5ded5,#b9a999);
+}
+
+.listing-photo.jacket{
+  background:linear-gradient(145deg,#dadde3,#8e949d);
+}
+
+.listing-photo:after{
+  content:"";
+  position:absolute;
+  inset:28% 23% 24%;
+  border-radius:13px;
+  background:rgba(30,32,35,.72);
+  box-shadow:0 15px 30px rgba(0,0,0,.12);
+}
+
+.listing-photo.bike:after{
+  inset:35% 20%;
+  border-radius:50%;
+  border:5px solid rgba(30,32,35,.75);
+  background:transparent;
+  box-shadow:50px 0 0 -5px transparent;
+}
+
+.listing-photo.sofa:after{
+  inset:43% 13% 20%;
+  border-radius:15px 15px 7px 7px;
+  background:#806f60;
+}
+
+.listing-photo.jacket:after{
+  inset:20% 30% 16%;
+  border-radius:18px 18px 8px 8px;
+  background:#3e454e;
+}
+
+.listing-heart{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:34px;
+  height:34px;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:50%;
   background:#fff;
+  z-index:2;
+}
+
+.listing-content{
+  padding:14px;
+}
+
+.listing-name{
+  font-size:14px;
+  font-weight:650;
+}
+
+.listing-meta{
+  color:var(--stone-light);
+  font-size:11.5px;
+  margin-top:4px;
+}
+
+.listing-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+
+.listing-price{
+  font-family:'IBM Plex Mono';
+  font-size:15px;
+}
+
+.small-score{
+  font-size:10px;
+  color:var(--accent-ink);
+  background:var(--accent-tint);
+  padding:4px 6px;
+  border-radius:6px;
+  font-weight:700;
+}
+
+/* =========================
+   FAVORITES
+========================= */
+
+.empty{
+  text-align:center;
+  padding:90px 20px;
+  color:var(--stone);
+}
+
+.empty-icon{
+  font-size:42px;
+  margin-bottom:15px;
+}
+
+/* =========================
+   SELL
+========================= */
+
+.sell-wrap{
+  max-width:760px;
+  margin:auto;
+  padding:48px 0 80px;
+}
+
+.sell-card{
+  background:var(--surface);
   border:1px solid var(--border);
   border-radius:22px;
-  overflow:hidden;
+  padding:30px;
   box-shadow:var(--shadow);
-  display:grid;
-  grid-template-columns:280px 1fr;
 }
 
-.threads{
+.progress-label{
+  display:flex;
+  justify-content:space-between;
+  color:var(--stone-light);
+  font-size:11px;
+  margin-bottom:8px;
+}
+
+.progress{
+  display:flex;
+  gap:5px;
+  margin-bottom:25px;
+}
+
+.progress div{
+  flex:1;
+  height:4px;
+  border-radius:99px;
+  background:var(--border);
+}
+
+.progress div.active{
+  background:var(--accent);
+}
+
+.sell-title{
+  font-family:'Instrument Sans';
+  font-size:28px;
+  font-weight:700;
+}
+
+.sell-sub{
+  color:var(--stone);
+  font-size:14px;
+  line-height:1.5;
+  margin-top:8px;
+}
+
+.photo-upload{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.photo-box{
+  aspect-ratio:1;
+  border:1.5px dashed var(--border);
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--stone-light);
+  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+}
+
+.photo-box:hover{
+  border-color:var(--accent);
+}
+
+.photo-box img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.ai-box{
+  margin-top:20px;
+  padding:14px;
+  border-radius:13px;
+  background:var(--accent-tint);
+  color:var(--accent-ink);
+  font-size:13px;
+}
+
+.form-group{
+  margin-top:19px;
+}
+
+.form-label{
+  font-size:12px;
+  font-weight:650;
+  color:var(--stone);
+  margin-bottom:6px;
+  display:block;
+}
+
+.input,
+.textarea,
+.select{
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:10px;
+  padding:11px 13px;
+  outline:none;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus{
+  border-color:var(--accent);
+}
+
+.textarea{
+  resize:vertical;
+  min-height:100px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.price-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+
+.price-choice{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:13px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.price-choice.selected{
+  border-color:var(--accent);
+  background:var(--accent-tint);
+}
+
+.price-choice span{
+  display:block;
+  font-size:11px;
+  color:var(--stone);
+}
+
+.price-choice strong{
+  display:block;
+  font-family:'IBM Plex Mono';
+  margin-top:4px;
+}
+
+.sell-actions{
+  display:flex;
+  gap:9px;
+  margin-top:28px;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+.chat-layout{
+  max-width:1100px;
+  height:calc(100vh - 108px);
+  min-height:600px;
+  margin:20px auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:290px 1fr;
+  box-shadow:var(--shadow);
+}
+
+.chat-list{
   border-right:1px solid var(--border);
   overflow:auto;
 }
 
-.threads-title{
-  padding:20px;
+.chat-list-head{
+  padding:19px;
   font-family:'Instrument Sans';
   font-size:18px;
-  font-weight:650;
+  font-weight:700;
 }
 
-.thread{
+.chat-person{
+  padding:13px 18px;
   display:flex;
   gap:10px;
-  padding:13px 18px;
-  cursor:pointer;
   border-left:3px solid transparent;
+  cursor:pointer;
 }
 
-.thread:hover{
-  background:#fafaf8;
-}
-
-.thread.active{
+.chat-person.active{
   background:var(--accent-tint);
   border-left-color:var(--accent);
 }
 
 .avatar{
-  width:39px;
-  height:39px;
+  width:38px;
+  height:38px;
+  flex-shrink:0;
   border-radius:50%;
-  background:var(--border);
+  background:var(--surface-2);
   display:flex;
   align-items:center;
   justify-content:center;
-  flex-shrink:0;
-  color:var(--stone);
   font-size:12px;
-  font-weight:600;
+  font-weight:700;
+  color:var(--stone);
 }
 
-.thread-name{
-  font-size:13.5px;
-  font-weight:600;
+.person-name{
+  font-weight:650;
+  font-size:13px;
 }
 
-.thread-preview{
-  font-size:11.5px;
+.person-preview{
   color:var(--stone-light);
+  font-size:11.5px;
   margin-top:3px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  max-width:170px;
+  max-width:180px;
 }
 
 .chat-window{
@@ -668,61 +1031,33 @@ header{
   min-width:0;
 }
 
-.chat-top{
+.chat-head{
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
   gap:10px;
-  padding:14px 18px;
-  border-bottom:1px solid var(--border);
 }
 
-.listing-chip{
-  margin-left:auto;
-  display:flex;
-  gap:9px;
-  align-items:center;
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:11px;
-  padding:7px 10px;
+.chat-head-info{
+  flex:1;
 }
 
-.mini-image{
-  width:39px;
-  height:31px;
-  border-radius:6px;
-  background:linear-gradient(135deg,#e7e4dc,#f7f6f2);
-}
-
-.mini-title{
-  font-size:11.5px;
-  font-weight:600;
-}
-
-.mini-price{
-  color:var(--stone);
-  font-size:11px;
-  margin-top:2px;
-}
-
-.messages{
+.chat-messages{
   flex:1;
   overflow:auto;
-  padding:22px;
+  padding:24px;
   display:flex;
   flex-direction:column;
   gap:13px;
 }
 
-.message-row{
-  display:flex;
-  flex-direction:column;
-  max-width:72%;
+.message-wrap{
+  max-width:70%;
 }
 
-.message-row.out{
+.message-wrap.out{
   align-self:flex-end;
-  align-items:flex-end;
 }
 
 .message{
@@ -734,21 +1069,20 @@ header{
   line-height:1.5;
 }
 
-.message-row.out .message{
+.message-wrap.out .message{
   background:var(--accent);
-  border-color:var(--accent);
   color:#fff;
-  border-bottom-right-radius:4px;
-}
-
-.message-row.in .message{
-  border-bottom-left-radius:4px;
+  border-color:var(--accent);
 }
 
 .message-time{
   color:var(--stone-light);
   font-size:10px;
   margin-top:4px;
+}
+
+.message-wrap.out .message-time{
+  text-align:right;
 }
 
 .offer{
@@ -761,14 +1095,15 @@ header{
 
 .offer-label{
   color:var(--stone-light);
-  font-size:10px;
   text-transform:uppercase;
+  font-size:10px;
   letter-spacing:.05em;
 }
 
 .offer-price{
-  margin-top:4px;
+  font-family:'IBM Plex Mono';
   font-size:20px;
+  margin-top:4px;
 }
 
 .offer-buttons{
@@ -779,354 +1114,184 @@ header{
 
 .offer-buttons button{
   flex:1;
-  border:0;
   border-radius:8px;
   padding:7px;
-  font-size:11.5px;
-  cursor:pointer;
+  border:1px solid var(--border);
+  background:var(--surface);
+  font-size:11px;
 }
 
-.accept{
+.offer-buttons .accept{
   background:var(--accent);
   color:#fff;
-}
-
-.decline{
-  background:var(--bg);
-  border:1px solid var(--border)!important;
+  border-color:var(--accent);
 }
 
 .suggestions{
   display:flex;
   gap:7px;
+  padding:0 18px 10px;
   flex-wrap:wrap;
-  padding:0 18px 12px;
 }
 
 .suggestion{
-  background:var(--bg);
   border:1px solid var(--border);
-  border-radius:999px;
-  padding:7px 12px;
-  font-size:11.5px;
-  color:var(--stone);
-  cursor:pointer;
-}
-
-.suggestion:hover{
-  border-color:var(--accent);
-  color:var(--accent);
+  background:var(--bg);
+  border-radius:99px;
+  padding:7px 11px;
+  font-size:11px;
 }
 
 .composer{
-  display:flex;
-  gap:8px;
   border-top:1px solid var(--border);
-  padding:14px 18px;
+  padding:12px 18px;
+  display:flex;
+  gap:7px;
 }
 
 .composer input{
   flex:1;
   min-width:0;
   border:1px solid var(--border);
-  outline:0;
-  border-radius:999px;
+  border-radius:99px;
   padding:10px 14px;
-  font-size:13px;
+  outline:none;
 }
 
-.composer input:focus{
-  border-color:var(--accent);
-}
-
-.send{
+.composer button{
   border:0;
-  border-radius:999px;
+  border-radius:99px;
+  padding:0 18px;
   background:var(--ink);
   color:#fff;
-  padding:0 19px;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.safety{
-  text-align:center;
-  color:var(--stone-light);
-  font-size:10.5px;
-  padding:0 0 12px;
-}
-
-.back-bar{
-  max-width:1050px;
-  margin:0 auto 12px;
-  padding:0 20px;
-}
-
-.back-button{
-  background:none;
-  border:0;
-  color:var(--stone);
-  cursor:pointer;
-  font-size:13px;
-}
-
-.back-button:hover{
-  color:var(--ink);
 }
 
 /* =========================
-   SELL
+   PROFILE
 ========================= */
 
-.sell-wrap{
-  max-width:700px;
-  margin:40px auto;
-  padding:0 20px 70px;
+.profile{
+  max-width:760px;
+  margin:auto;
+  padding:60px 0;
 }
 
-.progress-label{
-  display:flex;
-  justify-content:space-between;
-  color:var(--stone-light);
-  font-size:11px;
-  margin-bottom:8px;
-}
-
-.progress{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:5px;
-  margin-bottom:25px;
-}
-
-.progress span{
-  height:4px;
-  border-radius:99px;
-  background:var(--border);
-}
-
-.progress span.done{
-  background:var(--accent);
-}
-
-.sell-card{
-  background:#fff;
+.profile-card{
+  background:var(--surface);
   border:1px solid var(--border);
   border-radius:22px;
   padding:30px;
   box-shadow:var(--shadow);
 }
 
-.sell-eyebrow{
-  color:var(--accent-ink);
-  font-size:11px;
-  text-transform:uppercase;
-  font-weight:650;
-  letter-spacing:.07em;
+.profile-top{
+  display:flex;
+  align-items:center;
+  gap:16px;
 }
 
-.sell-title{
-  font-size:27px;
-  margin-top:7px;
-  font-weight:650;
-}
-
-.sell-sub{
-  color:var(--stone);
-  font-size:14px;
-  line-height:1.5;
-  margin-top:7px;
-}
-
-.photos{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:9px;
-  margin-top:24px;
-}
-
-.photo{
-  aspect-ratio:1;
-  border-radius:13px;
-  border:1.5px dashed var(--border);
+.profile-avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:var(--accent-tint);
   display:flex;
   align-items:center;
   justify-content:center;
-  color:var(--stone-light);
-  font-size:11px;
-  text-align:center;
-  cursor:pointer;
-}
-
-.photo.filled{
-  border-style:solid;
-  background:linear-gradient(135deg,#e7e4dc,#f7f6f2);
-}
-
-.photo.primary{
-  position:relative;
-}
-
-.photo.primary::after{
-  content:"Titelbild";
-  position:absolute;
-  bottom:6px;
-  left:6px;
-  background:rgba(21,23,27,.72);
-  color:#fff;
-  padding:3px 7px;
-  border-radius:999px;
-  font-size:9px;
-}
-
-.ai-banner{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  margin-top:20px;
-  padding:13px 15px;
-  border-radius:13px;
-  background:var(--accent-tint);
+  font-family:'Instrument Sans';
+  font-size:23px;
+  font-weight:700;
   color:var(--accent-ink);
-  font-size:12.5px;
 }
 
-.ai-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--accent);
-  animation:pulse 1.4s infinite;
+.profile-name{
+  font-family:'Instrument Sans';
+  font-size:25px;
+  font-weight:700;
 }
 
-@keyframes pulse{
-  0%,100%{opacity:1}
-  50%{opacity:.3}
-}
-
-.form-field{
-  margin-top:17px;
-}
-
-.form-label{
-  display:flex;
-  align-items:center;
-  gap:6px;
+.profile-location{
   color:var(--stone);
-  font-size:12px;
-  font-weight:600;
-  margin-bottom:6px;
+  font-size:13px;
+  margin-top:3px;
 }
 
-.ai-tag{
-  color:var(--accent-ink);
-  background:var(--accent-tint);
-  border-radius:999px;
-  padding:2px 6px;
-  font-size:9px;
-}
-
-.ai-tag.warning{
-  color:var(--gold);
-  background:#FBF2DE;
-}
-
-.form-input{
-  width:100%;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:11px 13px;
-  outline:0;
-  background:#fff;
-  font-size:13.5px;
-}
-
-.form-input:focus{
-  border-color:var(--accent);
-}
-
-textarea.form-input{
-  resize:vertical;
-  min-height:90px;
-}
-
-.form-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.price-box{
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:18px;
-  margin-top:20px;
-}
-
-.price-header{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  font-size:12px;
-}
-
-.market{
-  color:var(--stone);
-}
-
-.market b{
-  color:var(--ink);
-}
-
-.price-options{
+.profile-stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:12px;
+  gap:10px;
+  margin-top:28px;
 }
 
-.price-option{
-  border:1.5px solid var(--border);
-  border-radius:11px;
-  padding:11px 5px;
-  text-align:center;
-  cursor:pointer;
+.profile-stat{
+  background:var(--bg);
+  border-radius:12px;
+  padding:15px;
 }
 
-.price-option:hover{
-  border-color:var(--accent);
+.profile-stat strong{
+  font-family:'Instrument Sans';
+  font-size:21px;
 }
 
-.price-option.selected{
-  border-color:var(--accent);
-  background:var(--accent-tint);
+.profile-stat span{
+  display:block;
+  color:var(--stone);
+  font-size:11px;
+  margin-top:2px;
 }
 
-.price-label{
-  color:var(--stone-light);
-  font-size:9.5px;
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(21,23,27,.35);
+  backdrop-filter:blur(4px);
 }
 
-.price-value{
-  margin-top:3px;
-  font-size:16px;
-}
-
-.sell-actions{
+.modal.open{
   display:flex;
-  gap:9px;
-  margin-top:25px;
 }
 
-.sell-actions button{
-  flex:1;
+.modal-card{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--surface);
+  border-radius:22px;
+  border:1px solid var(--border);
+  box-shadow:0 25px 70px rgba(0,0,0,.18);
+  padding:26px;
 }
 
-.sell-note{
-  color:var(--stone-light);
-  font-size:10.5px;
-  text-align:center;
-  margin-top:13px;
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.modal-title{
+  font-family:'Instrument Sans';
+  font-size:24px;
+  font-weight:700;
+}
+
+.close{
+  border:1px solid var(--border);
+  background:var(--surface);
+  width:34px;
+  height:34px;
+  border-radius:50%;
 }
 
 /* =========================
@@ -1135,18 +1300,18 @@ textarea.form-input{
 
 .toast{
   position:fixed;
+  z-index:300;
   left:50%;
-  bottom:24px;
+  bottom:25px;
   transform:translate(-50%,20px);
-  background:var(--ink);
-  color:#fff;
-  border-radius:999px;
-  padding:11px 17px;
-  font-size:12.5px;
   opacity:0;
   pointer-events:none;
+  background:var(--ink);
+  color:#fff;
+  padding:11px 16px;
+  border-radius:999px;
+  font-size:12px;
   transition:.25s;
-  z-index:500;
 }
 
 .toast.show{
@@ -1160,16 +1325,14 @@ textarea.form-input{
 
 footer{
   border-top:1px solid var(--border);
-  padding:42px 0;
+  padding:45px 0;
+  margin-top:20px;
 }
 
 .footer-inner{
-  max-width:1180px;
-  margin:auto;
-  padding:0 32px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   gap:20px;
   flex-wrap:wrap;
 }
@@ -1177,113 +1340,142 @@ footer{
 .footer-links{
   display:flex;
   gap:20px;
+  flex-wrap:wrap;
   color:var(--stone);
   font-size:12px;
 }
 
-.footer-copy{
-  color:var(--stone-light);
-  font-size:11px;
-}
-
 /* =========================
-   MOBILE
+   RESPONSIVE
 ========================= */
 
-@media(max-width:920px){
+@media(max-width:950px){
+  .header-search{
+    display:none;
+  }
 
   .hero-grid{
     grid-template-columns:1fr;
   }
 
   .hero-card{
-    margin-top:15px;
+    max-width:500px;
   }
 
-  .flow{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .categories{
+  .listing-grid{
     grid-template-columns:repeat(3,1fr);
   }
 
-  .chat-shell{
-    grid-template-columns:1fr;
-  }
-
-  .threads{
-    display:none;
+  .category-grid{
+    grid-template-columns:repeat(3,1fr);
   }
 }
 
-@media(max-width:650px){
+@media(max-width:720px){
 
   .wrap{
-    padding:0 18px;
+    width:min(100% - 28px,1180px);
+  }
+
+  .nav,
+  .header-actions .btn{
+    display:none;
+  }
+
+  .mobile-menu{
+    display:block;
+    border:1px solid var(--border);
+    background:var(--surface);
+    width:38px;
+    height:38px;
+    border-radius:50%;
+  }
+
+  .header-inner{
+    justify-content:space-between;
   }
 
   .hero{
-    padding:55px 0 50px;
+    padding:50px 0;
   }
 
   .hero h1{
-    font-size:43px;
+    font-size:45px;
   }
 
   .hero-sub{
     font-size:15px;
   }
 
-  .smart-search{
+  .search-box{
     flex-direction:column;
-    border-radius:15px;
+    padding:8px;
   }
 
-  .smart-search button{
-    height:43px;
+  .search-button{
+    height:45px;
   }
 
-  .stats-inner{
+  .stats-grid{
     grid-template-columns:1fr 1fr;
+  }
+
+  .stat:nth-child(2){
+    border-right:0;
   }
 
   .stat{
     border-bottom:1px solid var(--border);
   }
 
+  .section{
+    padding:58px 0;
+  }
+
+  .category-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
   .flow{
     grid-template-columns:1fr;
   }
 
-  .categories{
+  .listing-grid{
     grid-template-columns:1fr 1fr;
+    gap:10px;
   }
 
-  .section{
-    padding:60px 0;
+  .listing-photo{
+    height:170px;
   }
 
-  .section-title{
-    font-size:30px;
-  }
-
-  .score{
-    right:-5px;
-    top:-15px;
-    width:105px;
-    height:105px;
-  }
-
-  .form-row{
+  .chat-layout{
+    margin:0;
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+    height:calc(100vh - 68px);
     grid-template-columns:1fr;
   }
 
-  .sell-card{
-    padding:22px 18px;
+  .chat-list{
+    display:none;
   }
 
-  .photos{
+  .sell-wrap{
+    padding:25px 0 50px;
+  }
+
+  .sell-card{
+    padding:20px;
+    border-radius:17px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .photo-upload{
     grid-template-columns:repeat(2,1fr);
   }
 
@@ -1291,33 +1483,30 @@ footer{
     grid-template-columns:1fr;
   }
 
-  .chat-shell{
-    height:calc(100vh - 110px);
-    margin-bottom:20px;
+  .profile{
+    padding:30px 0;
+  }
+}
+
+@media(max-width:430px){
+  .listing-grid{
+    grid-template-columns:1fr;
   }
 
-  .listing-chip{
-    display:none;
+  .listing-photo{
+    height:220px;
   }
 
-  .message-row{
-    max-width:85%;
+  .hero-card{
+    padding:14px;
   }
 
-  .composer{
-    padding:11px;
+  .product-image{
+    height:240px;
   }
 
-  .composer input{
-    min-width:0;
-  }
-
-  .send{
-    padding:0 14px;
-  }
-
-  .footer-inner{
-    padding:0 18px;
+  .profile-stats{
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -1325,74 +1514,59 @@ footer{
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
+<!-- ================= HEADER ================= -->
 
 <header>
-  <div class="header-inner">
+  <div class="wrap header-inner">
 
-    <div class="logo" onclick="showView('home')">
+    <button class="logo" onclick="showView('home')" style="background:none;border:0;">
       <span class="logo-dot"></span>
       Livo
-    </div>
+    </button>
 
-    <nav class="main-nav">
-
-      <a class="nav-link active"
-         onclick="showView('home')">
-        Startseite
-      </a>
-
-      <a class="nav-link"
-         onclick="showView('discover')">
-        Entdecken
-      </a>
-
-      <a class="nav-link"
-         onclick="showView('sell')">
-        Verkaufen
-      </a>
-
-      <a class="nav-link"
-         onclick="scrollCategories()">
-        Kategorien
-      </a>
-
+    <nav class="nav">
+      <button onclick="showView('discover')">Entdecken</button>
+      <button onclick="scrollToCategories()">Kategorien</button>
+      <button onclick="showView('sell')">Verkaufen</button>
     </nav>
 
-    <div class="header-search"
-         onclick="showView('discover')">
+    <div class="header-search">
       <span>⌕</span>
-      <span>Suchen…</span>
+      <input id="headerSearch" placeholder="Suchen…" onkeydown="headerSearch(event)">
     </div>
 
     <div class="header-actions">
 
-      <button class="btn btn-ghost"
-              onclick="showView('discover')">
-        Anmelden
+      <button class="icon-btn" onclick="showView('favorites')" title="Favoriten">
+        ♡
+        <span class="badge" id="favoriteCount">0</span>
       </button>
 
-      <button class="btn btn-primary"
-              onclick="showView('sell')">
-        Verkaufen
+      <button class="icon-btn" onclick="showView('chat')" title="Nachrichten">
+        ♧
+        <span class="badge">2</span>
       </button>
+
+      <button class="btn btn-ghost" onclick="showView('profile')">
+        Profil
+      </button>
+
+      <button class="btn btn-primary" onclick="showView('sell')">
+        + Verkaufen
+      </button>
+
+      <button class="mobile-menu" onclick="openMobileMenu()">☰</button>
 
     </div>
 
   </div>
 </header>
 
+<!-- ================= HOME ================= -->
 
-<!-- ==================================================
-     HOME
-================================================== -->
-
-<main id="homeView" class="view active">
+<main id="home" class="view active">
 
 <section class="hero">
-
   <div class="wrap hero-grid">
 
     <div>
@@ -1408,72 +1582,52 @@ footer{
       </h1>
 
       <p class="hero-sub">
-        Ein Marktplatz, der zuhört: KI-Suche in echten Sätzen,
-        faire Preisvorschläge und ein Deal Score, dem du vertrauen kannst.
+        Ein moderner Schweizer Marktplatz mit intelligenter Suche,
+        fairen Preisvorschlägen und sicherem Handeln.
       </p>
 
-      <div class="smart-search">
-
+      <div class="search-box">
         <input
-          id="homeSearch"
-          type="text"
-          value="Ein MacBook unter 800 CHF in Bern…"
+          id="mainSearch"
+          placeholder="z.B. MacBook unter 800 CHF in Bern…"
+          onkeydown="mainSearchKey(event)"
         >
-
-        <button onclick="performSearch()">
+        <button class="search-button" onclick="performSearch()">
           Suchen
         </button>
-
       </div>
 
       <div class="search-hint">
-        Verstanden:
-        <b>MacBook</b> · ≤ <b>CHF 800</b> · <b>Bern, 15 km</b>
+        Beispiel: <b>MacBook</b> · unter <b>CHF 800</b> · <b>Bern</b>
       </div>
 
       <div class="hero-buttons">
-
-        <button
-          class="btn btn-primary btn-large"
-          onclick="showView('discover')">
+        <button class="btn btn-primary" onclick="performSearch()">
           Jetzt entdecken
         </button>
 
-        <button
-          class="btn btn-ghost btn-large"
-          onclick="showView('sell')">
+        <button class="btn btn-ghost" onclick="showView('sell')">
           Etwas verkaufen
         </button>
-
       </div>
 
-      <div class="trust">
-
-        <span>
-          <i>✓</i>
-          Verifizierte Verkäufer
-        </span>
-
-        <span>
-          <i>✓</i>
-          Betrugsschutz
-        </span>
-
-        <span>
-          <i>✓</i>
-          Schweizer Server
-        </span>
-
+      <div class="hero-trust">
+        <span>✓ Verifizierte Verkäufer</span>
+        <span>✓ Sicher bezahlen</span>
+        <span>✓ Schweizer Marktplatz</span>
       </div>
 
     </div>
 
+    <div class="hero-card">
 
-    <div>
+      <button class="favorite" onclick="toggleFavorite(1,this)">
+        ♡
+      </button>
 
-      <div class="hero-card">
+      <div class="product-image"></div>
 
-        <div class="product-image"></div>
+      <div class="product-info">
 
         <div class="product-title">
           MacBook Air M2, 256GB
@@ -1483,22 +1637,9 @@ footer{
           Bern · vor 2 Stunden
         </div>
 
-        <div class="product-price mono">
-          CHF 699.–
-        </div>
-
-        <div class="score">
-
-          <div class="score-ring"></div>
-
-          <div class="score-number mono">
-            91
-          </div>
-
-          <div class="score-label">
-            Deal Score
-          </div>
-
+        <div class="product-bottom">
+          <div class="price">CHF 699.–</div>
+          <div class="score">91 Deal Score</div>
         </div>
 
       </div>
@@ -1506,13 +1647,10 @@ footer{
     </div>
 
   </div>
-
 </section>
 
-
 <section class="stats">
-
-  <div class="wrap stats-inner">
+  <div class="wrap stats-grid">
 
     <div class="stat">
       <div class="stat-number">120k+</div>
@@ -1521,141 +1659,121 @@ footer{
 
     <div class="stat">
       <div class="stat-number">26</div>
-      <div class="stat-label">Kantone abgedeckt</div>
+      <div class="stat-label">Kantone</div>
     </div>
 
     <div class="stat">
       <div class="stat-number">4.8/5</div>
-      <div class="stat-label">Ø Verkäufer-Bewertung</div>
+      <div class="stat-label">Verkäufer-Bewertung</div>
     </div>
 
     <div class="stat">
       <div class="stat-number">&lt;60s</div>
-      <div class="stat-label">bis zum veröffentlichten Inserat</div>
+      <div class="stat-label">Inserat erstellen</div>
     </div>
 
   </div>
-
 </section>
 
-
 <section class="section">
-
   <div class="wrap">
 
     <div class="section-head">
-
-      <div class="section-eyebrow">
-        So funktioniert's
-      </div>
+      <div class="section-eyebrow">So funktioniert's</div>
 
       <h2 class="section-title">
-        Fotos machen. Der Rest geht von selbst.
+        Kaufen und verkaufen, ohne Umwege.
       </h2>
 
       <p class="section-desc">
-        Die KI erkennt Produkt, Zustand und fairen Preis —
-        du bestätigst nur noch.
+        Livo macht die wichtigsten Schritte einfacher.
       </p>
-
     </div>
-
 
     <div class="flow">
 
-      <div class="flow-step">
-        <div class="flow-number mono">01</div>
-        <div class="flow-title">Fotos hochladen</div>
-        <div class="flow-desc">
-          Ein paar Bilder reichen, direkt aus der Kamera.
+      <div class="flow-item">
+        <div class="flow-number">01</div>
+        <div class="flow-title">Suchen</div>
+        <div class="flow-text">
+          Beschreibe einfach, was du suchst.
         </div>
       </div>
 
-      <div class="flow-step">
-        <div class="flow-number mono">02</div>
-        <div class="flow-title">KI erkennt dein Produkt</div>
-        <div class="flow-desc">
-          Marke, Modell und Zustand werden vorgeschlagen.
+      <div class="flow-item">
+        <div class="flow-number">02</div>
+        <div class="flow-title">Vergleichen</div>
+        <div class="flow-text">
+          Preis, Zustand und Deal Score auf einen Blick.
         </div>
       </div>
 
-      <div class="flow-step">
-        <div class="flow-number mono">03</div>
-        <div class="flow-title">Fairen Preis wählen</div>
-        <div class="flow-desc">
-          Marktvergleich zeigt dir eine faire Spanne.
+      <div class="flow-item">
+        <div class="flow-number">03</div>
+        <div class="flow-title">Kontaktieren</div>
+        <div class="flow-text">
+          Direkt mit dem Verkäufer schreiben.
         </div>
       </div>
 
-      <div class="flow-step">
-        <div class="flow-number mono">04</div>
-        <div class="flow-title">Veröffentlichen</div>
-        <div class="flow-desc">
-          Live in unter einer Minute.
+      <div class="flow-item">
+        <div class="flow-number">04</div>
+        <div class="flow-title">Deal machen</div>
+        <div class="flow-text">
+          Sicher und unkompliziert abschliessen.
         </div>
       </div>
 
     </div>
 
   </div>
-
 </section>
 
-
-<section
-  class="section"
-  id="categoriesSection"
-  style="padding-top:0;">
-
+<section class="section" id="categoriesSection" style="padding-top:0;">
   <div class="wrap">
 
     <div class="section-head">
-
-      <div class="section-eyebrow">
-        Kategorien
-      </div>
+      <div class="section-eyebrow">Kategorien</div>
 
       <h2 class="section-title">
-        Alles, was die Schweiz kauft und verkauft.
+        Was möchtest du entdecken?
       </h2>
-
     </div>
 
+    <div class="category-grid">
 
-    <div class="categories">
-
-      <div class="category"
-           onclick="categorySearch('Elektronik')">
+      <div class="category" onclick="filterCategory('Elektronik')">
+        <div class="category-icon">💻</div>
         <div class="category-name">Elektronik</div>
         <div class="category-count">18'200 Inserate</div>
       </div>
 
-      <div class="category"
-           onclick="categorySearch('Velos')">
+      <div class="category" onclick="filterCategory('Velos')">
+        <div class="category-icon">🚲</div>
         <div class="category-name">Velos</div>
         <div class="category-count">9'400 Inserate</div>
       </div>
 
-      <div class="category"
-           onclick="categorySearch('Mode')">
+      <div class="category" onclick="filterCategory('Mode')">
+        <div class="category-icon">👕</div>
         <div class="category-name">Mode</div>
         <div class="category-count">31'700 Inserate</div>
       </div>
 
-      <div class="category"
-           onclick="categorySearch('Möbel')">
+      <div class="category" onclick="filterCategory('Möbel')">
+        <div class="category-icon">🛋️</div>
         <div class="category-name">Möbel</div>
         <div class="category-count">12'100 Inserate</div>
       </div>
 
-      <div class="category"
-           onclick="categorySearch('Sport')">
+      <div class="category" onclick="filterCategory('Sport')">
+        <div class="category-icon">⚽</div>
         <div class="category-name">Sport</div>
         <div class="category-count">7'850 Inserate</div>
       </div>
 
-      <div class="category"
-           onclick="categorySearch('Immobilien')">
+      <div class="category" onclick="filterCategory('Immobilien')">
+        <div class="category-icon">🏠</div>
         <div class="category-name">Immobilien</div>
         <div class="category-count">2'300 Inserate</div>
       </div>
@@ -1663,938 +1781,1527 @@ footer{
     </div>
 
   </div>
-
 </section>
 
-</main>
-
-
-<!-- ==================================================
-     DISCOVER / CHAT
-================================================== -->
-
-<main id="discoverView" class="view">
-
-  <div class="discover-wrap">
-
-    <div class="back-bar">
-
-      <button
-        class="back-button"
-        onclick="showView('home')">
-        ← Zurück zu Livo
-      </button>
-
-    </div>
-
-
-    <div class="chat-shell">
-
-      <aside class="threads">
-
-        <div class="threads-title">
-          Nachrichten
-        </div>
-
-        <div class="thread active">
-
-          <div class="avatar">
-            DK
-          </div>
-
-          <div>
-            <div class="thread-name">
-              David K.
-            </div>
-
-            <div class="thread-preview">
-              Ist das noch verfügbar?
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="thread">
-
-          <div class="avatar">
-            LM
-          </div>
-
-          <div>
-            <div class="thread-name">
-              Laura M.
-            </div>
-
-            <div class="thread-preview">
-              Perfekt, bis morgen dann 👍
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="thread">
-
-          <div class="avatar">
-            SF
-          </div>
-
-          <div>
-            <div class="thread-name">
-              Stefan F.
-            </div>
-
-            <div class="thread-preview">
-              Danke für die schnelle Lieferung!
-            </div>
-          </div>
-
-        </div>
-
-      </aside>
-
-
-      <section class="chat-window">
-
-        <div class="chat-top">
-
-          <div class="avatar">
-            DK
-          </div>
-
-          <div>
-
-            <div class="thread-name">
-              David K.
-            </div>
-
-            <div class="thread-preview"
-                 style="max-width:none;">
-              Antwortet meist in 2 Std.
-            </div>
-
-          </div>
-
-
-          <div class="listing-chip">
-
-            <div class="mini-image"></div>
-
-            <div>
-              <div class="mini-title">
-                MacBook Air M2
-              </div>
-
-              <div class="mini-price mono">
-                CHF 699.–
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="messages"
-          id="messages">
-
-          <div class="message-row in">
-
-            <div class="message">
-              Hoi! Ist das MacBook noch verfügbar?
-            </div>
-
-            <div class="message-time">
-              14:02
-            </div>
-
-          </div>
-
-
-          <div class="message-row out">
-
-            <div class="message">
-              Ja klar, steht noch! 🙂
-            </div>
-
-            <div class="message-time">
-              14:05
-            </div>
-
-          </div>
-
-
-          <div class="message-row in">
-
-            <div class="message">
-              Top. Würdest du auf 650 runtergehen?
-            </div>
-
-            <div class="message-time">
-              14:06
-            </div>
-
-          </div>
-
-
-          <div class="offer">
-
-            <div class="offer-label">
-              Angebot erhalten
-            </div>
-
-            <div class="offer-price mono">
-              CHF 650.–
-            </div>
-
-            <div class="offer-buttons">
-
-              <button
-                class="accept"
-                onclick="acceptOffer()">
-                Annehmen
-              </button>
-
-              <button
-                class="decline"
-                onclick="declineOffer()">
-                Ablehnen
-              </button>
-
-            </div>
-
-          </div>
-
-          <div class="message-time">
-            14:06
-          </div>
-
-        </div>
-
-
-        <div class="suggestions">
-
-          <button
-            class="suggestion"
-            onclick="useSuggestion('Ja, passt für mich')">
-            Ja, passt für mich
-          </button>
-
-          <button
-            class="suggestion"
-            onclick="useSuggestion('Kann ich morgen abholen?')">
-            Kann ich morgen abholen?
-          </button>
-
-          <button
-            class="suggestion"
-            onclick="useSuggestion('Versand möglich?')">
-            Versand möglich?
-          </button>
-
-        </div>
-
-
-        <div class="composer">
-
-          <input
-            id="messageInput"
-            type="text"
-            placeholder="Nachricht schreiben…"
-            onkeydown="handleMessageKey(event)">
-
-          <button
-            class="send"
-            onclick="sendMessage()">
-            Senden
-          </button>
-
-        </div>
-
-        <div class="safety">
-          Bezahle niemals ausserhalb der Plattform.
-        </div>
-
-      </section>
-
-    </div>
-
-  </div>
-
-</main>
-
-
-<!-- ==================================================
-     SELL
-================================================== -->
-
-<main id="sellView" class="view">
-
-  <div class="sell-wrap">
-
-    <div class="back-bar"
-         style="padding:0;margin:0 0 15px;">
-      <button
-        class="back-button"
-        onclick="showView('home')">
-        ← Zurück zu Livo
-      </button>
-    </div>
-
-
-    <div class="progress-label">
-      <span>Schritt 2 von 4</span>
-      <span>Details prüfen</span>
-    </div>
-
-    <div class="progress">
-      <span class="done"></span>
-      <span class="done"></span>
-      <span></span>
-      <span></span>
-    </div>
-
-
-    <div class="sell-card">
-
-      <div class="sell-eyebrow">
-        Neues Inserat
-      </div>
-
-      <h1 class="sell-title">
-        Sieht gut aus — das haben wir erkannt.
-      </h1>
-
-      <p class="sell-sub">
-        Livo hat deine Fotos analysiert.
-        Prüf kurz, ob alles stimmt — du kannst jedes Feld anpassen.
-      </p>
-
-
-      <div class="photos">
-
-        <div class="photo filled primary">
-          Foto 1
-        </div>
-
-        <div class="photo filled">
-          Foto 2
-        </div>
-
-        <div class="photo filled">
-          Foto 3
-        </div>
-
-        <div class="photo"
-             onclick="addPhoto()">
-          + Hinzufügen
-        </div>
-
-      </div>
-
-
-      <div class="ai-banner">
-
-        <div class="ai-dot"></div>
-
-        <div>
-          <b>Livo KI</b> hat Marke,
-          Modell und Zustand erkannt.
-          Unsichere Angaben sind markiert.
-        </div>
-
-      </div>
-
-
-      <div class="form-field">
-
-        <div class="form-label">
-          Titel
-          <span class="ai-tag">
-            KI-Vorschlag
-          </span>
-        </div>
-
-        <input
-          class="form-input"
-          value="MacBook Air M2, 256GB, Space Grau">
-
-      </div>
-
-
-      <div class="form-row">
-
-        <div class="form-field">
-
-          <div class="form-label">
-            Marke
-            <span class="ai-tag">
-              KI-Vorschlag
-            </span>
-          </div>
-
-          <input
-            class="form-input"
-            value="Apple">
-
-        </div>
-
-
-        <div class="form-field">
-
-          <div class="form-label">
-            Zustand
-            <span class="ai-tag warning">
-              Bitte prüfen
-            </span>
-          </div>
-
-          <input
-            class="form-input"
-            value="Wie neu">
-
-        </div>
-
-      </div>
-
-
-      <div class="form-field">
-
-        <div class="form-label">
-          Beschreibung
-          <span class="ai-tag">
-            KI-Vorschlag
-          </span>
-        </div>
-
-        <textarea class="form-input">MacBook Air M2 mit 256GB Speicher. Sehr guter, gepflegter Zustand mit leichten Gebrauchsspuren am Gehäuse. Funktioniert einwandfrei, Akku hält gut.</textarea>
-
-      </div>
-
-
-      <div class="price-box">
-
-        <div class="price-header">
-
-          <strong>
-            Preisvorschlag
-          </strong>
-
-          <div class="market">
-            Marktwert
-            <b>CHF 650–750</b>
-          </div>
-
-        </div>
-
-
-        <div class="price-options">
-
-          <div
-            class="price-option"
-            onclick="selectPrice(this,'649')">
-
-            <div class="price-label">
-              Schneller verkaufen
-            </div>
-
-            <div class="price-value mono">
-              CHF 649
-            </div>
-
-          </div>
-
-
-          <div
-            class="price-option selected"
-            onclick="selectPrice(this,'699')">
-
-            <div class="price-label">
-              Empfohlen
-            </div>
-
-            <div class="price-value mono">
-              CHF 699
-            </div>
-
-          </div>
-
-
-          <div
-            class="price-option"
-            onclick="selectPrice(this,'749')">
-
-            <div class="price-label">
-              Maximaler Preis
-            </div>
-
-            <div class="price-value mono">
-              CHF 749
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="sell-actions">
-
-        <button
-          class="btn btn-ghost"
-          onclick="showView('home')">
-          Zurück
-        </button>
-
-        <button
-          class="btn btn-primary"
-          onclick="publishListing()">
-          Weiter zur Vorschau
-        </button>
-
-      </div>
-
-      <div class="sell-note">
-        Alle Angaben sind Vorschläge —
-        du entscheidest, was veröffentlicht wird.
-      </div>
-
-    </div>
-
-  </div>
-
-</main>
-
-
-<!-- =========================
-     FOOTER
-========================= -->
-
 <footer>
+  <div class="wrap footer-inner">
 
-  <div class="footer-inner">
-
-    <div class="logo"
-         onclick="showView('home')">
-
+    <button class="logo" onclick="showView('home')" style="background:none;border:0;">
       <span class="logo-dot"></span>
       Livo
-
-    </div>
+    </button>
 
     <div class="footer-links">
-
-      <a href="#"
-         onclick="return false;">
-        Impressum
-      </a>
-
-      <a href="#"
-         onclick="return false;">
-        AGB
-      </a>
-
-      <a href="#"
-         onclick="return false;">
-        Datenschutz
-      </a>
-
-      <a href="#"
-         onclick="showView('discover');return false;">
-        Hilfe
-      </a>
-
+      <a href="#" onclick="showToast('Impressum folgt')">Impressum</a>
+      <a href="#" onclick="showToast('AGB folgen')">AGB</a>
+      <a href="#" onclick="showToast('Datenschutz folgt')">Datenschutz</a>
+      <a href="#" onclick="showToast('Hilfe geöffnet')">Hilfe</a>
     </div>
 
-    <div class="footer-copy">
+    <div style="color:var(--stone-light);font-size:11px;">
       © 2026 Livo Schweiz
     </div>
 
   </div>
-
 </footer>
 
+</main>
 
-<div
-  id="toast"
-  class="toast">
+<!-- ================= DISCOVER ================= -->
+
+<section id="discover" class="view">
+
+  <div class="wrap">
+
+    <div class="page-top">
+
+      <div class="page-top-row">
+
+        <div>
+          <div class="section-eyebrow">Marktplatz</div>
+          <div class="page-title">Entdecken</div>
+          <div class="page-sub" id="discoverSub">
+            Gute Angebote in deiner Nähe.
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="showView('sell')">
+          + Inserat erstellen
+        </button>
+
+      </div>
+
+      <div class="search-box" style="max-width:100%;margin-top:24px;">
+        <input
+          id="discoverSearch"
+          placeholder="Was suchst du?"
+          oninput="filterListings()"
+        >
+        <button class="search-button" onclick="filterListings()">
+          Suchen
+        </button>
+      </div>
+
+      <div class="filters">
+
+        <button class="filter active" onclick="setFilter('Alle',this)">
+          Alle
+        </button>
+
+        <button class="filter" onclick="setFilter('Elektronik',this)">
+          Elektronik
+        </button>
+
+        <button class="filter" onclick="setFilter('Velos',this)">
+          Velos
+        </button>
+
+        <button class="filter" onclick="setFilter('Mode',this)">
+          Mode
+        </button>
+
+        <button class="filter" onclick="setFilter('Möbel',this)">
+          Möbel
+        </button>
+
+        <button class="filter" onclick="setFilter('Sport',this)">
+          Sport
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="listing-grid" id="listingGrid"></div>
+
+  </div>
+
+</section>
+
+<!-- ================= FAVORITES ================= -->
+
+<section id="favorites" class="view">
+
+  <div class="wrap">
+
+    <div class="page-top">
+
+      <div class="section-eyebrow">Gespeichert</div>
+      <div class="page-title">Meine Favoriten</div>
+      <div class="page-sub">
+        Inserate, die du später wiederfinden möchtest.
+      </div>
+
+    </div>
+
+    <div class="listing-grid" id="favoriteGrid"></div>
+
+  </div>
+
+</section>
+
+<!-- ================= CHAT ================= -->
+
+<section id="chat" class="view">
+
+  <div class="chat-layout">
+
+    <div class="chat-list">
+
+      <div class="chat-list-head">
+        Nachrichten
+      </div>
+
+      <div class="chat-person active">
+        <div class="avatar">DK</div>
+        <div>
+          <div class="person-name">David K.</div>
+          <div class="person-preview">Ist das noch verfügbar?</div>
+        </div>
+      </div>
+
+      <div class="chat-person">
+        <div class="avatar">LM</div>
+        <div>
+          <div class="person-name">Laura M.</div>
+          <div class="person-preview">Perfekt, bis morgen dann 👍</div>
+        </div>
+      </div>
+
+      <div class="chat-person">
+        <div class="avatar">SF</div>
+        <div>
+          <div class="person-name">Stefan F.</div>
+          <div class="person-preview">Danke für die schnelle Lieferung!</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chat-window">
+
+      <div class="chat-head">
+
+        <div class="avatar">DK</div>
+
+        <div class="chat-head-info">
+          <div class="person-name">David K.</div>
+          <div class="person-preview">
+            Antwortet meist in 2 Std.
+          </div>
+        </div>
+
+        <div class="score">
+          MacBook · CHF 699
+        </div>
+
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+
+        <div class="message-wrap">
+          <div class="message">
+            Hoi! Ist das MacBook noch verfügbar?
+          </div>
+          <div class="message-time">14:02</div>
+        </div>
+
+        <div class="message-wrap out">
+          <div class="message">
+            Ja klar, steht noch! 🙂
+          </div>
+          <div class="message-time">14:05</div>
+        </div>
+
+        <div class="message-wrap">
+          <div class="message">
+            Top. Würdest du auf 650 runtergehen?
+          </div>
+          <div class="message-time">14:06</div>
+        </div>
+
+        <div class="offer">
+
+          <div class="offer-label">
+            Angebot erhalten
+          </div>
+
+          <div class="offer-price">
+            CHF 650.–
+          </div>
+
+          <div class="offer-buttons">
+            <button class="accept" onclick="acceptOffer()">
+              Annehmen
+            </button>
+
+            <button onclick="declineOffer()">
+              Ablehnen
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="suggestions">
+
+        <button class="suggestion" onclick="useSuggestion('Ja, passt für mich')">
+          Ja, passt für mich
+        </button>
+
+        <button class="suggestion" onclick="useSuggestion('Kann ich morgen abholen?')">
+          Kann ich morgen abholen?
+        </button>
+
+        <button class="suggestion" onclick="useSuggestion('Versand möglich?')">
+          Versand möglich?
+        </button>
+
+      </div>
+
+      <div class="composer">
+
+        <input
+          id="messageInput"
+          placeholder="Nachricht schreiben…"
+          onkeydown="messageKey(event)"
+        >
+
+        <button onclick="sendMessage()">
+          Senden
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= SELL ================= -->
+
+<section id="sell" class="view">
+
+  <div class="sell-wrap">
+
+    <div class="progress-label">
+      <span id="sellStepLabel">Schritt 1 von 3</span>
+      <span id="sellStepName">Inserat erstellen</span>
+    </div>
+
+    <div class="progress">
+      <div id="progress1" class="active"></div>
+      <div id="progress2"></div>
+      <div id="progress3"></div>
+    </div>
+
+    <div class="sell-card">
+
+      <div id="sellStep1">
+
+        <div class="section-eyebrow">
+          Neues Inserat
+        </div>
+
+        <div class="sell-title">
+          Was möchtest du verkaufen?
+        </div>
+
+        <div class="sell-sub">
+          Lade Fotos hoch. Livo hilft dir anschliessend bei Titel,
+          Beschreibung und Preis.
+        </div>
+
+        <div class="photo-upload">
+
+          <label class="photo-box">
+            <input
+              id="photoInput"
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              onchange="previewPhotos(event)"
+            >
+            + Fotos
+          </label>
+
+          <div class="photo-box" id="photo2">+</div>
+          <div class="photo-box" id="photo3">+</div>
+          <div class="photo-box" id="photo4">+</div>
+
+        </div>
+
+        <div class="ai-box">
+          ✨ <b>Livo KI</b> erkennt dein Produkt automatisch und macht
+          dir passende Vorschläge.
+        </div>
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Titel
+          </label>
+
+          <input
+            id="sellTitle"
+            class="input"
+            value="MacBook Air M2, 256GB, Space Grau"
+          >
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Kategorie
+            </label>
+
+            <select id="sellCategory" class="select">
+              <option>Elektronik</option>
+              <option>Velos</option>
+              <option>Mode</option>
+              <option>Möbel</option>
+              <option>Sport</option>
+              <option>Immobilien</option>
+              <option>Sonstiges</option>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Zustand
+            </label>
+
+            <select id="sellCondition" class="select">
+              <option>Wie neu</option>
+              <option>Sehr gut</option>
+              <option>Gut</option>
+              <option>Akzeptabel</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Beschreibung
+          </label>
+
+          <textarea id="sellDescription" class="textarea">MacBook Air M2 mit 256GB Speicher. Sehr guter, gepflegter Zustand mit leichten Gebrauchsspuren. Funktioniert einwandfrei.</textarea>
+
+        </div>
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Standort
+          </label>
+
+          <input
+            id="sellLocation"
+            class="input"
+            value="Bern"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Preis
+          </label>
+
+          <div class="price-options">
+
+            <div class="price-choice" onclick="selectPrice(649,this)">
+              <span>Schnell verkaufen</span>
+              <strong>CHF 649</strong>
+            </div>
+
+            <div class="price-choice selected" onclick="selectPrice(699,this)">
+              <span>Empfohlen</span>
+              <strong>CHF 699</strong>
+            </div>
+
+            <div class="price-choice" onclick="selectPrice(749,this)">
+              <span>Maximal</span>
+              <strong>CHF 749</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="sell-actions">
+
+          <button class="btn btn-ghost" onclick="showView('home')">
+            Abbrechen
+          </button>
+
+          <button class="btn btn-primary" style="flex:1" onclick="nextSellStep()">
+            Weiter zur Vorschau →
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- STEP 2 -->
+
+      <div id="sellStep2" style="display:none;">
+
+        <div class="section-eyebrow">
+          Vorschau
+        </div>
+
+        <div class="sell-title">
+          So sieht dein Inserat aus.
+        </div>
+
+        <div class="sell-sub">
+          Prüfe alles noch einmal, bevor du es veröffentlichst.
+        </div>
+
+        <div style="margin-top:25px;border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+
+          <div class="product-image" id="previewImage"></div>
+
+          <div style="padding:18px;">
+
+            <div id="previewTitle" class="product-title">
+              MacBook Air M2
+            </div>
+
+            <div id="previewMeta" class="product-location">
+              Bern · Wie neu
+            </div>
+
+            <div id="previewDescription" style="color:var(--stone);font-size:13px;line-height:1.5;margin-top:12px;">
+            </div>
+
+            <div class="product-bottom">
+              <div id="previewPrice" class="price">
+                CHF 699.–
+              </div>
+
+              <div class="score">
+                91 Deal Score
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="sell-actions">
+
+          <button class="btn btn-ghost" onclick="previousSellStep()">
+            ← Zurück
+          </button>
+
+          <button class="btn btn-primary" style="flex:1" onclick="publishListing()">
+            Inserat veröffentlichen
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- STEP 3 -->
+
+      <div id="sellStep3" style="display:none;text-align:center;">
+
+        <div style="font-size:55px;margin-top:20px;">
+          ✓
+        </div>
+
+        <div class="section-eyebrow" style="margin-top:20px;">
+          Erfolgreich
+        </div>
+
+        <div class="sell-title">
+          Dein Inserat ist online.
+        </div>
+
+        <div class="sell-sub">
+          Käufer können dein Inserat jetzt entdecken und dich kontaktieren.
+        </div>
+
+        <div class="sell-actions">
+
+          <button class="btn btn-ghost" style="flex:1" onclick="showView('home')">
+            Zur Startseite
+          </button>
+
+          <button class="btn btn-primary" style="flex:1" onclick="showView('discover')">
+            Inserate ansehen
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= PROFILE ================= -->
+
+<section id="profile" class="view">
+
+  <div class="profile">
+
+    <div class="profile-card">
+
+      <div class="profile-top">
+
+        <div class="profile-avatar">
+          M
+        </div>
+
+        <div>
+          <div class="profile-name">
+            Marko
+          </div>
+
+          <div class="profile-location">
+            📍 Schweiz · Mitglied seit 2026
+          </div>
+        </div>
+
+      </div>
+
+      <div class="profile-stats">
+
+        <div class="profile-stat">
+          <strong>4.9</strong>
+          <span>Bewertung</span>
+        </div>
+
+        <div class="profile-stat">
+          <strong>12</strong>
+          <span>Verkäufe</span>
+        </div>
+
+        <div class="profile-stat">
+          <strong>8</strong>
+          <span>Favoriten</span>
+        </div>
+
+      </div>
+
+      <div style="margin-top:28px;display:grid;gap:10px;">
+
+        <button class="btn btn-ghost" onclick="showView('favorites')">
+          ♡ Meine Favoriten
+        </button>
+
+        <button class="btn btn-ghost" onclick="showView('chat')">
+          ♧ Meine Nachrichten
+        </button>
+
+        <button class="btn btn-primary" onclick="showView('sell')">
+          + Neues Inserat
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= MOBILE MENU ================= -->
+
+<div class="modal" id="mobileModal">
+
+  <div class="modal-card">
+
+    <div class="modal-head">
+
+      <div class="modal-title">
+        Livo
+      </div>
+
+      <button class="close" onclick="closeMobileMenu()">
+        ×
+      </button>
+
+    </div>
+
+    <div style="display:grid;gap:8px;">
+
+      <button class="btn btn-ghost" onclick="mobileNavigate('home')">
+        🏠 Startseite
+      </button>
+
+      <button class="btn btn-ghost" onclick="mobileNavigate('discover')">
+        🔎 Entdecken
+      </button>
+
+      <button class="btn btn-ghost" onclick="mobileNavigate('favorites')">
+        ♡ Favoriten
+      </button>
+
+      <button class="btn btn-ghost" onclick="mobileNavigate('chat')">
+        💬 Nachrichten
+      </button>
+
+      <button class="btn btn-primary" onclick="mobileNavigate('sell')">
+        + Verkaufen
+      </button>
+
+      <button class="btn btn-ghost" onclick="mobileNavigate('profile')">
+        👤 Profil
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
+<!-- ================= TOAST ================= -->
+
+<div class="toast" id="toast"></div>
 
 <script>
 
-/* ==========================================
-   LIVO APP NAVIGATION
-========================================== */
+/* =========================================
+   DATEN
+========================================= */
 
-function showView(view){
+const listings = [
 
-  const views = [
-    'home',
-    'discover',
-    'sell'
-  ];
+  {
+    id:1,
+    title:"MacBook Air M2, 256GB",
+    category:"Elektronik",
+    location:"Bern",
+    price:699,
+    score:91,
+    type:"mac"
+  },
 
-  views.forEach(function(name){
+  {
+    id:2,
+    title:"Trek Rennvelo Carbon",
+    category:"Velos",
+    location:"Zürich",
+    price:1450,
+    score:88,
+    type:"bike"
+  },
 
-    const element =
-      document.getElementById(name + 'View');
+  {
+    id:3,
+    title:"Vintage Sofa Beige",
+    category:"Möbel",
+    location:"Bern",
+    price:280,
+    score:84,
+    type:"sofa"
+  },
 
-    if(element){
-      element.classList.remove('active');
-    }
+  {
+    id:4,
+    title:"Patagonia Jacke",
+    category:"Mode",
+    location:"Luzern",
+    price:120,
+    score:93,
+    type:"jacket"
+  },
 
+  {
+    id:5,
+    title:"Sony Kopfhörer WH-1000XM5",
+    category:"Elektronik",
+    location:"Basel",
+    price:249,
+    score:90,
+    type:"mac"
+  },
+
+  {
+    id:6,
+    title:"Mountainbike Scott",
+    category:"Velos",
+    location:"Bern",
+    price:890,
+    score:87,
+    type:"bike"
+  },
+
+  {
+    id:7,
+    title:"Nike Sneaker Air Max",
+    category:"Mode",
+    location:"Zürich",
+    price:95,
+    score:82,
+    type:"jacket"
+  },
+
+  {
+    id:8,
+    title:"Fussballschuhe Adidas",
+    category:"Sport",
+    location:"Bern",
+    price:75,
+    score:89,
+    type:"jacket"
+  }
+
+];
+
+let currentFilter = "Alle";
+let selectedPrice = 699;
+let uploadedImage = null;
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function showView(id){
+
+  document.querySelectorAll(".view").forEach(view=>{
+    view.classList.remove("active");
   });
 
-  const target =
-    document.getElementById(view + 'View');
+  const target = document.getElementById(id);
 
   if(target){
-    target.classList.add('active');
-  }
-
-  document.querySelectorAll('.nav-link')
-    .forEach(function(link){
-      link.classList.remove('active');
-    });
-
-  if(view === 'home'){
-    document.querySelectorAll('.nav-link')[0]
-      ?.classList.add('active');
-  }
-
-  if(view === 'discover'){
-    document.querySelectorAll('.nav-link')[1]
-      ?.classList.add('active');
-  }
-
-  if(view === 'sell'){
-    document.querySelectorAll('.nav-link')[2]
-      ?.classList.add('active');
+    target.classList.add("active");
   }
 
   window.scrollTo({
     top:0,
-    behavior:'smooth'
+    behavior:"smooth"
   });
 
-  history.replaceState(null,'','#'+view);
+  if(id==="discover"){
+    renderListings();
+  }
+
+  if(id==="favorites"){
+    renderFavorites();
+  }
+
+  closeMobileMenu();
 }
 
+function scrollToCategories(){
 
-/* ==========================================
-   BROWSER BACK / FORWARD
-========================================== */
+  showView("home");
 
-window.addEventListener('popstate',function(){
+  setTimeout(()=>{
+    document
+      .getElementById("categoriesSection")
+      .scrollIntoView({behavior:"smooth"});
+  },100);
 
-  const hash =
-    window.location.hash.replace('#','');
+}
 
-  if(hash === 'discover'){
-    showView('discover');
-  }
-  else if(hash === 'sell'){
-    showView('sell');
-  }
-  else{
-    showView('home');
-  }
+/* =========================================
+   MOBILE
+========================================= */
 
-});
+function openMobileMenu(){
+  document.getElementById("mobileModal").classList.add("open");
+}
 
+function closeMobileMenu(){
+  document.getElementById("mobileModal").classList.remove("open");
+}
 
-/* ==========================================
-   INITIAL VIEW
-========================================== */
+function mobileNavigate(view){
+  closeMobileMenu();
+  showView(view);
+}
 
-(function(){
-
-  const hash =
-    window.location.hash.replace('#','');
-
-  if(hash === 'discover'){
-    showView('discover');
-  }
-  else if(hash === 'sell'){
-    showView('sell');
-  }
-  else{
-    showView('home');
-  }
-
-})();
-
-
-/* ==========================================
-   HOME SEARCH
-========================================== */
+/* =========================================
+   SUCHE
+========================================= */
 
 function performSearch(){
 
-  const input =
-    document.getElementById('homeSearch');
+  const input = document.getElementById("mainSearch");
+  const value = input.value.trim();
 
-  const value =
-    input.value.trim();
+  document.getElementById("discoverSearch").value = value;
 
-  showView('discover');
+  showView("discover");
+
+  renderListings();
 
   if(value){
-    showToast(
-      'Suche gestartet: ' + value
-    );
+    showToast("Suche nach „" + value + "“");
   }
 
 }
 
+function mainSearchKey(event){
 
-/* ==========================================
-   CATEGORY
-========================================== */
+  if(event.key==="Enter"){
+    performSearch();
+  }
 
-function categorySearch(category){
+}
 
-  showView('discover');
+function headerSearch(event){
 
-  showToast(
-    'Kategorie: ' + category
+  if(event.key==="Enter"){
+
+    const value = event.target.value.trim();
+
+    document.getElementById("mainSearch").value = value;
+
+    performSearch();
+
+  }
+
+}
+
+/* =========================================
+   LISTINGS
+========================================= */
+
+function renderListings(){
+
+  const grid = document.getElementById("listingGrid");
+
+  if(!grid) return;
+
+  const query =
+    document
+      .getElementById("discoverSearch")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const favorites =
+    JSON.parse(localStorage.getItem("livoFavorites") || "[]");
+
+  let filtered = listings.filter(item=>{
+
+    const matchesFilter =
+      currentFilter==="Alle" ||
+      item.category===currentFilter;
+
+    const matchesSearch =
+      !query ||
+      item.title.toLowerCase().includes(query) ||
+      item.category.toLowerCase().includes(query) ||
+      item.location.toLowerCase().includes(query);
+
+    return matchesFilter && matchesSearch;
+
+  });
+
+  if(filtered.length===0){
+
+    grid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1;">
+        <div class="empty-icon">⌕</div>
+        <h2 class="display" style="color:var(--ink);">
+          Keine passenden Inserate
+        </h2>
+        <p style="margin-top:8px;">
+          Versuch einen anderen Suchbegriff.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  grid.innerHTML = filtered.map(item=>{
+
+    const isFav = favorites.includes(item.id);
+
+    return `
+      <article class="listing" onclick="openListing(${item.id})">
+
+        <div class="listing-photo ${item.type}">
+
+          <button
+            class="listing-heart"
+            onclick="event.stopPropagation();toggleFavorite(${item.id},this)"
+          >
+            ${isFav ? "♥" : "♡"}
+          </button>
+
+        </div>
+
+        <div class="listing-content">
+
+          <div class="listing-name">
+            ${item.title}
+          </div>
+
+          <div class="listing-meta">
+            ${item.location} · ${item.category}
+          </div>
+
+          <div class="listing-row">
+
+            <div class="listing-price">
+              CHF ${item.price}.–
+            </div>
+
+            <div class="small-score">
+              ${item.score}
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+
+}
+
+function filterListings(){
+  renderListings();
+}
+
+function setFilter(filter,button){
+
+  currentFilter = filter;
+
+  document.querySelectorAll(".filter").forEach(item=>{
+    item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  renderListings();
+
+}
+
+function filterCategory(category){
+
+  currentFilter = category;
+
+  showView("discover");
+
+  document
+    .querySelectorAll(".filter")
+    .forEach(button=>{
+
+      button.classList.toggle(
+        "active",
+        button.textContent.trim()===category
+      );
+
+    });
+
+  renderListings();
+
+}
+
+/* =========================================
+   FAVORITEN
+========================================= */
+
+function getFavorites(){
+
+  return JSON.parse(
+    localStorage.getItem("livoFavorites") || "[]"
   );
 
 }
 
+function saveFavorites(data){
 
-/* ==========================================
-   SCROLL CATEGORIES
-========================================== */
+  localStorage.setItem(
+    "livoFavorites",
+    JSON.stringify(data)
+  );
 
-function scrollCategories(){
+}
 
-  showView('home');
+function toggleFavorite(id,button){
 
-  setTimeout(function(){
+  let favorites = getFavorites();
 
-    const section =
-      document.getElementById(
-        'categoriesSection'
-      );
+  if(favorites.includes(id)){
 
-    if(section){
-      section.scrollIntoView({
-        behavior:'smooth'
-      });
+    favorites = favorites.filter(item=>item!==id);
+
+    if(button){
+      button.classList.remove("active");
+      button.innerHTML="♡";
     }
 
-  },100);
+    showToast("Aus Favoriten entfernt");
+
+  }else{
+
+    favorites.push(id);
+
+    if(button){
+      button.classList.add("active");
+      button.innerHTML="♥";
+    }
+
+    showToast("Zu Favoriten hinzugefügt");
+
+  }
+
+  saveFavorites(favorites);
+
+  updateFavoriteCount();
+
+  if(document.getElementById("favorites").classList.contains("active")){
+    renderFavorites();
+  }
 
 }
 
+function updateFavoriteCount(){
 
-/* ==========================================
-   CHAT SUGGESTIONS
-========================================== */
-
-function useSuggestion(text){
-
-  const input =
-    document.getElementById('messageInput');
-
-  input.value = text;
-
-  input.focus();
+  document.getElementById("favoriteCount").textContent =
+    getFavorites().length;
 
 }
 
+function renderFavorites(){
 
-/* ==========================================
-   SEND MESSAGE
-========================================== */
+  const grid = document.getElementById("favoriteGrid");
+
+  if(!grid) return;
+
+  const favorites = getFavorites();
+
+  const data =
+    listings.filter(item=>favorites.includes(item.id));
+
+  if(data.length===0){
+
+    grid.innerHTML=`
+      <div class="empty" style="grid-column:1/-1;">
+        <div class="empty-icon">♡</div>
+
+        <h2 class="display" style="color:var(--ink);">
+          Noch keine Favoriten
+        </h2>
+
+        <p style="margin-top:8px;">
+          Speichere interessante Inserate und finde sie später wieder.
+        </p>
+
+        <button
+          class="btn btn-primary"
+          style="margin-top:18px;"
+          onclick="showView('discover')"
+        >
+          Inserate entdecken
+        </button>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  grid.innerHTML=data.map(item=>`
+
+    <article class="listing" onclick="openListing(${item.id})">
+
+      <div class="listing-photo ${item.type}">
+
+        <button
+          class="listing-heart"
+          onclick="event.stopPropagation();toggleFavorite(${item.id},this)"
+        >
+          ♥
+        </button>
+
+      </div>
+
+      <div class="listing-content">
+
+        <div class="listing-name">
+          ${item.title}
+        </div>
+
+        <div class="listing-meta">
+          ${item.location} · ${item.category}
+        </div>
+
+        <div class="listing-row">
+
+          <div class="listing-price">
+            CHF ${item.price}.–
+          </div>
+
+          <div class="small-score">
+            ${item.score}
+          </div>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `).join("");
+
+}
+
+/* =========================================
+   INSERAT
+========================================= */
+
+function openListing(id){
+
+  const item = listings.find(x=>x.id===id);
+
+  if(!item) return;
+
+  const favorites = getFavorites();
+
+  const saved = favorites.includes(id);
+
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title">${item.title}</div>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+
+    <div class="listing-photo ${item.type}" style="height:280px;border-radius:15px;"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;">
+
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:22px;">
+          CHF ${item.price}.–
+        </div>
+
+        <div style="color:var(--stone);font-size:12px;margin-top:4px;">
+          ${item.location} · ${item.category}
+        </div>
+      </div>
+
+      <div class="score">
+        ${item.score} Deal Score
+      </div>
+
+    </div>
+
+    <div style="margin-top:20px;color:var(--stone);font-size:14px;line-height:1.6;">
+      Sehr gepflegtes Angebot. Der Verkäufer wurde von Livo
+      verifiziert. Abholung oder Versand nach Absprache möglich.
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:22px;">
+
+      <button
+        class="btn btn-ghost"
+        style="flex:1"
+        onclick="toggleFavorite(${item.id},this)"
+      >
+        ${saved ? "♥ Gespeichert" : "♡ Favorisieren"}
+      </button>
+
+      <button
+        class="btn btn-primary"
+        style="flex:1"
+        onclick="closeModal();showView('chat');showToast('Nachricht geöffnet')"
+      >
+        Verkäufer kontaktieren
+      </button>
+
+    </div>
+  `);
+
+}
+
+/* =========================================
+   SELL FLOW
+========================================= */
+
+function selectPrice(price,element){
+
+  selectedPrice = price;
+
+  document
+    .querySelectorAll(".price-choice")
+    .forEach(item=>item.classList.remove("selected"));
+
+  element.classList.add("selected");
+
+}
+
+function nextSellStep(){
+
+  document.getElementById("sellStep1").style.display="none";
+  document.getElementById("sellStep2").style.display="block";
+
+  document.getElementById("progress1").classList.add("active");
+  document.getElementById("progress2").classList.add("active");
+
+  document.getElementById("sellStepLabel").textContent="Schritt 2 von 3";
+  document.getElementById("sellStepName").textContent="Vorschau";
+
+  const title =
+    document.getElementById("sellTitle").value;
+
+  const condition =
+    document.getElementById("sellCondition").value;
+
+  const location =
+    document.getElementById("sellLocation").value;
+
+  const description =
+    document.getElementById("sellDescription").value;
+
+  document.getElementById("previewTitle").textContent =
+    title;
+
+  document.getElementById("previewMeta").textContent =
+    location + " · " + condition;
+
+  document.getElementById("previewDescription").textContent =
+    description;
+
+  document.getElementById("previewPrice").textContent =
+    "CHF " + selectedPrice + ".–";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+function previousSellStep(){
+
+  document.getElementById("sellStep1").style.display="block";
+  document.getElementById("sellStep2").style.display="none";
+
+  document.getElementById("progress2").classList.remove("active");
+
+  document.getElementById("sellStepLabel").textContent="Schritt 1 von 3";
+  document.getElementById("sellStepName").textContent="Inserat erstellen";
+
+}
+
+function publishListing(){
+
+  document.getElementById("sellStep2").style.display="none";
+  document.getElementById("sellStep3").style.display="block";
+
+  document.getElementById("progress3").classList.add("active");
+
+  document.getElementById("sellStepLabel").textContent="Schritt 3 von 3";
+  document.getElementById("sellStepName").textContent="Veröffentlicht";
+
+  localStorage.setItem(
+    "livoLastListing",
+    JSON.stringify({
+      title:document.getElementById("sellTitle").value,
+      category:document.getElementById("sellCategory").value,
+      price:selectedPrice
+    })
+  );
+
+  showToast("Inserat erfolgreich veröffentlicht");
+
+}
+
+/* =========================================
+   FOTO-UPLOAD
+========================================= */
+
+function previewPhotos(event){
+
+  const files = [...event.target.files].slice(0,4);
+
+  files.forEach((file,index)=>{
+
+    const reader = new FileReader();
+
+    reader.onload=function(e){
+
+      if(index===0){
+
+        const box=document.querySelector(".photo-box");
+
+        box.innerHTML=
+          `<img src="${e.target.result}" alt="Foto">`;
+
+        uploadedImage=e.target.result;
+
+        document.getElementById("previewImage").style.backgroundImage=
+          `url("${e.target.result}")`;
+
+        document.getElementById("previewImage").style.backgroundSize=
+          "cover";
+
+        document.getElementById("previewImage").style.backgroundPosition=
+          "center";
+
+      }else{
+
+        const box=
+          document.getElementById("photo"+(index+1));
+
+        if(box){
+
+          box.innerHTML=
+            `<img src="${e.target.result}" alt="Foto">`;
+
+        }
+
+      }
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+/* =========================================
+   CHAT
+========================================= */
 
 function sendMessage(){
 
-  const input =
-    document.getElementById('messageInput');
+  const input=document.getElementById("messageInput");
 
-  const text =
-    input.value.trim();
+  const text=input.value.trim();
 
-  if(!text){
-    return;
-  }
+  if(!text) return;
 
-  const messages =
-    document.getElementById('messages');
+  const messages=document.getElementById("chatMessages");
 
-  const row =
-    document.createElement('div');
+  const wrap=document.createElement("div");
 
-  row.className =
-    'message-row out';
+  wrap.className="message-wrap out";
 
-  const message =
-    document.createElement('div');
+  wrap.innerHTML=`
+    <div class="message"></div>
+    <div class="message-time">jetzt</div>
+  `;
 
-  message.className =
-    'message';
+  wrap.querySelector(".message").textContent=text;
 
-  message.textContent =
-    text;
+  messages.appendChild(wrap);
 
-  const time =
-    document.createElement('div');
+  input.value="";
 
-  time.className =
-    'message-time';
+  messages.scrollTop=messages.scrollHeight;
 
-  time.textContent =
-    'gerade eben';
+  setTimeout(()=>{
 
-  row.appendChild(message);
-  row.appendChild(time);
+    const reply=document.createElement("div");
 
-  messages.appendChild(row);
+    reply.className="message-wrap";
 
-  input.value = '';
+    reply.innerHTML=`
+      <div class="message">
+        Danke! Ich melde mich gleich bei dir. 🙂
+      </div>
+      <div class="message-time">jetzt</div>
+    `;
 
-  messages.scrollTop =
-    messages.scrollHeight;
+    messages.appendChild(reply);
 
-  setTimeout(function(){
+    messages.scrollTop=messages.scrollHeight;
 
-    showToast(
-      'Nachricht gesendet'
-    );
-
-  },100);
+  },900);
 
 }
 
+function messageKey(event){
 
-/* ==========================================
-   ENTER SEND
-========================================== */
-
-function handleMessageKey(event){
-
-  if(event.key === 'Enter'){
-    event.preventDefault();
+  if(event.key==="Enter"){
     sendMessage();
   }
 
 }
 
+function useSuggestion(text){
 
-/* ==========================================
-   OFFER
-========================================== */
+  document.getElementById("messageInput").value=text;
+
+  sendMessage();
+
+}
 
 function acceptOffer(){
 
-  showToast(
-    'Angebot von CHF 650.– angenommen'
-  );
+  showToast("Angebot angenommen ✓");
 
 }
 
 function declineOffer(){
 
-  showToast(
-    'Angebot abgelehnt'
-  );
+  showToast("Angebot abgelehnt");
 
 }
 
+/* =========================================
+   MODAL
+========================================= */
 
-/* ==========================================
-   SELL PHOTO
-========================================== */
+function openModal(content){
 
-function addPhoto(){
+  let modal=document.getElementById("genericModal");
 
-  showToast(
-    'Foto-Upload wird vorbereitet'
-  );
+  if(!modal){
 
-}
+    modal=document.createElement("div");
 
+    modal.id="genericModal";
+    modal.className="modal";
 
-/* ==========================================
-   PRICE SELECT
-========================================== */
+    modal.innerHTML=`
+      <div class="modal-card" id="genericModalCard"></div>
+    `;
 
-function selectPrice(element,price){
+    document.body.appendChild(modal);
 
-  document.querySelectorAll(
-    '.price-option'
-  ).forEach(function(option){
+  }
 
-    option.classList.remove(
-      'selected'
-    );
+  document.getElementById("genericModalCard").innerHTML=content;
 
-  });
-
-  element.classList.add(
-    'selected'
-  );
-
-  showToast(
-    'Preis auf CHF ' + price + '.– gesetzt'
-  );
+  modal.classList.add("open");
 
 }
 
+function closeModal(){
 
-/* ==========================================
-   PUBLISH
-========================================== */
+  const modal=document.getElementById("genericModal");
 
-function publishListing(){
-
-  showToast(
-    'Vorschau wird vorbereitet …'
-  );
-
-  setTimeout(function(){
-
-    showToast(
-      'Inserat ist bereit zur Veröffentlichung'
-    );
-
-  },1000);
+  if(modal){
+    modal.classList.remove("open");
+  }
 
 }
 
-
-/* ==========================================
+/* =========================================
    TOAST
-========================================== */
+========================================= */
 
 let toastTimer;
 
-function showToast(message){
+function showToast(text){
 
-  const toast =
-    document.getElementById('toast');
+  const toast=document.getElementById("toast");
 
-  toast.textContent =
-    message;
-
-  toast.classList.add('show');
+  toast.textContent=text;
+  toast.classList.add("show");
 
   clearTimeout(toastTimer);
 
-  toastTimer =
-    setTimeout(function(){
-
-      toast.classList.remove('show');
-
-    },2600);
+  toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2200);
 
 }
+
+/* =========================================
+   START
+========================================= */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  updateFavoriteCount();
+
+  renderListings();
+
+  const savedListing =
+    localStorage.getItem("livoLastListing");
+
+  if(savedListing){
+
+    console.log(
+      "Letztes Inserat:",
+      JSON.parse(savedListing)
+    );
+
+  }
+
+});
 
 </script>
 
