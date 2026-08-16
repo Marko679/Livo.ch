@@ -23,7 +23,6 @@
   --accent-dark:#0B4638;
   --accent-tint:#E8F1EC;
   --danger:#B42318;
-  --warning:#A9822E;
   --shadow:0 8px 30px rgba(21,23,27,.06);
   --radius:18px;
 }
@@ -58,7 +57,9 @@ body{
   font-family:'Inter',sans-serif;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
-  transition:background .3s ease,color .3s ease;
+  transition:
+    background .35s ease,
+    color .35s ease;
 }
 
 button,
@@ -95,6 +96,40 @@ a{
   .wrap{
     width:min(100% - 32px,1180px);
   }
+}
+
+/* =========================
+   GLOBAL SMOOTHNESS
+========================= */
+
+button,
+.listing,
+.category,
+.flow-item,
+.icon-btn,
+.btn,
+.filter,
+.contact,
+.price-option,
+.favorite,
+.upload-slot,
+.form-input{
+  transition:
+    transform .22s cubic-bezier(.2,.8,.2,1),
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    color .25s ease,
+    opacity .25s ease;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+::selection{
+  background:var(--accent);
+  color:#fff;
 }
 
 /* =========================
@@ -149,7 +184,6 @@ nav button{
   color:var(--stone);
   font-size:14px;
   padding:8px 0;
-  transition:.2s;
 }
 
 nav button:hover,
@@ -168,6 +202,11 @@ nav button.active{
   padding:0 14px;
   background:var(--surface);
   color:var(--muted);
+}
+
+.header-search:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-tint);
 }
 
 .header-search input{
@@ -195,11 +234,10 @@ nav button.active{
   display:grid;
   place-items:center;
   position:relative;
-  transition:.2s;
 }
 
 .icon-btn:hover{
-  transform:translateY(-1px);
+  transform:translateY(-2px);
   border-color:var(--accent);
 }
 
@@ -221,11 +259,10 @@ nav button.active{
   font-family:'Instrument Sans';
   font-weight:600;
   font-size:14px;
-  transition:transform .2s,background .2s,border .2s;
 }
 
 .btn:hover{
-  transform:translateY(-1px);
+  transform:translateY(-2px);
 }
 
 .btn-primary{
@@ -235,6 +272,7 @@ nav button.active{
 
 .btn-primary:hover{
   background:var(--accent-dark);
+  box-shadow:0 8px 20px rgba(14,92,72,.18);
 }
 
 .btn-secondary{
@@ -268,7 +306,7 @@ nav button.active{
 }
 
 /* =========================
-   APP / VIEWS
+   VIEWS
 ========================= */
 
 main{
@@ -277,26 +315,26 @@ main{
 
 .view{
   display:none;
-  animation:viewIn .35s ease both;
 }
 
 .view.active{
   display:block;
+  animation:viewIn .42s cubic-bezier(.2,.8,.2,1) both;
 }
 
 @keyframes viewIn{
   from{
     opacity:0;
-    transform:translateY(10px);
+    transform:translateY(8px);
   }
   to{
     opacity:1;
-    transform:none;
+    transform:translateY(0);
   }
 }
 
 /* =========================
-   HOME
+   HERO
 ========================= */
 
 .hero{
@@ -361,6 +399,13 @@ main{
   box-shadow:var(--shadow);
 }
 
+.search-box:focus-within{
+  border-color:var(--accent);
+  box-shadow:
+    0 8px 30px rgba(21,23,27,.06),
+    0 0 0 4px var(--accent-tint);
+}
+
 .search-box input{
   flex:1;
   min-width:0;
@@ -422,13 +467,18 @@ main{
   border-radius:24px;
   padding:22px;
   box-shadow:var(--shadow);
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+
+.hero-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 18px 45px rgba(21,23,27,.1);
 }
 
 .product-image{
   aspect-ratio:4/3;
   border-radius:16px;
-  background:
-    linear-gradient(145deg,#ebe8df,#f8f7f3);
+  background:linear-gradient(145deg,#ebe8df,#f8f7f3);
   display:grid;
   place-items:center;
   font-size:70px;
@@ -440,13 +490,20 @@ main{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,.5),transparent);
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.5),
+    transparent
+  );
   transform:translateX(-100%);
   animation:shine 4s infinite;
 }
 
 @keyframes shine{
-  45%,100%{transform:translateX(100%)}
+  45%,100%{
+    transform:translateX(100%);
+  }
 }
 
 .product-meta{
@@ -498,6 +555,10 @@ main{
   text-transform:uppercase;
   letter-spacing:.08em;
 }
+
+/* =========================
+   STATS
+========================= */
 
 .stats{
   border-top:1px solid var(--border);
@@ -577,11 +638,11 @@ main{
 .flow-item{
   background:var(--surface);
   padding:27px 23px;
-  transition:.25s;
 }
 
 .flow-item:hover{
   background:var(--accent-tint);
+  transform:translateY(-2px);
 }
 
 .flow-num{
@@ -614,13 +675,12 @@ main{
   border:1px solid var(--border);
   border-radius:15px;
   padding:20px 16px;
-  transition:.2s;
-  cursor:pointer;
 }
 
 .category:hover{
-  transform:translateY(-3px);
+  transform:translateY(-4px);
   border-color:var(--accent);
+  box-shadow:var(--shadow);
 }
 
 .category-icon{
@@ -640,7 +700,7 @@ main{
 }
 
 /* =========================
-   EXPLORE
+   PAGE
 ========================= */
 
 .page{
@@ -664,6 +724,10 @@ main{
   margin-top:7px;
 }
 
+/* =========================
+   FILTERS
+========================= */
+
 .filters{
   display:flex;
   gap:8px;
@@ -678,7 +742,11 @@ main{
   border-radius:999px;
   padding:8px 13px;
   font-size:12px;
-  cursor:pointer;
+}
+
+.filter:hover{
+  border-color:var(--accent);
+  color:var(--accent);
 }
 
 .filter.active{
@@ -686,6 +754,10 @@ main{
   color:var(--accent-dark);
   border-color:var(--accent);
 }
+
+/* =========================
+   LISTINGS
+========================= */
 
 .listings{
   display:grid;
@@ -699,11 +771,10 @@ main{
   border-radius:17px;
   overflow:hidden;
   cursor:pointer;
-  transition:.25s;
 }
 
 .listing:hover{
-  transform:translateY(-4px);
+  transform:translateY(-5px);
   box-shadow:var(--shadow);
 }
 
@@ -728,6 +799,10 @@ main{
   display:grid;
   place-items:center;
   z-index:2;
+}
+
+.favorite:hover{
+  transform:scale(1.08);
 }
 
 .favorite.active{
@@ -804,7 +879,11 @@ main{
   color:var(--stone);
   font-size:13px;
   margin-bottom:24px;
-  cursor:pointer;
+}
+
+.back:hover{
+  color:var(--accent);
+  transform:translateX(-3px);
 }
 
 .detail-title{
@@ -850,6 +929,95 @@ main{
 }
 
 /* =========================
+   RECOMMENDATIONS
+========================= */
+
+.recommendations{
+  margin-top:65px;
+}
+
+.recommendation-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:20px;
+  margin-bottom:22px;
+}
+
+.recommendation-title{
+  font-size:28px;
+}
+
+.recommendation-sub{
+  color:var(--stone);
+  font-size:13px;
+  margin-top:6px;
+}
+
+.recommendation-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.recommendation-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.recommendation-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow);
+  border-color:var(--accent);
+}
+
+.recommendation-photo{
+  aspect-ratio:1.25;
+  background:#efede7;
+  display:grid;
+  place-items:center;
+  font-size:42px;
+}
+
+.recommendation-body{
+  padding:13px;
+}
+
+.recommendation-name{
+  font-size:13px;
+  font-weight:600;
+}
+
+.recommendation-location{
+  font-size:10.5px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.recommendation-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:10px;
+}
+
+.recommendation-price{
+  font-family:'IBM Plex Mono';
+  font-size:13px;
+}
+
+.recommendation-score{
+  font-size:9px;
+  padding:4px 6px;
+  border-radius:99px;
+  background:var(--accent-tint);
+  color:var(--accent-dark);
+}
+
+/* =========================
    MESSAGES
 ========================= */
 
@@ -882,7 +1050,6 @@ main{
   padding:13px 18px;
   cursor:pointer;
   border-left:3px solid transparent;
-  transition:.2s;
 }
 
 .contact:hover{
@@ -965,6 +1132,18 @@ main{
   border-radius:15px;
   font-size:13.5px;
   line-height:1.5;
+  animation:bubbleIn .28s ease both;
+}
+
+@keyframes bubbleIn{
+  from{
+    opacity:0;
+    transform:translateY(5px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 
 .bubble.in{
@@ -979,6 +1158,43 @@ main{
   background:var(--accent);
   color:#fff;
   border-bottom-right-radius:4px;
+}
+
+.typing{
+  align-self:flex-start;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:10px 13px;
+  display:flex;
+  gap:4px;
+}
+
+.typing span{
+  width:5px;
+  height:5px;
+  background:var(--muted);
+  border-radius:50%;
+  animation:typing 1s infinite;
+}
+
+.typing span:nth-child(2){
+  animation-delay:.15s;
+}
+
+.typing span:nth-child(3){
+  animation-delay:.3s;
+}
+
+@keyframes typing{
+  0%,60%,100%{
+    transform:translateY(0);
+    opacity:.5;
+  }
+  30%{
+    transform:translateY(-3px);
+    opacity:1;
+  }
 }
 
 .chat-input{
@@ -996,6 +1212,11 @@ main{
   outline:0;
   background:var(--surface);
   color:var(--ink);
+}
+
+.chat-input input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-tint);
 }
 
 .chat-input button{
@@ -1031,6 +1252,7 @@ main{
   height:4px;
   border-radius:99px;
   background:var(--border);
+  transition:.35s ease;
 }
 
 .progress span.active{
@@ -1109,6 +1331,7 @@ main{
 
 .form-input:focus{
   border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-tint);
 }
 
 textarea.form-input{
@@ -1144,6 +1367,10 @@ textarea.form-input{
   cursor:pointer;
 }
 
+.price-option:hover{
+  transform:translateY(-2px);
+}
+
 .price-option.active{
   border-color:var(--accent);
   background:var(--accent-tint);
@@ -1172,7 +1399,7 @@ textarea.form-input{
 }
 
 /* =========================
-   PROFILE / SETTINGS
+   PROFILE
 ========================= */
 
 .profile-card{
@@ -1263,7 +1490,7 @@ textarea.form-input{
 }
 
 /* =========================
-   MOBILE
+   MOBILE DRAWER
 ========================= */
 
 .mobile-drawer{
@@ -1273,7 +1500,7 @@ textarea.form-input{
   z-index:90;
   padding:20px;
   transform:translateX(100%);
-  transition:.3s ease;
+  transition:.32s cubic-bezier(.2,.8,.2,1);
 }
 
 .mobile-drawer.open{
@@ -1306,7 +1533,7 @@ textarea.form-input{
   font-size:13px;
   opacity:0;
   pointer-events:none;
-  transition:.3s;
+  transition:.3s cubic-bezier(.2,.8,.2,1);
   z-index:500;
   box-shadow:var(--shadow);
 }
@@ -1340,6 +1567,7 @@ footer{
 ========================= */
 
 @media(max-width:1000px){
+
   .hero-grid{
     grid-template-columns:1fr;
   }
@@ -1355,9 +1583,14 @@ footer{
   .categories{
     grid-template-columns:repeat(3,1fr);
   }
+
+  .recommendation-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 
 @media(max-width:800px){
+
   .stats-grid{
     grid-template-columns:repeat(2,1fr);
   }
@@ -1378,12 +1611,17 @@ footer{
     grid-template-columns:repeat(2,1fr);
   }
 
+  .recommendation-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
   .detail-grid{
     grid-template-columns:1fr;
   }
 }
 
 @media(max-width:650px){
+
   .hero{
     padding:55px 0;
   }
@@ -1416,6 +1654,11 @@ footer{
   }
 
   .listings{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .recommendation-grid{
     grid-template-columns:1fr 1fr;
     gap:10px;
   }
@@ -1453,20 +1696,23 @@ footer{
   .sell-actions{
     flex-direction:column;
   }
+
+  .recommendation-head{
+    display:block;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
-
 <header>
   <div class="wrap header-inner">
 
-    <button class="logo" onclick="go('home')" style="border:0;background:none;color:var(--ink);">
+    <button
+      class="logo"
+      onclick="go('home')"
+      style="border:0;background:none;color:var(--ink);">
       <span class="logo-dot"></span>
       Livo
     </button>
@@ -1480,29 +1726,44 @@ footer{
 
     <div class="header-search">
       <span>⌕</span>
-      <input id="globalSearch" placeholder="Suchen…" onkeydown="globalSearch(event)">
+      <input
+        id="globalSearch"
+        placeholder="Suchen…"
+        onkeydown="globalSearch(event)">
     </div>
 
     <div class="header-actions">
 
-      <button class="icon-btn" onclick="toggleTheme()" title="Design wechseln">
+      <button
+        class="icon-btn"
+        onclick="toggleTheme()"
+        title="Design wechseln">
         ◐
       </button>
 
-      <button class="icon-btn" onclick="go('messages')" title="Nachrichten">
+      <button
+        class="icon-btn"
+        onclick="go('messages')"
+        title="Nachrichten">
         ♧
         <span class="notification-dot"></span>
       </button>
 
-      <button class="btn btn-secondary" onclick="go('profile')">
+      <button
+        class="btn btn-secondary"
+        onclick="go('profile')">
         Profil
       </button>
 
-      <button class="btn btn-primary" onclick="go('sell')">
+      <button
+        class="btn btn-primary"
+        onclick="go('sell')">
         Verkaufen
       </button>
 
-      <button class="icon-btn mobile-menu" onclick="toggleMobile()" title="Menü">
+      <button
+        class="icon-btn mobile-menu"
+        onclick="toggleMobile()">
         ☰
       </button>
 
@@ -1510,8 +1771,6 @@ footer{
 
   </div>
 </header>
-
-<!-- MOBILE MENU -->
 
 <div class="mobile-drawer" id="mobileDrawer">
   <button onclick="go('home');toggleMobile()">🏠 Startseite</button>
@@ -1524,874 +1783,1138 @@ footer{
 <main>
 
 <!-- =========================
-     HOME
+HOME
 ========================= -->
 
 <section class="view active" id="view-home">
 
-  <section class="hero">
-    <div class="wrap hero-grid">
+<section class="hero">
+<div class="wrap hero-grid">
 
-      <div>
+<div>
 
-        <div class="eyebrow">
-          <span class="eyebrow-dot"></span>
-          Für die Schweiz gebaut
-        </div>
+<div class="eyebrow">
+<span class="eyebrow-dot"></span>
+Für die Schweiz gebaut
+</div>
 
-        <h1 class="display">
-          Finde, was<br>
-          wirklich zu <em>dir</em> passt.
-        </h1>
+<h1 class="display">
+Finde, was<br>
+wirklich zu <em>dir</em> passt.
+</h1>
 
-        <p class="hero-sub">
-          Livo verbindet intelligente Suche, faire Preise und direkte
-          Kommunikation in einem modernen Schweizer Marktplatz.
-        </p>
+<p class="hero-sub">
+Livo verbindet intelligente Suche, faire Preise und direkte
+Kommunikation in einem modernen Schweizer Marktplatz.
+</p>
 
-        <div class="search-box">
-          <input
-            id="heroSearch"
-            value="Ein MacBook unter 800 CHF in Bern"
-            onkeydown="heroSearch(event)"
-          >
-          <button onclick="runHeroSearch()">Suchen</button>
-        </div>
+<div class="search-box">
+<input
+id="heroSearch"
+value="Ein MacBook unter 800 CHF in Bern"
+onkeydown="heroSearch(event)">
+<button onclick="runHeroSearch()">Suchen</button>
+</div>
 
-        <div class="search-hint">
-          Verstanden: <b>MacBook</b> · ≤ <b>CHF 800</b> · <b>Bern</b>
-        </div>
+<div class="search-hint">
+Verstanden: <b>MacBook</b> · ≤ <b>CHF 800</b> · <b>Bern</b>
+</div>
 
-        <div class="hero-actions">
-          <button class="btn btn-primary btn-large" onclick="go('explore')">
-            Jetzt entdecken
-          </button>
+<div class="hero-actions">
 
-          <button class="btn btn-secondary btn-large" onclick="go('sell')">
-            Etwas verkaufen
-          </button>
-        </div>
+<button
+class="btn btn-primary btn-large"
+onclick="go('explore')">
+Jetzt entdecken
+</button>
 
-        <div class="trust">
-          <span>✓ Verifizierte Verkäufer</span>
-          <span>✓ Sicherer Chat</span>
-          <span>✓ Schweizer Marktplatz</span>
-        </div>
+<button
+class="btn btn-secondary btn-large"
+onclick="go('sell')">
+Etwas verkaufen
+</button>
 
-      </div>
+</div>
 
-      <div class="hero-card">
+<div class="trust">
+<span>✓ Verifizierte Verkäufer</span>
+<span>✓ Sicherer Chat</span>
+<span>✓ Schweizer Marktplatz</span>
+</div>
 
-        <div class="product-image">
-          💻
-        </div>
+</div>
 
-        <div class="product-meta">
+<div class="hero-card">
 
-          <div class="product-title">
-            MacBook Air M2, 256GB
-          </div>
+<div class="product-image">
+💻
+</div>
 
-          <div class="product-location">
-            Bern · vor 2 Stunden
-          </div>
+<div class="product-meta">
 
-          <div class="product-price mono">
-            CHF 699.–
-          </div>
+<div class="product-title">
+MacBook Air M2, 256GB
+</div>
 
-        </div>
+<div class="product-location">
+Bern · vor 2 Stunden
+</div>
 
-        <div class="score">
-          <div class="score-inner">
-            <div class="score-number mono">91</div>
-            <div class="score-label">Deal Score</div>
-          </div>
-        </div>
+<div class="product-price mono">
+CHF 699.–
+</div>
 
-      </div>
+</div>
 
-    </div>
-  </section>
+<div class="score">
+<div class="score-inner">
+<div class="score-number mono">91</div>
+<div class="score-label">Deal Score</div>
+</div>
+</div>
 
-  <div class="stats">
-    <div class="wrap stats-grid">
+</div>
 
-      <div class="stat">
-        <div class="stat-number display">120k+</div>
-        <div class="stat-label">aktive Inserate</div>
-      </div>
+</div>
+</section>
 
-      <div class="stat">
-        <div class="stat-number display">26</div>
-        <div class="stat-label">Kantone</div>
-      </div>
+<div class="stats">
+<div class="wrap stats-grid">
 
-      <div class="stat">
-        <div class="stat-number display">4.8/5</div>
-        <div class="stat-label">Verkäufer-Bewertung</div>
-      </div>
+<div class="stat">
+<div class="stat-number display">120k+</div>
+<div class="stat-label">aktive Inserate</div>
+</div>
 
-      <div class="stat">
-        <div class="stat-number display">&lt;60s</div>
-        <div class="stat-label">bis zum Inserat</div>
-      </div>
+<div class="stat">
+<div class="stat-number display">26</div>
+<div class="stat-label">Kantone</div>
+</div>
 
-    </div>
-  </div>
+<div class="stat">
+<div class="stat-number display">4.8/5</div>
+<div class="stat-label">Verkäufer-Bewertung</div>
+</div>
 
-  <section class="section">
-    <div class="wrap">
+<div class="stat">
+<div class="stat-number display">&lt;60s</div>
+<div class="stat-label">bis zum Inserat</div>
+</div>
 
-      <div class="section-head">
-        <div class="section-kicker">So funktioniert's</div>
-        <h2 class="section-title display">
-          Fotos machen. Der Rest geht von selbst.
-        </h2>
-        <p class="section-desc">
-          Livo hilft dir beim Erstellen, Finden und Handeln.
-        </p>
-      </div>
+</div>
+</div>
 
-      <div class="flow">
+<section class="section">
+<div class="wrap">
 
-        <div class="flow-item">
-          <div class="flow-num mono">01</div>
-          <div class="flow-title">Fotos hochladen</div>
-          <div class="flow-text">
-            Ein paar Bilder reichen.
-          </div>
-        </div>
+<div class="section-head">
+<div class="section-kicker">So funktioniert's</div>
 
-        <div class="flow-item">
-          <div class="flow-num mono">02</div>
-          <div class="flow-title">Produkt erkennen</div>
-          <div class="flow-text">
-            Marke und Zustand werden vorgeschlagen.
-          </div>
-        </div>
+<h2 class="section-title display">
+Fotos machen. Der Rest geht von selbst.
+</h2>
 
-        <div class="flow-item">
-          <div class="flow-num mono">03</div>
-          <div class="flow-title">Preis wählen</div>
-          <div class="flow-text">
-            Du erhältst einen Preisvorschlag.
-          </div>
-        </div>
+<p class="section-desc">
+Livo hilft dir beim Erstellen, Finden und Handeln.
+</p>
+</div>
 
-        <div class="flow-item">
-          <div class="flow-num mono">04</div>
-          <div class="flow-title">Veröffentlichen</div>
-          <div class="flow-text">
-            Dein Inserat ist bereit.
-          </div>
-        </div>
+<div class="flow">
 
-      </div>
+<div class="flow-item">
+<div class="flow-num mono">01</div>
+<div class="flow-title">Fotos hochladen</div>
+<div class="flow-text">Ein paar Bilder reichen.</div>
+</div>
 
-    </div>
-  </section>
+<div class="flow-item">
+<div class="flow-num mono">02</div>
+<div class="flow-title">Produkt erkennen</div>
+<div class="flow-text">
+Marke und Zustand werden vorgeschlagen.
+</div>
+</div>
 
-  <section class="section" style="padding-top:0">
-    <div class="wrap">
+<div class="flow-item">
+<div class="flow-num mono">03</div>
+<div class="flow-title">Preis wählen</div>
+<div class="flow-text">
+Du erhältst einen Preisvorschlag.
+</div>
+</div>
 
-      <div class="section-head">
-        <div class="section-kicker">Kategorien</div>
-        <h2 class="section-title display">
-          Was möchtest du finden?
-        </h2>
-      </div>
+<div class="flow-item">
+<div class="flow-num mono">04</div>
+<div class="flow-title">Veröffentlichen</div>
+<div class="flow-text">
+Dein Inserat ist bereit.
+</div>
+</div>
 
-      <div class="categories">
+</div>
 
-        <div class="category" onclick="filterCategory('Elektronik')">
-          <div class="category-icon">💻</div>
-          <div class="category-name">Elektronik</div>
-          <div class="category-count">18'200 Inserate</div>
-        </div>
+</div>
+</section>
 
-        <div class="category" onclick="filterCategory('Velos')">
-          <div class="category-icon">🚲</div>
-          <div class="category-name">Velos</div>
-          <div class="category-count">9'400 Inserate</div>
-        </div>
+<section class="section" style="padding-top:0">
+<div class="wrap">
 
-        <div class="category" onclick="filterCategory('Mode')">
-          <div class="category-icon">👕</div>
-          <div class="category-name">Mode</div>
-          <div class="category-count">31'700 Inserate</div>
-        </div>
+<div class="section-head">
+<div class="section-kicker">Kategorien</div>
+<h2 class="section-title display">
+Was möchtest du finden?
+</h2>
+</div>
 
-        <div class="category" onclick="filterCategory('Möbel')">
-          <div class="category-icon">🛋️</div>
-          <div class="category-name">Möbel</div>
-          <div class="category-count">12'100 Inserate</div>
-        </div>
+<div class="categories">
 
-        <div class="category" onclick="filterCategory('Sport')">
-          <div class="category-icon">⚽</div>
-          <div class="category-name">Sport</div>
-          <div class="category-count">7'850 Inserate</div>
-        </div>
+<div class="category" onclick="filterCategory('Elektronik')">
+<div class="category-icon">💻</div>
+<div class="category-name">Elektronik</div>
+<div class="category-count">18'200 Inserate</div>
+</div>
 
-        <div class="category" onclick="filterCategory('Immobilien')">
-          <div class="category-icon">🏠</div>
-          <div class="category-name">Immobilien</div>
-          <div class="category-count">2'300 Inserate</div>
-        </div>
+<div class="category" onclick="filterCategory('Velos')">
+<div class="category-icon">🚲</div>
+<div class="category-name">Velos</div>
+<div class="category-count">9'400 Inserate</div>
+</div>
 
-      </div>
+<div class="category" onclick="filterCategory('Mode')">
+<div class="category-icon">👕</div>
+<div class="category-name">Mode</div>
+<div class="category-count">31'700 Inserate</div>
+</div>
 
-    </div>
-  </section>
+<div class="category" onclick="filterCategory('Möbel')">
+<div class="category-icon">🛋️</div>
+<div class="category-name">Möbel</div>
+<div class="category-count">12'100 Inserate</div>
+</div>
+
+<div class="category" onclick="filterCategory('Sport')">
+<div class="category-icon">⚽</div>
+<div class="category-name">Sport</div>
+<div class="category-count">7'850 Inserate</div>
+</div>
+
+<div class="category" onclick="filterCategory('Immobilien')">
+<div class="category-icon">🏠</div>
+<div class="category-name">Immobilien</div>
+<div class="category-count">2'300 Inserate</div>
+</div>
+
+</div>
+
+</div>
+</section>
 
 </section>
 
 <!-- =========================
-     EXPLORE
+EXPLORE
 ========================= -->
 
 <section class="view" id="view-explore">
 
-  <div class="wrap page">
+<div class="wrap page">
 
-    <div class="page-header">
-      <div>
-        <h1 class="page-title display">Entdecken</h1>
-        <p class="page-sub">Finde interessante Angebote in deiner Nähe.</p>
-      </div>
+<div class="page-header">
 
-      <button class="btn btn-primary" onclick="go('sell')">
-        + Inserat erstellen
-      </button>
-    </div>
+<div>
+<h1 class="page-title display">Entdecken</h1>
+<p class="page-sub">
+Finde interessante Angebote in deiner Nähe.
+</p>
+</div>
 
-    <div class="filters">
-      <button class="filter active" onclick="setFilter(this,'Alle')">Alle</button>
-      <button class="filter" onclick="setFilter(this,'Elektronik')">Elektronik</button>
-      <button class="filter" onclick="setFilter(this,'Velos')">Velos</button>
-      <button class="filter" onclick="setFilter(this,'Mode')">Mode</button>
-      <button class="filter" onclick="setFilter(this,'Möbel')">Möbel</button>
-      <button class="filter" onclick="setFilter(this,'Sport')">Sport</button>
-    </div>
+<button
+class="btn btn-primary"
+onclick="go('sell')">
++ Inserat erstellen
+</button>
 
-    <div class="listings" id="listingGrid"></div>
+</div>
 
-  </div>
+<div class="filters">
+
+<button
+class="filter active"
+onclick="setFilter(this,'Alle')">
+Alle
+</button>
+
+<button
+class="filter"
+onclick="setFilter(this,'Elektronik')">
+Elektronik
+</button>
+
+<button
+class="filter"
+onclick="setFilter(this,'Velos')">
+Velos
+</button>
+
+<button
+class="filter"
+onclick="setFilter(this,'Mode')">
+Mode
+</button>
+
+<button
+class="filter"
+onclick="setFilter(this,'Möbel')">
+Möbel
+</button>
+
+<button
+class="filter"
+onclick="setFilter(this,'Sport')">
+Sport
+</button>
+
+</div>
+
+<div class="listings" id="listingGrid"></div>
+
+</div>
 
 </section>
 
 <!-- =========================
-     DETAIL
+DETAIL
 ========================= -->
 
 <section class="view" id="view-detail">
 
-  <div class="wrap page">
+<div class="wrap page">
 
-    <button class="back" onclick="go('explore')">
-      ← Zurück zu Entdecken
-    </button>
+<button class="back" onclick="go('explore')">
+← Zurück zu Entdecken
+</button>
 
-    <div class="detail-grid">
+<div class="detail-grid">
 
-      <div class="detail-photo" id="detailEmoji">
-        💻
-      </div>
+<div
+class="detail-photo"
+id="detailEmoji">
+💻
+</div>
 
-      <div class="detail-info">
+<div class="detail-info">
 
-        <div class="section-kicker">Inserat</div>
+<div class="section-kicker">Inserat</div>
 
-        <h1 class="detail-title display" id="detailTitle">
-          MacBook Air M2
-        </h1>
+<h1
+class="detail-title display"
+id="detailTitle">
+MacBook Air M2
+</h1>
 
-        <div class="detail-location" id="detailLocation">
-          Bern · vor 2 Stunden
-        </div>
+<div
+class="detail-location"
+id="detailLocation">
+Bern · vor 2 Stunden
+</div>
 
-        <div class="detail-price mono" id="detailPrice">
-          CHF 699.–
-        </div>
+<div
+class="detail-price mono"
+id="detailPrice">
+CHF 699.–
+</div>
 
-        <div class="detail-score">
-          ✓ Deal Score <strong id="detailScore">91</strong>/100
-        </div>
+<div class="detail-score">
+✓ Deal Score
+<strong id="detailScore">91</strong>/100
+</div>
 
-        <p class="detail-description" id="detailDescription">
-          Sehr gepflegtes MacBook Air M2. Funktioniert einwandfrei.
-          Ideal für Studium, Arbeit und unterwegs.
-        </p>
+<p
+class="detail-description"
+id="detailDescription">
+Sehr gepflegtes MacBook Air M2.
+Funktioniert einwandfrei.
+Ideal für Studium, Arbeit und unterwegs.
+</p>
 
-        <div class="detail-actions">
+<div class="detail-actions">
 
-          <button class="btn btn-secondary" onclick="toggleDetailFavorite()">
-            ♡ Favorisieren
-          </button>
+<button
+class="btn btn-secondary"
+onclick="toggleDetailFavorite()">
+♡ Favorisieren
+</button>
 
-          <button class="btn btn-primary" onclick="contactSeller()">
-            Verkäufer kontaktieren
-          </button>
+<button
+class="btn btn-primary"
+onclick="contactSeller()">
+Verkäufer kontaktieren
+</button>
 
-        </div>
+</div>
 
-      </div>
+</div>
 
-    </div>
+</div>
 
-  </div>
+<!-- NEU: EMPFOHLENE INSERATE -->
+
+<section class="recommendations">
+
+<div class="recommendation-head">
+
+<div>
+<div class="section-kicker">
+Das könnte dir auch gefallen
+</div>
+
+<h2 class="recommendation-title display">
+Ähnliche Inserate
+</h2>
+
+<p class="recommendation-sub">
+Weitere Angebote, die zu diesem Inserat passen.
+</p>
+</div>
+
+<button
+class="btn btn-secondary"
+onclick="go('explore')">
+Alle ansehen
+</button>
+
+</div>
+
+<div
+class="recommendation-grid"
+id="recommendationGrid">
+</div>
+
+</section>
+
+</div>
 
 </section>
 
 <!-- =========================
-     MESSAGES
+MESSAGES
 ========================= -->
 
 <section class="view" id="view-messages">
 
-  <div class="wrap page">
+<div class="wrap page">
 
-    <div class="page-header">
-      <div>
-        <h1 class="page-title display">Nachrichten</h1>
-        <p class="page-sub">Deine Kontakte und Gespräche.</p>
-      </div>
-    </div>
+<div class="page-header">
 
-    <div class="messages-layout">
+<div>
+<h1 class="page-title display">Nachrichten</h1>
+<p class="page-sub">
+Deine Kontakte und Gespräche.
+</p>
+</div>
 
-      <div class="contacts">
+</div>
 
-        <div class="contacts-title">
-          Kontakte
-        </div>
+<div class="messages-layout">
 
-        <div class="contact active" onclick="selectContact('David K.','DK')">
-          <div class="avatar">DK</div>
-          <div>
-            <div class="contact-name">David K.</div>
-            <div class="contact-preview">Ist das noch verfügbar?</div>
-          </div>
-        </div>
+<div class="contacts">
 
-        <div class="contact" onclick="selectContact('Laura M.','LM')">
-          <div class="avatar">LM</div>
-          <div>
-            <div class="contact-name">Laura M.</div>
-            <div class="contact-preview">Perfekt, bis morgen dann 👍</div>
-          </div>
-        </div>
+<div class="contacts-title">
+Kontakte
+</div>
 
-        <div class="contact" onclick="selectContact('Stefan F.','SF')">
-          <div class="avatar">SF</div>
-          <div>
-            <div class="contact-name">Stefan F.</div>
-            <div class="contact-preview">Danke für die schnelle Lieferung!</div>
-          </div>
-        </div>
+<div
+class="contact active"
+onclick="selectContact('David K.','DK',this)">
 
-      </div>
+<div class="avatar">DK</div>
 
-      <div class="chat">
+<div>
+<div class="contact-name">David K.</div>
+<div class="contact-preview">
+Ist das noch verfügbar?
+</div>
+</div>
 
-        <div class="chat-head">
+</div>
 
-          <div class="avatar" id="chatAvatar">
-            DK
-          </div>
+<div
+class="contact"
+onclick="selectContact('Laura M.','LM',this)">
 
-          <div class="chat-user">
-            <div class="chat-user-name" id="chatName">
-              David K.
-            </div>
+<div class="avatar">LM</div>
 
-            <div class="chat-status">
-              zuletzt online · antwortet meist schnell
-            </div>
-          </div>
+<div>
+<div class="contact-name">Laura M.</div>
+<div class="contact-preview">
+Perfekt, bis morgen dann 👍
+</div>
+</div>
 
-          <button class="icon-btn" onclick="showToast('Inserat geöffnet')">
-            ⋯
-          </button>
+</div>
 
-        </div>
+<div
+class="contact"
+onclick="selectContact('Stefan F.','SF',this)">
 
-        <div class="chat-messages" id="chatMessages">
+<div class="avatar">SF</div>
 
-          <div class="bubble in">
-            Hoi! Ist das MacBook noch verfügbar?
-          </div>
+<div>
+<div class="contact-name">Stefan F.</div>
+<div class="contact-preview">
+Danke für die schnelle Lieferung!
+</div>
+</div>
 
-          <div class="bubble out">
-            Ja klar, steht noch! 🙂
-          </div>
+</div>
 
-          <div class="bubble in">
-            Top. Würdest du auf 650 runtergehen?
-          </div>
+</div>
 
-          <div class="bubble out">
-            650 CHF passt für mich.
-          </div>
+<div class="chat">
 
-        </div>
+<div class="chat-head">
 
-        <div class="chat-input">
+<div
+class="avatar"
+id="chatAvatar">
+DK
+</div>
 
-          <input
-            id="messageInput"
-            placeholder="Nachricht schreiben…"
-            onkeydown="sendMessageKey(event)"
-          >
+<div class="chat-user">
 
-          <button onclick="sendMessage()">
-            Senden
-          </button>
+<div
+class="chat-user-name"
+id="chatName">
+David K.
+</div>
 
-        </div>
+<div class="chat-status">
+zuletzt online · antwortet meist schnell
+</div>
 
-      </div>
+</div>
 
-    </div>
+<button
+class="icon-btn"
+onclick="showToast('Inserat geöffnet')">
+⋯
+</button>
 
-  </div>
+</div>
+
+<div
+class="chat-messages"
+id="chatMessages">
+
+<div class="bubble in">
+Hoi! Ist das MacBook noch verfügbar?
+</div>
+
+<div class="bubble out">
+Ja klar, steht noch! 🙂
+</div>
+
+<div class="bubble in">
+Top. Würdest du auf 650 runtergehen?
+</div>
+
+<div class="bubble out">
+650 CHF passt für mich.
+</div>
+
+</div>
+
+<div class="chat-input">
+
+<input
+id="messageInput"
+placeholder="Nachricht schreiben…"
+onkeydown="sendMessageKey(event)">
+
+<button onclick="sendMessage()">
+Senden
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
 <!-- =========================
-     SELL
+SELL
 ========================= -->
 
 <section class="view" id="view-sell">
 
-  <div class="wrap page">
+<div class="wrap page">
 
-    <div class="sell-card">
+<div class="sell-card">
 
-      <div class="progress">
-        <span class="active" id="p1"></span>
-        <span id="p2"></span>
-        <span id="p3"></span>
-        <span id="p4"></span>
-      </div>
+<div class="progress">
+<span class="active" id="p1"></span>
+<span id="p2"></span>
+<span id="p3"></span>
+<span id="p4"></span>
+</div>
 
-      <div id="sellStep1">
+<div id="sellStep1">
 
-        <div class="section-kicker">Neues Inserat</div>
+<div class="section-kicker">
+Neues Inserat
+</div>
 
-        <h1 class="sell-title display">
-          Was möchtest du verkaufen?
-        </h1>
+<h1 class="sell-title display">
+Was möchtest du verkaufen?
+</h1>
 
-        <p class="sell-sub">
-          Lade Fotos hoch. Livo hilft dir anschließend bei den Details.
-        </p>
+<p class="sell-sub">
+Lade Fotos hoch. Livo hilft dir anschließend bei den Details.
+</p>
 
-        <div class="upload">
+<div class="upload">
 
-          <label class="upload-slot">
-            <input
-              id="photoInput"
-              type="file"
-              accept="image/*"
-              multiple
-              hidden
-              onchange="handlePhotos(event)"
-            >
-            + Fotos
-          </label>
+<label class="upload-slot">
 
-          <div class="upload-slot" id="photo2">+</div>
-          <div class="upload-slot" id="photo3">+</div>
-          <div class="upload-slot" id="photo4">+</div>
+<input
+id="photoInput"
+type="file"
+accept="image/*"
+multiple
+hidden
+onchange="handlePhotos(event)">
 
-        </div>
++ Fotos
 
-        <div class="form-field">
+</label>
 
-          <div class="form-label">
-            Was verkaufst du?
-          </div>
+<div class="upload-slot" id="photo2">+</div>
+<div class="upload-slot" id="photo3">+</div>
+<div class="upload-slot" id="photo4">+</div>
 
-          <input
-            id="sellProduct"
-            class="form-input"
-            placeholder="z.B. MacBook Air M2"
-          >
+</div>
 
-        </div>
+<div class="form-field">
 
-        <div class="sell-actions">
+<div class="form-label">
+Was verkaufst du?
+</div>
 
-          <button class="btn btn-secondary" onclick="go('home')">
-            Abbrechen
-          </button>
+<input
+id="sellProduct"
+class="form-input"
+placeholder="z.B. MacBook Air M2">
 
-          <button class="btn btn-primary" onclick="analyzeProduct()">
-            Weiter
-          </button>
+</div>
 
-        </div>
+<div class="sell-actions">
 
-      </div>
+<button
+class="btn btn-secondary"
+onclick="go('home')">
+Abbrechen
+</button>
 
-      <div id="sellStep2" style="display:none">
+<button
+class="btn btn-primary"
+onclick="analyzeProduct()">
+Weiter
+</button>
 
-        <div class="section-kicker">Livo KI</div>
+</div>
 
-        <h1 class="sell-title display">
-          Das haben wir erkannt.
-        </h1>
+</div>
 
-        <div class="ai">
-          ✓ Produkt, Marke und Zustand wurden automatisch vorgeschlagen.
-        </div>
+<div id="sellStep2" style="display:none">
 
-        <div class="form-field">
-          <div class="form-label">Titel</div>
-          <input id="sellTitle" class="form-input" value="MacBook Air M2, 256GB">
-        </div>
+<div class="section-kicker">
+Livo KI
+</div>
 
-        <div class="form-grid">
+<h1 class="sell-title display">
+Das haben wir erkannt.
+</h1>
 
-          <div class="form-field">
-            <div class="form-label">Marke</div>
-            <input class="form-input" value="Apple">
-          </div>
+<div class="ai">
+✓ Produkt, Marke und Zustand wurden automatisch vorgeschlagen.
+</div>
 
-          <div class="form-field">
-            <div class="form-label">Zustand</div>
-            <select class="form-input">
-              <option>Wie neu</option>
-              <option>Sehr gut</option>
-              <option>Gut</option>
-              <option>Akzeptabel</option>
-            </select>
-          </div>
+<div class="form-field">
 
-        </div>
+<div class="form-label">
+Titel
+</div>
 
-        <div class="form-field">
-          <div class="form-label">Beschreibung</div>
-          <textarea id="sellDescription" class="form-input" rows="4">Sehr gepflegter Zustand. Funktioniert einwandfrei und wurde sorgfältig behandelt.</textarea>
-        </div>
+<input
+id="sellTitle"
+class="form-input"
+value="MacBook Air M2, 256GB">
 
-        <div class="sell-actions">
+</div>
 
-          <button class="btn btn-secondary" onclick="sellStep(1)">
-            ← Zurück
-          </button>
+<div class="form-grid">
 
-          <button class="btn btn-primary" onclick="sellStep(3)">
-            Preis festlegen
-          </button>
+<div class="form-field">
 
-        </div>
+<div class="form-label">
+Marke
+</div>
 
-      </div>
+<input
+class="form-input"
+value="Apple">
 
-      <div id="sellStep3" style="display:none">
+</div>
 
-        <div class="section-kicker">Preis</div>
+<div class="form-field">
 
-        <h1 class="sell-title display">
-          Was möchtest du dafür?
-        </h1>
+<div class="form-label">
+Zustand
+</div>
 
-        <p class="sell-sub">
-          Marktvergleich: ungefähr CHF 650–750
-        </p>
+<select class="form-input">
 
-        <div class="price-box">
+<option>Wie neu</option>
+<option>Sehr gut</option>
+<option>Gut</option>
+<option>Akzeptabel</option>
 
-          <div class="price-options">
+</select>
 
-            <div class="price-option" onclick="selectPrice(this,649)">
-              <div class="price-label">Schneller Verkauf</div>
-              <div class="price-value">649</div>
-            </div>
+</div>
 
-            <div class="price-option active" onclick="selectPrice(this,699)">
-              <div class="price-label">Empfohlen</div>
-              <div class="price-value">699</div>
-            </div>
+</div>
 
-            <div class="price-option" onclick="selectPrice(this,749)">
-              <div class="price-label">Maximal</div>
-              <div class="price-value">749</div>
-            </div>
+<div class="form-field">
 
-          </div>
+<div class="form-label">
+Beschreibung
+</div>
 
-          <div class="form-field">
-            <div class="form-label">Dein Preis in CHF</div>
-            <input id="sellPrice" class="form-input" value="699">
-          </div>
+<textarea
+id="sellDescription"
+class="form-input"
+rows="4">Sehr gepflegter Zustand. Funktioniert einwandfrei und wurde sorgfältig behandelt.</textarea>
 
-        </div>
+</div>
 
-        <div class="sell-actions">
+<div class="sell-actions">
 
-          <button class="btn btn-secondary" onclick="sellStep(2)">
-            ← Zurück
-          </button>
+<button
+class="btn btn-secondary"
+onclick="sellStep(1)">
+← Zurück
+</button>
 
-          <button class="btn btn-primary" onclick="sellStep(4)">
-            Vorschau
-          </button>
+<button
+class="btn btn-primary"
+onclick="sellStep(3)">
+Preis festlegen
+</button>
 
-        </div>
+</div>
 
-      </div>
+</div>
 
-      <div id="sellStep4" style="display:none">
+<div id="sellStep3" style="display:none">
 
-        <div class="section-kicker">Vorschau</div>
+<div class="section-kicker">
+Preis
+</div>
 
-        <h1 class="sell-title display">
-          So sieht dein Inserat aus.
-        </h1>
+<h1 class="sell-title display">
+Was möchtest du dafür?
+</h1>
 
-        <div class="detail-info" style="margin-top:22px">
+<p class="sell-sub">
+Marktvergleich: ungefähr CHF 650–750
+</p>
 
-          <div style="font-size:65px;text-align:center;padding:25px;">
-            💻
-          </div>
+<div class="price-box">
 
-          <div class="listing-name" id="previewTitle">
-            MacBook Air M2, 256GB
-          </div>
+<div class="price-options">
 
-          <div class="listing-meta">
-            Bern · gerade eben
-          </div>
+<div
+class="price-option"
+onclick="selectPrice(this,649)">
 
-          <div class="listing-price-small" style="margin-top:15px;" id="previewPrice">
-            CHF 699.–
-          </div>
+<div class="price-label">
+Schneller Verkauf
+</div>
 
-          <p class="detail-description" id="previewDescription">
-            Sehr gepflegter Zustand.
-          </p>
+<div class="price-value">
+649
+</div>
 
-        </div>
+</div>
 
-        <div class="sell-actions">
+<div
+class="price-option active"
+onclick="selectPrice(this,699)">
 
-          <button class="btn btn-secondary" onclick="sellStep(3)">
-            ← Bearbeiten
-          </button>
+<div class="price-label">
+Empfohlen
+</div>
 
-          <button class="btn btn-primary" onclick="publishListing()">
-            🚀 Inserat veröffentlichen
-          </button>
+<div class="price-value">
+699
+</div>
 
-        </div>
+</div>
 
-      </div>
+<div
+class="price-option"
+onclick="selectPrice(this,749)">
 
-    </div>
+<div class="price-label">
+Maximal
+</div>
 
-  </div>
+<div class="price-value">
+749
+</div>
+
+</div>
+
+</div>
+
+<div class="form-field">
+
+<div class="form-label">
+Dein Preis in CHF
+</div>
+
+<input
+id="sellPrice"
+class="form-input"
+value="699">
+
+</div>
+
+</div>
+
+<div class="sell-actions">
+
+<button
+class="btn btn-secondary"
+onclick="sellStep(2)">
+← Zurück
+</button>
+
+<button
+class="btn btn-primary"
+onclick="sellStep(4)">
+Vorschau
+</button>
+
+</div>
+
+</div>
+
+<div id="sellStep4" style="display:none">
+
+<div class="section-kicker">
+Vorschau
+</div>
+
+<h1 class="sell-title display">
+So sieht dein Inserat aus.
+</h1>
+
+<div
+class="detail-info"
+style="margin-top:22px">
+
+<div
+style="font-size:65px;text-align:center;padding:25px;">
+💻
+</div>
+
+<div
+class="listing-name"
+id="previewTitle">
+MacBook Air M2, 256GB
+</div>
+
+<div class="listing-meta">
+Bern · gerade eben
+</div>
+
+<div
+class="listing-price-small"
+style="margin-top:15px;"
+id="previewPrice">
+CHF 699.–
+</div>
+
+<p
+class="detail-description"
+id="previewDescription">
+Sehr gepflegter Zustand.
+</p>
+
+</div>
+
+<div class="sell-actions">
+
+<button
+class="btn btn-secondary"
+onclick="sellStep(3)">
+← Bearbeiten
+</button>
+
+<button
+class="btn btn-primary"
+onclick="publishListing()">
+🚀 Inserat veröffentlichen
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
 <!-- =========================
-     PROFILE
+PROFILE
 ========================= -->
 
 <section class="view" id="view-profile">
 
-  <div class="wrap page">
+<div class="wrap page">
 
-    <div class="profile-card">
+<div class="profile-card">
 
-      <div class="profile-head">
+<div class="profile-head">
 
-        <div class="profile-avatar">
-          MK
-        </div>
+<div class="profile-avatar">
+MK
+</div>
 
-        <div>
-          <div class="profile-name">
-            Mein Livo-Profil
-          </div>
+<div>
 
-          <div class="profile-email">
-            Verkäufer seit 2026
-          </div>
-        </div>
+<div class="profile-name">
+Mein Livo-Profil
+</div>
 
-      </div>
+<div class="profile-email">
+Verkäufer seit 2026
+</div>
 
-      <div class="setting">
+</div>
 
-        <div>
-          <div class="setting-title">Dark Mode</div>
-          <div class="setting-sub">Erscheinungsbild der Plattform</div>
-        </div>
+</div>
 
-        <button
-          class="switch"
-          id="themeSwitch"
-          onclick="toggleTheme()">
-        </button>
+<div class="setting">
 
-      </div>
+<div>
 
-      <div class="setting">
+<div class="setting-title">
+Dark Mode
+</div>
 
-        <div>
-          <div class="setting-title">Benachrichtigungen</div>
-          <div class="setting-sub">Neue Nachrichten und Angebote</div>
-        </div>
+<div class="setting-sub">
+Erscheinungsbild der Plattform
+</div>
 
-        <button
-          class="switch on"
-          onclick="this.classList.toggle('on')">
-        </button>
+</div>
 
-      </div>
+<button
+class="switch"
+id="themeSwitch"
+onclick="toggleTheme()">
+</button>
 
-      <div class="setting">
+</div>
 
-        <div>
-          <div class="setting-title">Standort</div>
-          <div class="setting-sub">Bern, Schweiz</div>
-        </div>
+<div class="setting">
 
-        <span style="font-size:13px;color:var(--muted)">
-          Bern
-        </span>
+<div>
 
-      </div>
+<div class="setting-title">
+Benachrichtigungen
+</div>
 
-      <div style="margin-top:25px">
+<div class="setting-sub">
+Neue Nachrichten und Angebote
+</div>
 
-        <button class="btn btn-secondary" onclick="go('home')">
-          ← Zur Startseite
-        </button>
+</div>
 
-      </div>
+<button
+class="switch on"
+onclick="this.classList.toggle('on')">
+</button>
 
-    </div>
+</div>
 
-  </div>
+<div class="setting">
+
+<div>
+
+<div class="setting-title">
+Standort
+</div>
+
+<div class="setting-sub">
+Bern, Schweiz
+</div>
+
+</div>
+
+<span style="font-size:13px;color:var(--muted)">
+Bern
+</span>
+
+</div>
+
+<div style="margin-top:25px">
+
+<button
+class="btn btn-secondary"
+onclick="go('home')">
+← Zur Startseite
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
 </main>
 
 <footer>
-  <div class="wrap footer-inner">
-    <div>© 2026 Livo Schweiz</div>
-    <div>Livo · Sicher kaufen · Einfach verkaufen</div>
-  </div>
+
+<div class="wrap footer-inner">
+
+<div>
+© 2026 Livo Schweiz
+</div>
+
+<div>
+Livo · Sicher kaufen · Einfach verkaufen
+</div>
+
+</div>
+
 </footer>
 
-<div class="toast" id="toast"></div>
+<div
+class="toast"
+id="toast">
+</div>
 
 <script>
 
 /* ==========================================
-   LIVO APP
+   LIVO DATA
 ========================================== */
 
 const listings = [
 
-  {
-    id:1,
-    title:"MacBook Air M2, 256GB",
-    category:"Elektronik",
-    price:699,
-    location:"Bern",
-    emoji:"💻",
-    score:91,
-    description:"Sehr gepflegtes MacBook Air M2. Funktioniert einwandfrei. Ideal für Studium, Arbeit und unterwegs."
-  },
+{
+id:1,
+title:"MacBook Air M2, 256GB",
+category:"Elektronik",
+price:699,
+location:"Bern",
+emoji:"💻",
+score:91,
+description:"Sehr gepflegtes MacBook Air M2. Funktioniert einwandfrei. Ideal für Studium, Arbeit und unterwegs."
+},
 
-  {
-    id:2,
-    title:"Trek Rennvelo",
-    category:"Velos",
-    price:1200,
-    location:"Zürich",
-    emoji:"🚲",
-    score:88,
-    description:"Leichtes Rennvelo in sehr gutem Zustand."
-  },
+{
+id:2,
+title:"Trek Rennvelo",
+category:"Velos",
+price:1200,
+location:"Zürich",
+emoji:"🚲",
+score:88,
+description:"Leichtes Rennvelo in sehr gutem Zustand."
+},
 
-  {
-    id:3,
-    title:"Nike Sneaker",
-    category:"Mode",
-    price:95,
-    location:"Bern",
-    emoji:"👟",
-    score:84,
-    description:"Kaum getragen, sehr guter Zustand."
-  },
+{
+id:3,
+title:"Nike Sneaker",
+category:"Mode",
+price:95,
+location:"Bern",
+emoji:"👟",
+score:84,
+description:"Kaum getragen, sehr guter Zustand."
+},
 
-  {
-    id:4,
-    title:"Designer Sofa",
-    category:"Möbel",
-    price:450,
-    location:"Basel",
-    emoji:"🛋️",
-    score:86,
-    description:"Modernes Sofa, gepflegter Zustand."
-  },
+{
+id:4,
+title:"Designer Sofa",
+category:"Möbel",
+price:450,
+location:"Basel",
+emoji:"🛋️",
+score:86,
+description:"Modernes Sofa, gepflegter Zustand."
+},
 
-  {
-    id:5,
-    title:"Mountainbike",
-    category:"Sport",
-    price:890,
-    location:"Luzern",
-    emoji:"🚵",
-    score:90,
-    description:"Sehr gut erhaltenes Mountainbike."
-  },
+{
+id:5,
+title:"Mountainbike",
+category:"Sport",
+price:890,
+location:"Luzern",
+emoji:"🚵",
+score:90,
+description:"Sehr gut erhaltenes Mountainbike."
+},
 
-  {
-    id:6,
-    title:"iPhone 15 Pro",
-    category:"Elektronik",
-    price:780,
-    location:"Bern",
-    emoji:"📱",
-    score:94,
-    description:"iPhone 15 Pro mit sehr wenig Gebrauchsspuren."
-  },
+{
+id:6,
+title:"iPhone 15 Pro",
+category:"Elektronik",
+price:780,
+location:"Bern",
+emoji:"📱",
+score:94,
+description:"iPhone 15 Pro mit sehr wenig Gebrauchsspuren."
+},
 
-  {
-    id:7,
-    title:"Vintage Jacke",
-    category:"Mode",
-    price:120,
-    location:"Lausanne",
-    emoji:"🧥",
-    score:82,
-    description:"Vintage Jacke in gutem Zustand."
-  },
+{
+id:7,
+title:"Vintage Jacke",
+category:"Mode",
+price:120,
+location:"Lausanne",
+emoji:"🧥",
+score:82,
+description:"Vintage Jacke in gutem Zustand."
+},
 
-  {
-    id:8,
-    title:"Gaming Monitor",
-    category:"Elektronik",
-    price:320,
-    location:"Zug",
-    emoji:"🖥️",
-    score:89,
-    description:"Gaming Monitor mit hoher Bildwiederholrate."
-  }
+{
+id:8,
+title:"Gaming Monitor",
+category:"Elektronik",
+price:320,
+location:"Zug",
+emoji:"🖥️",
+score:89,
+description:"Gaming Monitor mit hoher Bildwiederholrate."
+}
 
 ];
 
-let currentListing = null;
-let selectedPrice = 699;
+let currentListing=null;
+let selectedPrice=699;
 
 /* ==========================================
    NAVIGATION
@@ -2399,38 +2922,52 @@ let selectedPrice = 699;
 
 function go(view){
 
-  document.querySelectorAll('.view').forEach(v=>{
-    v.classList.remove('active');
-  });
+document
+.querySelectorAll('.view')
+.forEach(v=>v.classList.remove('active'));
 
-  const target = document.getElementById('view-'+view);
+const target=document.getElementById('view-'+view);
 
-  if(!target){
-    console.warn('View nicht gefunden:',view);
-    return;
-  }
+if(!target){
+console.warn('View nicht gefunden:',view);
+return;
+}
 
-  target.classList.add('active');
+target.classList.add('active');
 
-  document.querySelectorAll('[data-nav]').forEach(btn=>{
-    btn.classList.toggle(
-      'active',
-      btn.dataset.nav === view
-    );
-  });
+document
+.querySelectorAll('[data-nav]')
+.forEach(btn=>{
+btn.classList.toggle(
+'active',
+btn.dataset.nav===view
+);
+});
 
-  window.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
+/*
+   WICHTIG:
+   Die Seite springt weiterhin nach oben,
+   aber wir verwenden keinen dauerhaften
+   Scroll-Mechanismus.
+*/
 
-  if(view === 'explore'){
-    renderListings();
-  }
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
 
-  if(view === 'profile'){
-    updateThemeSwitch();
-  }
+if(view==='explore'){
+renderListings();
+}
+
+if(view==='profile'){
+updateThemeSwitch();
+}
+
+if(view==='detail'){
+renderRecommendations();
+}
+
 }
 
 /* ==========================================
@@ -2439,9 +2976,9 @@ function go(view){
 
 function toggleMobile(){
 
-  document
-    .getElementById('mobileDrawer')
-    .classList.toggle('open');
+document
+.getElementById('mobileDrawer')
+.classList.toggle('open');
 
 }
 
@@ -2451,82 +2988,78 @@ function toggleMobile(){
 
 function globalSearch(event){
 
-  if(event.key !== 'Enter') return;
+if(event.key!=='Enter')return;
 
-  const value = event.target.value.trim();
+const value=event.target.value.trim();
 
-  if(!value){
-    showToast('Bitte Suchbegriff eingeben');
-    return;
-  }
+if(!value){
+showToast('Bitte Suchbegriff eingeben');
+return;
+}
 
-  runSearch(value);
+runSearch(value);
 }
 
 function heroSearch(event){
 
-  if(event.key === 'Enter'){
-    runHeroSearch();
-  }
+if(event.key==='Enter'){
+runHeroSearch();
+}
 
 }
 
 function runHeroSearch(){
 
-  const value =
-    document.getElementById('heroSearch').value.trim();
+const value=
+document.getElementById('heroSearch')
+.value.trim();
 
-  if(!value){
-    showToast('Bitte Suchbegriff eingeben');
-    return;
-  }
+if(!value){
+showToast('Bitte Suchbegriff eingeben');
+return;
+}
 
-  runSearch(value);
+runSearch(value);
 }
 
 function runSearch(value){
 
-  go('explore');
+go('explore');
 
-  setTimeout(()=>{
+setTimeout(()=>{
 
-    const grid =
-      document.getElementById('listingGrid');
+const query=value.toLowerCase();
 
-    const query =
-      value.toLowerCase();
+const results=listings.filter(item=>
+item.title.toLowerCase().includes(query) ||
+item.category.toLowerCase().includes(query) ||
+item.location.toLowerCase().includes(query)
+);
 
-    const results =
-      listings.filter(item=>
-        item.title.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query) ||
-        item.location.toLowerCase().includes(query)
-      );
+if(results.length){
 
-    if(results.length){
+renderListings(results);
 
-      renderListings(results);
+showToast(
+results.length+
+' passende Inserate gefunden'
+);
 
-      showToast(
-        results.length +
-        ' passende Inserate gefunden'
-      );
+}else{
 
-    }else{
+renderListings([]);
 
-      renderListings([]);
+showToast(
+'Keine direkten Treffer'
+);
 
-      showToast(
-        'Keine direkten Treffer – alle Angebote angezeigt'
-      );
+setTimeout(()=>{
+renderListings(listings);
+},1000);
 
-      setTimeout(()=>{
-        renderListings(listings);
-      },1000);
+}
 
-    }
-
-  },100);
+},150);
 
 }
 
@@ -2536,67 +3069,71 @@ function runSearch(value){
 
 function renderListings(data=listings){
 
-  const grid =
-    document.getElementById('listingGrid');
+const grid=
+document.getElementById('listingGrid');
 
-  if(!grid) return;
+if(!grid)return;
 
-  grid.innerHTML='';
+grid.innerHTML='';
 
-  data.forEach(item=>{
+data.forEach(item=>{
 
-    const card =
-      document.createElement('article');
+const card=document.createElement('article');
 
-    card.className='listing';
+card.className='listing';
 
-    card.onclick=()=>{
-      openListing(item.id);
-    };
+card.onclick=()=>{
+openListing(item.id);
+};
 
-    card.innerHTML=`
+const fav=
+localStorage.getItem('livo-fav-'+item.id)==='1';
 
-      <div class="listing-photo">
+card.innerHTML=`
 
-        <button
-          class="favorite"
-          onclick="event.stopPropagation();toggleFavorite(${item.id},this)">
-          ♡
-        </button>
+<div class="listing-photo">
 
-        ${item.emoji}
+<button
+class="favorite ${fav?'active':''}"
+onclick="
+event.stopPropagation();
+toggleFavorite(${item.id},this)
+">
+${fav?'♥':'♡'}
+</button>
 
-      </div>
+${item.emoji}
 
-      <div class="listing-body">
+</div>
 
-        <div class="listing-name">
-          ${item.title}
-        </div>
+<div class="listing-body">
 
-        <div class="listing-meta">
-          ${item.location} · ${item.category}
-        </div>
+<div class="listing-name">
+${item.title}
+</div>
 
-        <div class="listing-bottom">
+<div class="listing-meta">
+${item.location} · ${item.category}
+</div>
 
-          <div class="listing-price-small">
-            CHF ${item.price}.–
-          </div>
+<div class="listing-bottom">
 
-          <div class="score-mini">
-            ${item.score}
-          </div>
+<div class="listing-price-small">
+CHF ${item.price}.–
+</div>
 
-        </div>
+<div class="score-mini">
+${item.score}
+</div>
 
-      </div>
+</div>
 
-    `;
+</div>
+`;
 
-    grid.appendChild(card);
+grid.appendChild(card);
 
-  });
+});
 
 }
 
@@ -2606,49 +3143,49 @@ function renderListings(data=listings){
 
 function setFilter(button,category){
 
-  document
-    .querySelectorAll('.filter')
-    .forEach(btn=>{
-      btn.classList.remove('active');
-    });
+document
+.querySelectorAll('.filter')
+.forEach(btn=>{
+btn.classList.remove('active');
+});
 
-  button.classList.add('active');
+button.classList.add('active');
 
-  if(category === 'Alle'){
-    renderListings(listings);
-    return;
-  }
+if(category==='Alle'){
+renderListings(listings);
+return;
+}
 
-  renderListings(
-    listings.filter(
-      item=>item.category===category
-    )
-  );
+renderListings(
+listings.filter(
+item=>item.category===category
+)
+);
 
 }
 
 function filterCategory(category){
 
-  go('explore');
+go('explore');
 
-  setTimeout(()=>{
+setTimeout(()=>{
 
-    document
-      .querySelectorAll('.filter')
-      .forEach(btn=>{
-        btn.classList.toggle(
-          'active',
-          btn.textContent===category
-        );
-      });
+document
+.querySelectorAll('.filter')
+.forEach(btn=>{
+btn.classList.toggle(
+'active',
+btn.textContent===category
+);
+});
 
-    renderListings(
-      listings.filter(
-        item=>item.category===category
-      )
-    );
+renderListings(
+listings.filter(
+item=>item.category===category
+)
+);
 
-  },100);
+},120);
 
 }
 
@@ -2658,165 +3195,439 @@ function filterCategory(category){
 
 function openListing(id){
 
-  currentListing =
-    listings.find(item=>item.id===id);
+currentListing=
+listings.find(item=>item.id===id);
 
-  if(!currentListing) return;
+if(!currentListing)return;
 
-  document.getElementById('detailEmoji')
-    .textContent=currentListing.emoji;
+document.getElementById('detailEmoji')
+.textContent=currentListing.emoji;
 
-  document.getElementById('detailTitle')
-    .textContent=currentListing.title;
+document.getElementById('detailTitle')
+.textContent=currentListing.title;
 
-  document.getElementById('detailLocation')
-    .textContent=
-      currentListing.location+
-      ' · vor 2 Stunden';
+document.getElementById('detailLocation')
+.textContent=
+currentListing.location+
+' · vor 2 Stunden';
 
-  document.getElementById('detailPrice')
-    .textContent=
-      'CHF '+currentListing.price+'.–';
+document.getElementById('detailPrice')
+.textContent=
+'CHF '+currentListing.price+'.–';
 
-  document.getElementById('detailScore')
-    .textContent=currentListing.score;
+document.getElementById('detailScore')
+.textContent=currentListing.score;
 
-  document.getElementById('detailDescription')
-    .textContent=currentListing.description;
+document.getElementById('detailDescription')
+.textContent=currentListing.description;
 
-  go('detail');
+go('detail');
+
+}
+
+function renderRecommendations(){
+
+const grid=
+document.getElementById('recommendationGrid');
+
+if(!grid||!currentListing)return;
+
+grid.innerHTML='';
+
+/*
+   Erst gleiche Kategorie,
+   danach weitere Inserate.
+*/
+
+let recommended=listings.filter(item=>
+item.id!==currentListing.id &&
+item.category===currentListing.category
+);
+
+const others=listings.filter(item=>
+item.id!==currentListing.id &&
+item.category!==currentListing.category
+);
+
+recommended=[
+...recommended,
+...others
+].slice(0,4);
+
+recommended.forEach(item=>{
+
+const card=document.createElement('article');
+
+card.className='recommendation-card';
+
+card.onclick=()=>{
+openListing(item.id);
+};
+
+card.innerHTML=`
+
+<div class="recommendation-photo">
+${item.emoji}
+</div>
+
+<div class="recommendation-body">
+
+<div class="recommendation-name">
+${item.title}
+</div>
+
+<div class="recommendation-location">
+${item.location} · ${item.category}
+</div>
+
+<div class="recommendation-bottom">
+
+<div class="recommendation-price">
+CHF ${item.price}.–
+</div>
+
+<div class="recommendation-score">
+${item.score}
+</div>
+
+</div>
+
+</div>
+
+`;
+
+grid.appendChild(card);
+
+});
 
 }
 
 function toggleDetailFavorite(){
 
-  if(!currentListing) return;
+if(!currentListing)return;
 
-  toggleFavorite(null,null,currentListing.id);
+const key='livo-fav-'+currentListing.id;
+
+const active=
+localStorage.getItem(key)==='1';
+
+if(active){
+
+localStorage.removeItem(key);
+
+showToast('Aus Favoriten entfernt');
+
+}else{
+
+localStorage.setItem(key,'1');
+
+showToast('Zu Favoriten hinzugefügt');
+
+}
 
 }
 
 function toggleFavorite(id,button,explicitId){
 
-  const listingId =
-    explicitId || id;
+const listingId=
+explicitId||id;
 
-  const key =
-    'livo-fav-'+listingId;
+const key=
+'livo-fav-'+listingId;
 
-  const active =
-    localStorage.getItem(key)==='1';
+const active=
+localStorage.getItem(key)==='1';
 
-  if(active){
+if(active){
 
-    localStorage.removeItem(key);
+localStorage.removeItem(key);
 
-    if(button){
-      button.classList.remove('active');
-      button.textContent='♡';
-    }
+if(button){
+button.classList.remove('active');
+button.textContent='♡';
+}
 
-    showToast('Aus Favoriten entfernt');
+showToast('Aus Favoriten entfernt');
 
-  }else{
+}else{
 
-    localStorage.setItem(key,'1');
+localStorage.setItem(key,'1');
 
-    if(button){
-      button.classList.add('active');
-      button.textContent='♥';
-    }
+if(button){
+button.classList.add('active');
+button.textContent='♥';
+}
 
-    showToast('Zu Favoriten hinzugefügt');
+showToast('Zu Favoriten hinzugefügt');
 
-  }
+}
 
 }
 
 /* ==========================================
-   CONTACT SELLER
+   SELLER CHAT
 ========================================== */
 
 function contactSeller(){
 
-  go('messages');
+go('messages');
 
-  showToast('Chat mit dem Verkäufer geöffnet');
+showToast(
+'Chat mit dem Verkäufer geöffnet'
+);
 
 }
 
 /* ==========================================
-   CHAT
+   CONTACTS
 ========================================== */
 
-function selectContact(name,initials){
+function selectContact(name,initials,element){
 
-  document
-    .querySelectorAll('.contact')
-    .forEach(c=>c.classList.remove('active'));
+document
+.querySelectorAll('.contact')
+.forEach(c=>c.classList.remove('active'));
 
-  event.currentTarget.classList.add('active');
+if(element){
+element.classList.add('active');
+}
 
-  document.getElementById('chatName')
-    .textContent=name;
+document.getElementById('chatName')
+.textContent=name;
 
-  document.getElementById('chatAvatar')
-    .textContent=initials;
+document.getElementById('chatAvatar')
+.textContent=initials;
+
+/*
+   Demo-Konversationen
+*/
+
+const messages=
+document.getElementById('chatMessages');
+
+const conversations={
+
+'David K.':`
+<div class="bubble in">
+Hoi! Ist das MacBook noch verfügbar?
+</div>
+<div class="bubble out">
+Ja klar, steht noch! 🙂
+</div>
+<div class="bubble in">
+Top. Würdest du auf 650 runtergehen?
+</div>
+<div class="bubble out">
+650 CHF passt für mich.
+</div>
+`,
+
+'Laura M.':`
+<div class="bubble in">
+Hoi! Ist die Jacke noch da?
+</div>
+<div class="bubble out">
+Ja, sie ist noch verfügbar.
+</div>
+<div class="bubble in">
+Perfekt, bis morgen dann 👍
+</div>
+`,
+
+'Stefan F.':`
+<div class="bubble in">
+Hallo! Die Lieferung ist angekommen.
+</div>
+<div class="bubble out">
+Super, freut mich!
+</div>
+<div class="bubble in">
+Danke für die schnelle Lieferung!
+</div>
+`
+
+};
+
+messages.innerHTML=
+conversations[name]||
+`<div class="bubble in">
+Hoi! Wie kann ich dir helfen?
+</div>`;
+
+}
+
+/* ==========================================
+   SMART CUSTOMER REPLIES
+========================================== */
+
+function getCustomerReply(text){
+
+const value=text.toLowerCase();
+
+if(
+value.includes('preis') ||
+value.includes('günstiger') ||
+value.includes('rabatt') ||
+value.includes('650') ||
+value.includes('600')
+){
+
+return [
+'Ich könnte dir beim Preis noch etwas entgegenkommen. Was wäre dein Angebot?',
+'Ich kann beim Preis ein bisschen runtergehen. 👍',
+'Wenn du es heute abholst, können wir uns beim Preis noch treffen.'
+][Math.floor(Math.random()*3)];
+
+}
+
+if(
+value.includes('verfügbar') ||
+value.includes('noch da') ||
+value.includes('noch verfügbar')
+){
+
+return [
+'Ja, das Inserat ist noch verfügbar. 😊',
+'Ja, ist noch da!',
+'Ja klar, du kannst es gerne haben.'
+][Math.floor(Math.random()*3)];
+
+}
+
+if(
+value.includes('abholen') ||
+value.includes('abholung')
+){
+
+return [
+'Ja, Abholung in Bern wäre möglich.',
+'Klar, wann möchtest du vorbeikommen?',
+'Abholung passt für mich. 👍'
+][Math.floor(Math.random()*3)];
+
+}
+
+if(
+value.includes('versand') ||
+value.includes('schicken')
+){
+
+return [
+'Ja, Versand wäre ebenfalls möglich.',
+'Klar, ich kann es auch verschicken.',
+'Versand sollte kein Problem sein.'
+][Math.floor(Math.random()*3)];
+
+}
+
+if(
+value.includes('morgen') ||
+value.includes('heute')
+){
+
+return [
+'Ja, das passt für mich.',
+'Super, machen wir so! 👍',
+'Perfekt, bis dann.'
+][Math.floor(Math.random()*3)];
+
+}
+
+return [
+'Danke für deine Nachricht! 😊',
+'Klingt gut. 👍',
+'Ja, das können wir gerne so machen.',
+'Alles klar, danke dir!',
+'Sehr gerne!'
+][Math.floor(Math.random()*5)];
 
 }
 
 function sendMessageKey(event){
 
-  if(event.key==='Enter'){
-    sendMessage();
-  }
+if(event.key==='Enter'){
+event.preventDefault();
+sendMessage();
+}
 
 }
 
 function sendMessage(){
 
-  const input =
-    document.getElementById('messageInput');
+const input=
+document.getElementById('messageInput');
 
-  const text =
-    input.value.trim();
+const text=
+input.value.trim();
 
-  if(!text) return;
+if(!text)return;
 
-  const bubble =
-    document.createElement('div');
+const messages=
+document.getElementById('chatMessages');
 
-  bubble.className='bubble out';
-  bubble.textContent=text;
+/* Eigene Nachricht */
 
-  const messages =
-    document.getElementById('chatMessages');
+const bubble=
+document.createElement('div');
 
-  messages.appendChild(bubble);
+bubble.className='bubble out';
+bubble.textContent=text;
 
-  input.value='';
+messages.appendChild(bubble);
 
-  messages.scrollTop=
-    messages.scrollHeight;
+input.value='';
 
-  showToast('Nachricht gesendet');
+messages.scrollTop=
+messages.scrollHeight;
 
-  setTimeout(()=>{
+showToast('Nachricht gesendet');
 
-    const reply =
-      document.createElement('div');
+/* Kunde tippt */
 
-    reply.className='bubble in';
+const typing=
+document.createElement('div');
 
-    reply.textContent=
-      'Danke für deine Nachricht! 👍';
+typing.className='typing';
 
-    messages.appendChild(reply);
+typing.innerHTML=`
+<span></span>
+<span></span>
+<span></span>
+`;
 
-    messages.scrollTop=
-      messages.scrollHeight;
+messages.appendChild(typing);
 
-  },900);
+messages.scrollTop=
+messages.scrollHeight;
+
+/*
+   Realistischere Verzögerung
+*/
+
+const delay=
+900+
+Math.floor(Math.random()*1000);
+
+setTimeout(()=>{
+
+typing.remove();
+
+const reply=
+document.createElement('div');
+
+reply.className='bubble in';
+
+reply.textContent=
+getCustomerReply(text);
+
+messages.appendChild(reply);
+
+messages.scrollTop=
+messages.scrollHeight;
+
+showToast('Neue Antwort erhalten');
+
+},delay);
 
 }
 
@@ -2826,204 +3637,217 @@ function sendMessage(){
 
 function sellStep(step){
 
-  for(let i=1;i<=4;i++){
+for(let i=1;i<=4;i++){
 
-    const section =
-      document.getElementById('sellStep'+i);
+const section=
+document.getElementById('sellStep'+i);
 
-    if(section){
-      section.style.display =
-        i===step ? 'block' : 'none';
-    }
+if(section){
+section.style.display=
+i===step?'block':'none';
+}
 
-    const progress =
-      document.getElementById('p'+i);
+const progress=
+document.getElementById('p'+i);
 
-    if(progress){
-      progress.classList.toggle(
-        'active',
-        i<=step
-      );
-    }
+if(progress){
+progress.classList.toggle(
+'active',
+i<=step
+);
+}
 
-  }
+}
 
-  if(step===4){
+if(step===4){
 
-    const title =
-      document.getElementById('sellTitle').value ||
-      'MacBook Air M2, 256GB';
+const title=
+document.getElementById('sellTitle')
+.value||
+'MacBook Air M2, 256GB';
 
-    const price =
-      document.getElementById('sellPrice').value ||
-      '699';
+const price=
+document.getElementById('sellPrice')
+.value||
+'699';
 
-    const description =
-      document.getElementById('sellDescription').value ||
-      'Sehr gepflegter Zustand.';
+const description=
+document.getElementById('sellDescription')
+.value||
+'Sehr gepflegter Zustand.';
 
-    document.getElementById('previewTitle')
-      .textContent=title;
+document.getElementById('previewTitle')
+.textContent=title;
 
-    document.getElementById('previewPrice')
-      .textContent='CHF '+price+'.–';
+document.getElementById('previewPrice')
+.textContent=
+'CHF '+price+'.–';
 
-    document.getElementById('previewDescription')
-      .textContent=description;
+document.getElementById('previewDescription')
+.textContent=description;
 
-  }
+}
 
-  window.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
 
 }
 
 function analyzeProduct(){
 
-  const product =
-    document.getElementById('sellProduct')
-      .value.trim();
+const product=
+document.getElementById('sellProduct')
+.value.trim();
 
-  if(!product){
+if(!product){
 
-    showToast(
-      'Bitte zuerst eingeben, was du verkaufen möchtest.'
-    );
+showToast(
+'Bitte zuerst eingeben, was du verkaufen möchtest.'
+);
 
-    return;
-  }
+return;
+}
 
-  const lower =
-    product.toLowerCase();
+const lower=
+product.toLowerCase();
 
-  if(lower.includes('iphone')){
+if(lower.includes('iphone')){
 
-    document.getElementById('sellTitle')
-      .value='iPhone 15 Pro, sehr guter Zustand';
+document.getElementById('sellTitle')
+.value=
+'iPhone 15 Pro, sehr guter Zustand';
 
-  }else if(lower.includes('velo')){
+}else if(lower.includes('velo')){
 
-    document.getElementById('sellTitle')
-      .value='Velo, sehr guter Zustand';
+document.getElementById('sellTitle')
+.value=
+'Velo, sehr guter Zustand';
 
-  }else{
+}else{
 
-    document.getElementById('sellTitle')
-      .value=product+
-        ', sehr guter Zustand';
+document.getElementById('sellTitle')
+.value=
+product+', sehr guter Zustand';
 
-  }
+}
 
-  showToast('Livo KI analysiert dein Produkt…');
+showToast(
+'Livo KI analysiert dein Produkt…'
+);
 
-  setTimeout(()=>{
-    sellStep(2);
-  },650);
+setTimeout(()=>{
+sellStep(2);
+},650);
 
 }
 
 function selectPrice(element,price){
 
-  document
-    .querySelectorAll('.price-option')
-    .forEach(option=>{
-      option.classList.remove('active');
-    });
+document
+.querySelectorAll('.price-option')
+.forEach(option=>{
+option.classList.remove('active');
+});
 
-  element.classList.add('active');
+element.classList.add('active');
 
-  selectedPrice=price;
+selectedPrice=price;
 
-  document.getElementById('sellPrice')
-    .value=price;
+document.getElementById('sellPrice')
+.value=price;
 
 }
 
 function handlePhotos(event){
 
-  const files =
-    Array.from(event.target.files);
+const files=
+Array.from(event.target.files);
 
-  const slots=[
-    document.querySelector('.upload-slot'),
-    document.getElementById('photo2'),
-    document.getElementById('photo3'),
-    document.getElementById('photo4')
-  ];
+const slots=[
+document.querySelector('.upload-slot'),
+document.getElementById('photo2'),
+document.getElementById('photo3'),
+document.getElementById('photo4')
+];
 
-  files.slice(0,4).forEach((file,index)=>{
+files.slice(0,4).forEach((file,index)=>{
 
-    const reader =
-      new FileReader();
+const reader=
+new FileReader();
 
-    reader.onload=function(e){
+reader.onload=function(e){
 
-      slots[index].innerHTML=`
-        <img src="${e.target.result}" alt="Hochgeladenes Foto">
-      `;
+slots[index].innerHTML=`
+<img
+src="${e.target.result}"
+alt="Hochgeladenes Foto">
+`;
 
-    };
+};
 
-    reader.readAsDataURL(file);
+reader.readAsDataURL(file);
 
-  });
+});
 
-  if(files.length){
+if(files.length){
 
-    showToast(
-      files.length+
-      ' Foto'+
-      (files.length>1?'s':'')+
-      ' hinzugefügt'
-    );
+showToast(
+files.length+
+' Foto'+
+(files.length>1?'s':'')+
+' hinzugefügt'
+);
 
-  }
+}
 
 }
 
 function publishListing(){
 
-  const title =
-    document.getElementById('sellTitle')
-      .value || 'Neues Inserat';
+const title=
+document.getElementById('sellTitle')
+.value||
+'Neues Inserat';
 
-  const price =
-    document.getElementById('sellPrice')
-      .value || '699';
+const price=
+document.getElementById('sellPrice')
+.value||
+'699';
 
-  const description =
-    document.getElementById('sellDescription')
-      .value || '';
+const description=
+document.getElementById('sellDescription')
+.value||
+'';
 
-  listings.unshift({
+listings.unshift({
 
-    id:Date.now(),
+id:Date.now(),
 
-    title:title,
+title:title,
 
-    category:'Elektronik',
+category:'Elektronik',
 
-    price:Number(price),
+price:Number(price),
 
-    location:'Bern',
+location:'Bern',
 
-    emoji:'📦',
+emoji:'📦',
 
-    score:90,
+score:90,
 
-    description:description
+description:description
 
-  });
+});
 
-  showToast('🎉 Inserat erfolgreich veröffentlicht!');
+showToast(
+'🎉 Inserat erfolgreich veröffentlicht!'
+);
 
-  setTimeout(()=>{
-
-    go('explore');
-
-  },900);
+setTimeout(()=>{
+go('explore');
+},900);
 
 }
 
@@ -3033,67 +3857,67 @@ function publishListing(){
 
 function toggleTheme(){
 
-  const html =
-    document.documentElement;
+const html=
+document.documentElement;
 
-  const dark =
-    html.getAttribute('data-theme')==='dark';
+const dark=
+html.getAttribute('data-theme')==='dark';
 
-  if(dark){
+if(dark){
 
-    html.removeAttribute('data-theme');
+html.removeAttribute('data-theme');
 
-    localStorage.setItem(
-      'livo-theme',
-      'light'
-    );
+localStorage.setItem(
+'livo-theme',
+'light'
+);
 
-  }else{
+}else{
 
-    html.setAttribute(
-      'data-theme',
-      'dark'
-    );
+html.setAttribute(
+'data-theme',
+'dark'
+);
 
-    localStorage.setItem(
-      'livo-theme',
-      'dark'
-    );
+localStorage.setItem(
+'livo-theme',
+'dark'
+);
 
-  }
+}
 
-  updateThemeSwitch();
+updateThemeSwitch();
 
 }
 
 function updateThemeSwitch(){
 
-  const switcher =
-    document.getElementById('themeSwitch');
+const switcher=
+document.getElementById('themeSwitch');
 
-  if(!switcher) return;
+if(!switcher)return;
 
-  switcher.classList.toggle(
-    'on',
-    document.documentElement
-      .getAttribute('data-theme')==='dark'
-  );
+switcher.classList.toggle(
+'on',
+document.documentElement
+.getAttribute('data-theme')==='dark'
+);
 
 }
 
 function loadTheme(){
 
-  if(
-    localStorage.getItem('livo-theme')==='dark'
-  ){
+if(
+localStorage.getItem('livo-theme')==='dark'
+){
 
-    document.documentElement
-      .setAttribute(
-        'data-theme',
-        'dark'
-      );
+document.documentElement
+.setAttribute(
+'data-theme',
+'dark'
+);
 
-  }
+}
 
 }
 
@@ -3105,19 +3929,19 @@ let toastTimer;
 
 function showToast(message){
 
-  const toast =
-    document.getElementById('toast');
+const toast=
+document.getElementById('toast');
 
-  toast.textContent=message;
+toast.textContent=message;
 
-  toast.classList.add('show');
+toast.classList.add('show');
 
-  clearTimeout(toastTimer);
+clearTimeout(toastTimer);
 
-  toastTimer =
-    setTimeout(()=>{
-      toast.classList.remove('show');
-    },2400);
+toastTimer=
+setTimeout(()=>{
+toast.classList.remove('show');
+},2400);
 
 }
 
