@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livo — Inserat erstellen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@450;550;650;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF8; --surface:#FFFFFF; --ink:#15171B; --stone:#6E6B64; --stone-light:#9C988E;
+    --border:#E3E0D9; --accent:#0E5C48; --accent-ink:#0B4638; --accent-tint:#E8F1EC; --gold:#A9822E;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+  .display{ font-family:'Instrument Sans',sans-serif; letter-spacing:-0.02em; }
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+
+  .shell{ max-width:640px; margin:40px auto; }
+
+  /* Fortschritt */
+  .progress{ display:flex; align-items:center; gap:6px; margin-bottom:28px; }
+  .progress .step{ flex:1; height:4px; border-radius:99px; background:var(--border); }
+  .progress .step.done{ background:var(--accent); }
+  .progress-label{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--stone-light); margin-bottom:8px; }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:22px; padding:32px; box-shadow:0 8px 30px rgba(21,23,27,0.05); }
+  .eyebrow{ font-size:12px; font-weight:600; color:var(--accent-ink); text-transform:uppercase; letter-spacing:.06em; }
+  h1{ font-family:'Instrument Sans'; font-weight:650; font-size:26px; margin-top:8px; letter-spacing:-0.02em; }
+  .sub{ color:var(--stone); font-size:14.5px; margin-top:8px; line-height:1.5; }
+
+  /* Foto-Upload */
+  .photo-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:26px; }
+  .photo-slot{ aspect-ratio:1; border-radius:14px; border:1.5px dashed var(--border); display:flex; align-items:center; justify-content:center; color:var(--stone-light); position:relative; overflow:hidden; }
+  .photo-slot.filled{ border:1px solid var(--border); }
+  .photo-slot.filled img{ width:100%; height:100%; object-fit:cover; }
+  .photo-slot.primary::after{ content:"Titelbild"; position:absolute; bottom:6px; left:6px; background:rgba(21,23,27,0.75); color:#fff; font-size:9.5px; padding:2px 7px; border-radius:99px; }
+
+  /* KI Analyse */
+  .ai-banner{ display:flex; align-items:center; gap:12px; background:var(--accent-tint); border-radius:14px; padding:14px 16px; margin-top:22px; }
+  .ai-dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+  .ai-banner-text{ font-size:13.5px; color:var(--accent-ink); }
+  .ai-banner-text b{ font-weight:650; }
+
+  /* Erkannte Felder */
+  .field{ margin-top:18px; }
+  .field-label{ display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--stone); margin-bottom:6px; }
+  .ai-tag{ font-size:10px; font-weight:600; background:var(--accent-tint); color:var(--accent-ink); padding:2px 7px; border-radius:99px; }
+  .ai-tag.unsicher{ background:#FBF2DE; color:var(--gold); }
+  .field-input{ width:100%; border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-size:14.5px; outline:none; background:var(--surface); }
+  .field-input:focus{ border-color:var(--accent); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  textarea.field-input{ resize:none; font-family:inherit; line-height:1.5; }
+
+  /* Preisvorschlag */
+  .price-box{ margin-top:22px; border:1px solid var(--border); border-radius:16px; padding:20px; }
+  .price-box-head{ display:flex; justify-content:space-between; align-items:baseline; }
+  .price-range{ font-size:12.5px; color:var(--stone); }
+  .price-range b{ color:var(--ink); font-family:'IBM Plex Mono'; font-weight:500; }
+  .price-options{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:14px; }
+  .price-option{ border:1.5px solid var(--border); border-radius:12px; padding:12px 10px; text-align:center; cursor:pointer; }
+  .price-option.selected{ border-color:var(--accent); background:var(--accent-tint); }
+  .price-option .po-label{ font-size:11px; color:var(--stone-light); }
+  .price-option.selected .po-label{ color:var(--accent-ink); }
+  .price-option .po-value{ font-family:'IBM Plex Mono'; font-weight:500; font-size:16px; margin-top:3px; }
+
+  .actions{ display:flex; gap:10px; margin-top:28px; }
+  .btn{ font-family:'Instrument Sans'; font-weight:600; font-size:14.5px; border-radius:999px; padding:13px 0; flex:1; text-align:center; cursor:pointer; border:1px solid transparent; }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-ghost{ background:var(--surface); color:var(--ink); border-color:var(--border); }
+
+  .footnote{ text-align:center; font-size:11.5px; color:var(--stone-light); margin-top:16px; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="progress-label"><span>Schritt 2 von 4</span><span>Details prüfen</span></div>
+  <div class="progress">
+    <div class="step done"></div>
+    <div class="step done"></div>
+    <div class="step"></div>
+    <div class="step"></div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Neues Inserat</div>
+    <h1 class="display">Sieht gut aus — das haben wir erkannt.</h1>
+    <p class="sub">Livo hat deine Fotos analysiert. Prüf kurz, ob alles stimmt — du kannst jedes Feld anpassen.</p>
+
+    <div class="photo-grid">
+      <div class="photo-slot filled primary"><img src="https://placehold.co/200x200/EFEDE7/9C988E?text=Foto+1"></div>
+      <div class="photo-slot filled"><img src="https://placehold.co/200x200/EFEDE7/9C988E?text=Foto+2"></div>
+      <div class="photo-slot filled"><img src="https://placehold.co/200x200/EFEDE7/9C988E?text=Foto+3"></div>
+      <div class="photo-slot">+ Hinzufügen</div>
+    </div>
+
+    <div class="ai-banner">
+      <div class="ai-dot"></div>
+      <div class="ai-banner-text"><b>Livo KI</b> hat Marke, Modell und Zustand erkannt. Unsichere Angaben sind markiert.</div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Titel <span class="ai-tag">KI-Vorschlag</span></div>
+      <input class="field-input" value="MacBook Air M2, 256GB, Space Grau">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <div class="field-label">Marke <span class="ai-tag">KI-Vorschlag</span></div>
+        <input class="field-input" value="Apple">
+      </div>
+      <div class="field">
+        <div class="field-label">Zustand <span class="ai-tag unsicher">Bitte prüfen</span></div>
+        <input class="field-input" value="Wie neu">
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Beschreibung <span class="ai-tag">KI-Vorschlag</span></div>
+      <textarea class="field-input" rows="3">MacBook Air M2 mit 256GB Speicher. Sehr guter, gepflegter Zustand mit leichten Gebrauchsspuren am Gehäuse. Funktioniert einwandfrei, Akku hält gut.</textarea>
+    </div>
+
+    <div class="price-box">
+      <div class="price-box-head">
+        <div class="field-label" style="margin:0;">Preisvorschlag</div>
+        <div class="price-range">Marktwert <b>CHF 650–750</b></div>
+      </div>
+      <div class="price-options">
+        <div class="price-option">
+          <div class="po-label">Schneller verkaufen</div>
+          <div class="po-value mono">649</div>
+        </div>
+        <div class="price-option selected">
+          <div class="po-label">Empfohlen</div>
+          <div class="po-value mono">699</div>
+        </div>
+        <div class="price-option">
+          <div class="po-label">Maximaler Preis</div>
+          <div class="po-value mono">749</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="btn btn-ghost">Zurück</div>
+      <div class="btn btn-primary">Weiter zur Vorschau</div>
+    </div>
+  </div>
+  <p class="footnote">Alle Angaben sind Vorschläge — du entscheidest, was veröffentlicht wird.</p>
+</div>
+
+</body>
+</html>

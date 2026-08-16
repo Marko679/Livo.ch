@@ -1,0 +1,400 @@
+// ============================================================
+// MARKETPLACE — PHASE 1 DATENBANKSCHEMA (Entwurf)
+// PostgreSQL via Prisma
+// Deckt ab: Auth/Profile, Kategorien, Listings, Bilder, Favoriten,
+// gespeicherte Suchen, Suchverlauf. Chat/Offers als schlankes
+// Grundgerüst für Phase 2 mit angelegt, damit die Beziehungen
+// (Listing <-> Conversation <-> Offer) von Anfang an sauber sind.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------------
+// AUTH & PROFILE
+// ------------------------------------------------------------
+
+enum UserRole {
+  USER
+  BUSINESS
+  MODERATOR
+  ADMIN
+  SUPERADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  emailVerified DateTime?
+  phone         String?    @unique
+  phoneVerified DateTime?
+  passwordHash  String
+  role          UserRole   @default(USER)
+  status        UserStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? // soft delete für Datenexport-Fristen
+
+  profile           Profile?
+  businessAccount   BusinessAccount?
+  listings          Listing[]
+  favorites         Favorite[]
+  savedSearches     SavedSearch[]
+  searchHistory     SearchHistory[]
+  sentMessages      Message[]           @relation("MessageSender")
+  conversationsA    Conversation[]      @relation("ConversationBuyer")
+  conversationsB    Conversation[]      @relation("ConversationSeller")
+  offersMade        Offer[]             @relation("OfferBuyer")
+  reviewsGiven      Review[]            @relation("ReviewAuthor")
+  reviewsReceived   Review[]            @relation("ReviewTarget")
+  reportsFiled      Report[]            @relation("ReportAuthor")
+  notifications     Notification[]
+  verification      VerificationRecord?
+  trustScore        TrustScore?
+
+  @@index([role, status])
+  @@map("users")
+}
+
+model Profile {
+  userId          String   @id
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName     String
+  avatarUrl       String?
+  city            String?
+  postalCode      String?
+  canton          String?
+  locale          String   @default("de-CH")
+  bio             String?
+  responseRateBp  Int      @default(0) // basis points 0-10000, aus Messages abgeleitet
+  responseTimeMin Int? // durchschnittliche Antwortzeit in Minuten
+  memberSince     DateTime @default(now())
+
+  @@map("profiles")
+}
+
+model VerificationRecord {
+  userId          String   @id
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailVerified   Boolean  @default(false)
+  phoneVerified   Boolean  @default(false)
+  identityVerified Boolean @default(false)
+  businessVerified Boolean @default(false)
+  verifiedAt      DateTime?
+
+  @@map("verification_records")
+}
+
+model TrustScore {
+  userId       String   @id
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score        Int      @default(50) // 0-100, intern berechnet
+  factors      Json // { accountAgeDays, verifications, txCount, avgRating, reportCount, ... }
+  updatedAt    DateTime @updatedAt
+
+  @@map("trust_scores")
+}
+
+model BusinessAccount {
+  userId       String   @id
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName  String
+  vatNumber    String?
+  bulkUploadOn Boolean  @default(false)
+  seatLimit    Int      @default(1)
+  createdAt    DateTime @default(now())
+
+  @@map("business_accounts")
+}
+
+// ------------------------------------------------------------
+// KATEGORIEN
+// ------------------------------------------------------------
+
+model Category {
+  id          String     @id @default(cuid())
+  slug        String     @unique // für SEO-URLs /kaufen/:slug
+  name        String
+  parentId    String?
+  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryTree")
+  isForbidden Boolean    @default(false) // Admin kann Kategorie sperren
+  sortOrder   Int        @default(0)
+
+  listings Listing[]
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+// ------------------------------------------------------------
+// LISTINGS
+// ------------------------------------------------------------
+
+enum ListingStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  SOLD
+  REMOVED // durch Moderation entfernt
+}
+
+enum ListingCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  FOR_PARTS
+}
+
+model Listing {
+  id           String            @id @default(cuid())
+  sellerId     String
+  seller       User              @relation(fields: [sellerId], references: [id])
+  categoryId   String
+  category     Category          @relation(fields: [categoryId], references: [id])
+
+  title        String
+  description  String
+  priceRappen  Int // CHF in Rappen gespeichert (Integer, keine Float-Rundungsfehler)
+  condition    ListingCondition
+  brand        String?
+  model        String?
+
+  city         String?
+  postalCode   String?
+  latitude     Float?
+  longitude    Float?
+
+  shippingAvailable Boolean @default(false)
+  pickupAvailable   Boolean @default(true)
+
+  status       ListingStatus @default(DRAFT)
+  minOfferRappen Int? // Mindestpreis für Smart Negotiation, nie öffentlich
+
+  aiGenerated  Boolean  @default(false)
+  aiConfidence Json? // pro Feld: { field: "brand", confidence: 0.82, source: "ai" }
+
+  viewCount     Int @default(0)
+  favoriteCount Int @default(0)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  publishedAt DateTime?
+  soldAt      DateTime?
+
+  images        ListingImage[]
+  favorites     Favorite[]
+  conversations Conversation[]
+  offers        Offer[]
+  reports       Report[]
+  aiGenerations AIGeneration[]
+
+  @@index([categoryId, status])
+  @@index([status, publishedAt])
+  @@index([sellerId])
+  @@map("listings")
+}
+
+model ListingImage {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  width     Int?
+  height    Int?
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+  moderationFlag Json? // { blurry, duplicate, inappropriate, ... } aus Bildanalyse
+
+  @@index([listingId])
+  @@map("listing_images")
+}
+
+// ------------------------------------------------------------
+// FAVORITEN, GESPEICHERTE SUCHEN, SUCHVERLAUF
+// ------------------------------------------------------------
+
+model Favorite {
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, listingId])
+  @@map("favorites")
+}
+
+model SavedSearch {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  queryJson Json // strukturierte Filter: { query, categoryId, priceMax, city, radiusKm, ... }
+  alertsOn  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("saved_searches")
+}
+
+model SearchHistory {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  rawQuery  String
+  parsedJson Json? // KI-Extraktion: Produkt, Kategorie, Preis, Ort ...
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("search_history")
+}
+
+// ------------------------------------------------------------
+// CHAT (Grundgerüst für Phase 2)
+// ------------------------------------------------------------
+
+model Conversation {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  buyerId   String
+  buyer     User     @relation("ConversationBuyer", fields: [buyerId], references: [id])
+  sellerId  String
+  seller    User     @relation("ConversationSeller", fields: [sellerId], references: [id])
+  createdAt DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+
+  messages Message[]
+  offers   Offer[]
+
+  @@unique([listingId, buyerId]) // ein Thread pro Käufer/Listing
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("MessageSender", fields: [senderId], references: [id])
+  body           String?
+  imageUrl       String?
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@map("messages")
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model Offer {
+  id             String       @id @default(cuid())
+  listingId      String
+  listing        Listing      @relation(fields: [listingId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  buyerId        String
+  buyer          User         @relation("OfferBuyer", fields: [buyerId], references: [id])
+  amountRappen   Int
+  status         OfferStatus  @default(PENDING)
+  createdAt      DateTime     @default(now())
+  expiresAt      DateTime?
+
+  @@index([listingId, status])
+  @@map("offers")
+}
+
+// ------------------------------------------------------------
+// REVIEWS, REPORTS, NOTIFICATIONS (schlank für spätere Phasen)
+// ------------------------------------------------------------
+
+model Review {
+  id         String   @id @default(cuid())
+  authorId   String
+  author     User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  targetId   String
+  target     User     @relation("ReviewTarget", fields: [targetId], references: [id])
+  rating     Int // 1-5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@index([targetId])
+  @@map("reviews")
+}
+
+enum ReportReason {
+  SCAM
+  SPAM
+  FAKE
+  FORBIDDEN_ITEM
+  OFFENSIVE
+  WRONG_DESCRIPTION
+  OTHER
+}
+
+model Report {
+  id        String       @id @default(cuid())
+  authorId  String
+  author    User         @relation("ReportAuthor", fields: [authorId], references: [id])
+  listingId String?
+  listing   Listing?     @relation(fields: [listingId], references: [id])
+  reason    ReportReason
+  details   String?
+  resolvedAt DateTime?
+  createdAt DateTime     @default(now())
+
+  @@index([listingId])
+  @@map("reports")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // "new_message" | "offer" | "price_drop" | "saved_search_match" | ...
+  payload   Json
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+// ------------------------------------------------------------
+// AI (Protokollierung für Kostenkontrolle & Nachvollziehbarkeit)
+// ------------------------------------------------------------
+
+model AIGeneration {
+  id        String   @id @default(cuid())
+  listingId String?
+  listing   Listing? @relation(fields: [listingId], references: [id])
+  userId    String?
+  type      String // "listing_generation" | "price_estimate" | "search_parse" | ...
+  inputJson Json
+  outputJson Json
+  costCents Int?
+  createdAt DateTime @default(now())
+
+  @@map("ai_generations")
+}
