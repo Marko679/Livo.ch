@@ -4,29 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0E5C48">
+<meta name="description" content="Livo — der moderne Schweizer Marktplatz. Finden, verkaufen und sicher handeln.">
 <title>Livo — Schweizer Marktplatz</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@450;550;650;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --bg:#FAFAF8;
   --surface:#FFFFFF;
-  --surface-2:#F4F3EF;
+  --surface-2:#F5F4F0;
   --ink:#15171B;
   --stone:#6E6B64;
   --stone-light:#9C988E;
   --border:#E3E0D9;
   --accent:#0E5C48;
-  --accent-ink:#0B4638;
+  --accent-dark:#0B4638;
   --accent-tint:#E8F1EC;
-  --danger:#B33A32;
-  --gold:#A9822E;
-  --shadow:0 1px 2px rgba(21,23,27,.04),0 12px 30px rgba(21,23,27,.06);
-  --radius-s:8px;
-  --radius-m:14px;
-  --radius-l:22px;
+  --danger:#B42318;
+  --warning:#A9822E;
+  --shadow-sm:0 1px 3px rgba(21,23,27,.06);
+  --shadow:0 10px 35px rgba(21,23,27,.08);
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:24px;
+  --transition:220ms cubic-bezier(.2,.8,.2,1);
+}
+
+[data-theme="dark"]{
+  --bg:#111412;
+  --surface:#191D1A;
+  --surface-2:#222722;
+  --ink:#F5F7F5;
+  --stone:#A8AEA8;
+  --stone-light:#7E857F;
+  --border:#303730;
+  --accent:#2E8B70;
+  --accent-dark:#3FA27F;
+  --accent-tint:#17372D;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.2);
+  --shadow:0 12px 40px rgba(0,0,0,.3);
 }
 
 *{
@@ -45,6 +64,13 @@ body{
   font-family:'Inter',sans-serif;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
+  transition:
+    background-color .35s ease,
+    color .35s ease;
+}
+
+body.loading{
+  overflow:hidden;
 }
 
 button,
@@ -55,7 +81,7 @@ select{
 }
 
 button{
-  cursor:pointer;
+  border:0;
 }
 
 a{
@@ -72,9 +98,136 @@ a{
   font-family:'IBM Plex Mono',monospace;
 }
 
-.wrap{
-  width:min(1180px,calc(100% - 40px));
+.container{
+  width:min(1180px,calc(100% - 48px));
   margin:auto;
+}
+
+@media(max-width:700px){
+  .container{
+    width:min(100% - 32px,1180px);
+  }
+}
+
+/* =========================
+   LOADER
+========================= */
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:opacity .5s ease,visibility .5s ease;
+}
+
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-inner{
+  text-align:center;
+}
+
+.loader-logo{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  font-family:'Instrument Sans';
+  font-size:27px;
+  font-weight:700;
+}
+
+.loader-dot{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  background:var(--accent);
+  animation:pulse 1s infinite;
+}
+
+.loader-line{
+  width:100px;
+  height:3px;
+  background:var(--border);
+  border-radius:999px;
+  overflow:hidden;
+  margin:18px auto 0;
+}
+
+.loader-line span{
+  display:block;
+  height:100%;
+  width:45%;
+  background:var(--accent);
+  border-radius:999px;
+  animation:loaderMove 1s infinite ease-in-out;
+}
+
+@keyframes loaderMove{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(230%)}
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(.8)}
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast-wrap{
+  position:fixed;
+  top:82px;
+  right:22px;
+  z-index:5000;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  pointer-events:none;
+}
+
+.toast{
+  min-width:260px;
+  max-width:360px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  border-radius:14px;
+  padding:13px 15px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transform:translateY(-10px);
+  opacity:0;
+  animation:toastIn .35s forwards;
+  font-size:13.5px;
+}
+
+.toast.success::before{
+  content:"✓";
+  color:var(--accent);
+  font-weight:700;
+}
+
+.toast.error::before{
+  content:"!";
+  color:var(--danger);
+  font-weight:700;
+}
+
+@keyframes toastIn{
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
 }
 
 /* =========================
@@ -84,14 +237,14 @@ a{
 header{
   position:sticky;
   top:0;
-  z-index:100;
-  background:rgba(250,250,248,.92);
-  backdrop-filter:blur(14px);
+  z-index:1000;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(18px);
   border-bottom:1px solid var(--border);
 }
 
-.header-inner{
-  height:68px;
+.header{
+  height:70px;
   display:flex;
   align-items:center;
   gap:28px;
@@ -102,8 +255,8 @@ header{
   align-items:center;
   gap:8px;
   font-family:'Instrument Sans';
-  font-weight:700;
   font-size:20px;
+  font-weight:700;
   flex-shrink:0;
 }
 
@@ -121,54 +274,80 @@ header{
   flex:1;
 }
 
-.nav button{
-  background:none;
-  border:0;
+.nav a{
   color:var(--stone);
   font-size:14px;
+  position:relative;
+  transition:color var(--transition);
 }
 
-.nav button:hover,
-.nav button.active{
+.nav a:hover,
+.nav a.active{
   color:var(--ink);
 }
 
-.header-search{
-  width:260px;
-  height:38px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:0 13px;
-  border:1px solid var(--border);
-  background:var(--surface);
+.nav a.active::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-25px;
+  height:2px;
+  background:var(--accent);
   border-radius:999px;
 }
 
+.header-search{
+  width:220px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--stone-light);
+  transition:all var(--transition);
+}
+
+.header-search:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-tint);
+}
+
 .header-search input{
-  width:100%;
   border:0;
   outline:0;
-  background:none;
+  background:transparent;
+  color:var(--ink);
+  width:100%;
   font-size:13px;
 }
 
 .header-actions{
   display:flex;
-  gap:9px;
   align-items:center;
+  gap:9px;
 }
 
 .icon-btn{
-  width:38px;
-  height:38px;
-  border:1px solid var(--border);
-  background:var(--surface);
+  width:40px;
+  height:40px;
   border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--ink);
+  cursor:pointer;
+  transition:all var(--transition);
   position:relative;
 }
 
 .icon-btn:hover{
+  transform:translateY(-1px);
   border-color:var(--accent);
 }
 
@@ -176,30 +355,44 @@ header{
   position:absolute;
   top:-3px;
   right:-3px;
-  min-width:16px;
-  height:16px;
-  padding:0 4px;
-  border-radius:99px;
+  min-width:17px;
+  height:17px;
+  border-radius:50%;
   background:var(--accent);
-  color:#fff;
-  font-size:9px;
+  color:white;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-size:9px;
+  font-weight:700;
+  border:2px solid var(--bg);
 }
 
 .btn{
-  border:1px solid transparent;
-  border-radius:999px;
-  padding:10px 18px;
-  font-family:'Instrument Sans';
-  font-weight:650;
-  font-size:14px;
   display:inline-flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   gap:7px;
-  transition:.18s;
+  min-height:42px;
+  padding:0 17px;
+  border-radius:999px;
+  font-family:'Instrument Sans';
+  font-weight:600;
+  font-size:13.5px;
+  cursor:pointer;
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+.btn:active{
+  transform:translateY(0) scale(.98);
 }
 
 .btn-primary{
@@ -208,13 +401,14 @@ header{
 }
 
 .btn-primary:hover{
-  background:var(--accent-ink);
-  transform:translateY(-1px);
+  background:var(--accent-dark);
+  box-shadow:0 7px 20px rgba(14,92,72,.18);
 }
 
 .btn-ghost{
   background:var(--surface);
-  border-color:var(--border);
+  color:var(--ink);
+  border:1px solid var(--border);
 }
 
 .btn-ghost:hover{
@@ -223,19 +417,6 @@ header{
 
 .mobile-menu{
   display:none;
-}
-
-/* =========================
-   VIEWS
-========================= */
-
-.view{
-  display:none;
-  min-height:calc(100vh - 68px);
-}
-
-.view.active{
-  display:block;
 }
 
 /* =========================
@@ -248,8 +429,8 @@ header{
 
 .hero-grid{
   display:grid;
-  grid-template-columns:1.05fr .95fr;
-  gap:60px;
+  grid-template-columns:1.04fr .96fr;
+  gap:70px;
   align-items:center;
 }
 
@@ -258,191 +439,245 @@ header{
   align-items:center;
   gap:8px;
   background:var(--accent-tint);
-  color:var(--accent-ink);
+  color:var(--accent-dark);
   padding:7px 12px;
   border-radius:999px;
   font-size:12px;
-  font-weight:650;
+  font-weight:700;
   margin-bottom:20px;
 }
 
-.flag{
-  width:12px;
-  height:8px;
-  border-radius:2px;
-  background:#D52B1E;
-  position:relative;
-}
-
-.flag:after{
-  content:"";
-  position:absolute;
-  left:2px;
-  top:3px;
-  width:8px;
-  height:2px;
-  background:#fff;
+.eyebrow-dot{
+  width:7px;
+  height:7px;
+  background:var(--accent);
+  border-radius:50%;
 }
 
 .hero h1{
   font-family:'Instrument Sans';
-  font-size:clamp(42px,6vw,66px);
-  line-height:1;
+  font-size:clamp(42px,5.4vw,68px);
+  line-height:1.01;
   letter-spacing:-.045em;
   font-weight:700;
 }
 
-.hero h1 em{
+.hero h1 span{
   color:var(--accent);
-  font-style:normal;
 }
 
-.hero-sub{
-  max-width:550px;
+.hero-text{
+  max-width:540px;
   margin-top:22px;
   color:var(--stone);
   font-size:17px;
-  line-height:1.6;
+  line-height:1.65;
 }
 
-.search-box{
+.hero-search{
   margin-top:30px;
-  max-width:560px;
-  padding:7px;
+  max-width:550px;
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:18px;
-  box-shadow:var(--shadow);
+  padding:7px;
   display:flex;
-  gap:7px;
+  box-shadow:var(--shadow);
+  transition:box-shadow .3s,border-color .3s;
 }
 
-.search-box input{
-  min-width:0;
+.hero-search:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 5px var(--accent-tint),var(--shadow);
+}
+
+.hero-search input{
   flex:1;
+  min-width:0;
   border:0;
   outline:0;
+  background:transparent;
   padding:12px 14px;
-  background:none;
+  color:var(--ink);
+  font-size:14.5px;
 }
 
-.search-button{
-  border:0;
-  border-radius:13px;
+.hero-search button{
   background:var(--ink);
   color:#fff;
-  padding:0 20px;
+  border-radius:12px;
+  padding:0 21px;
+  cursor:pointer;
   font-family:'Instrument Sans';
-  font-weight:650;
+  font-weight:600;
+  transition:all var(--transition);
 }
 
-.search-hint{
+.hero-search button:hover{
+  background:var(--accent);
+}
+
+.search-tags{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
   color:var(--stone-light);
   font-size:12px;
-  margin:10px 4px 0;
 }
 
-.hero-buttons{
+.search-tag{
+  background:var(--surface-2);
+  padding:5px 9px;
+  border-radius:999px;
+}
+
+.hero-actions{
   display:flex;
+  flex-wrap:wrap;
   gap:10px;
-  margin-top:26px;
-  flex-wrap:wrap;
+  margin-top:25px;
 }
 
-.hero-trust{
+.trust{
   display:flex;
-  gap:22px;
   flex-wrap:wrap;
-  margin-top:32px;
+  gap:20px;
+  margin-top:30px;
+}
+
+.trust span{
   color:var(--stone);
   font-size:12px;
 }
 
-/* Hero product */
+/* HERO CARD */
 
-.hero-card{
-  position:relative;
+.market-card{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:24px;
-  padding:22px;
+  border-radius:26px;
+  padding:18px;
   box-shadow:var(--shadow);
+  position:relative;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+
+.market-card:hover{
+  transform:translateY(-6px) rotate(.2deg);
 }
 
 .product-image{
-  height:300px;
-  border-radius:17px;
+  height:330px;
+  border-radius:18px;
   background:
-    radial-gradient(circle at 50% 40%,#d8d5cd 0 13%,transparent 14%),
-    linear-gradient(145deg,#eeeae2,#d7d3c9);
+    radial-gradient(circle at 70% 30%,rgba(255,255,255,.8),transparent 20%),
+    linear-gradient(145deg,#ECEBE7,#DCDAD3);
   position:relative;
   overflow:hidden;
 }
 
-.product-image:after{
+.product-image::before{
   content:"";
   position:absolute;
-  width:55%;
-  height:40%;
-  left:22%;
-  bottom:13%;
-  border-radius:10px;
-  background:linear-gradient(145deg,#33363a,#15171b);
-  box-shadow:0 20px 30px rgba(0,0,0,.18);
+  width:230px;
+  height:140px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-40%);
+  border-radius:12px;
+  background:linear-gradient(145deg,#B7B7B3,#7D7F7C);
+  box-shadow:0 30px 40px rgba(0,0,0,.14);
 }
 
-.product-info{
-  padding-top:17px;
+.product-image::after{
+  content:"";
+  position:absolute;
+  width:170px;
+  height:5px;
+  left:50%;
+  top:62%;
+  transform:translateX(-50%);
+  background:#A7A7A2;
+  border-radius:50%;
 }
 
-.product-title{
+.score{
+  position:absolute;
+  right:14px;
+  top:14px;
+  width:105px;
+  height:105px;
+  border-radius:50%;
+  background:var(--surface);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.score-number{
+  font-family:'IBM Plex Mono';
+  font-size:25px;
+}
+
+.score-label{
+  color:var(--stone-light);
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-top:2px;
+}
+
+.card-info{
+  padding:15px 4px 3px;
+}
+
+.card-title{
   font-family:'Instrument Sans';
-  font-weight:650;
   font-size:18px;
+  font-weight:700;
 }
 
-.product-location{
+.card-location{
   color:var(--stone-light);
   font-size:12px;
   margin-top:4px;
 }
 
-.product-bottom{
+.card-bottom{
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  align-items:end;
   margin-top:13px;
 }
 
-.price{
+.card-price{
   font-family:'IBM Plex Mono';
-  font-size:20px;
+  font-size:19px;
 }
 
-.score{
-  background:var(--accent-tint);
-  color:var(--accent-ink);
-  border-radius:999px;
-  padding:6px 9px;
-  font-size:11px;
-  font-weight:700;
-}
-
-.favorite{
-  position:absolute;
-  top:32px;
-  right:32px;
-  z-index:2;
-  width:40px;
-  height:40px;
+.fav{
+  width:39px;
+  height:39px;
   border-radius:50%;
   border:1px solid var(--border);
-  background:#fff;
-  font-size:18px;
+  background:var(--surface);
+  cursor:pointer;
+  transition:all var(--transition);
 }
 
-.favorite.active{
-  color:#B33A32;
+.fav:hover{
+  border-color:var(--accent);
+  transform:scale(1.05);
+}
+
+.fav.active{
+  background:#FCECEC;
+  border-color:#F1B7B7;
+  color:#B42318;
 }
 
 /* =========================
@@ -450,9 +685,9 @@ header{
 ========================= */
 
 .stats{
-  background:var(--surface);
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
+  background:var(--surface);
 }
 
 .stats-grid{
@@ -461,13 +696,13 @@ header{
 }
 
 .stat{
-  padding:27px 10px;
+  padding:28px 20px;
   text-align:center;
   border-right:1px solid var(--border);
 }
 
 .stat:last-child{
-  border:0;
+  border-right:0;
 }
 
 .stat-number{
@@ -483,38 +718,83 @@ header{
 }
 
 /* =========================
-   SECTIONS
+   GENERAL SECTIONS
 ========================= */
 
 .section{
-  padding:82px 0;
+  padding:92px 0;
 }
 
-.section-head{
-  max-width:600px;
-  margin-bottom:35px;
+.section-header{
+  max-width:650px;
+  margin-bottom:42px;
 }
 
 .section-eyebrow{
-  color:var(--accent-ink);
+  color:var(--accent-dark);
   font-size:12px;
   text-transform:uppercase;
-  letter-spacing:.07em;
+  letter-spacing:.08em;
   font-weight:700;
-  margin-bottom:11px;
+  margin-bottom:10px;
 }
 
 .section-title{
   font-family:'Instrument Sans';
+  font-size:clamp(30px,4vw,44px);
+  line-height:1.08;
   font-weight:700;
-  font-size:clamp(29px,4vw,40px);
-  letter-spacing:-.035em;
 }
 
-.section-desc{
+.section-description{
   color:var(--stone);
   line-height:1.6;
-  margin-top:12px;
+  font-size:15px;
+  margin-top:13px;
+}
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:22px;
+  overflow:hidden;
+}
+
+.flow-item{
+  background:var(--surface);
+  padding:29px 24px;
+  transition:background .3s;
+}
+
+.flow-item:hover{
+  background:var(--accent-tint);
+}
+
+.flow-number{
+  font-family:'IBM Plex Mono';
+  color:var(--stone-light);
+  font-size:11px;
+}
+
+.flow-title{
+  font-family:'Instrument Sans';
+  font-weight:700;
+  font-size:17px;
+  margin-top:14px;
+}
+
+.flow-text{
+  color:var(--stone);
+  font-size:13px;
+  line-height:1.55;
+  margin-top:7px;
 }
 
 /* =========================
@@ -530,26 +810,33 @@ header{
 .category{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:15px;
-  padding:20px 16px;
+  border-radius:16px;
+  padding:20px 17px;
   cursor:pointer;
-  transition:.18s;
+  transition:all var(--transition);
 }
 
 .category:hover{
+  transform:translateY(-4px);
   border-color:var(--accent);
-  transform:translateY(-2px);
-  box-shadow:var(--shadow);
+  box-shadow:var(--shadow-sm);
 }
 
 .category-icon{
-  font-size:25px;
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:var(--accent-tint);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:30px;
+  font-size:18px;
 }
 
 .category-name{
-  font-weight:650;
   font-size:13.5px;
-  margin-top:20px;
+  font-weight:600;
 }
 
 .category-count{
@@ -559,174 +846,91 @@ header{
 }
 
 /* =========================
-   FLOW
+   LISTINGS
 ========================= */
 
-.flow{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:1px;
-  border:1px solid var(--border);
-  border-radius:20px;
-  overflow:hidden;
-  background:var(--border);
-}
-
-.flow-item{
-  background:var(--surface);
-  padding:27px;
-}
-
-.flow-number{
-  color:var(--stone-light);
-  font-family:'IBM Plex Mono';
-  font-size:11px;
-}
-
-.flow-title{
-  font-family:'Instrument Sans';
-  font-size:17px;
-  font-weight:650;
-  margin-top:14px;
-}
-
-.flow-text{
-  color:var(--stone);
-  font-size:13px;
-  line-height:1.5;
-  margin-top:6px;
-}
-
-/* =========================
-   DISCOVER
-========================= */
-
-.page-top{
-  padding:42px 0 25px;
-}
-
-.page-top-row{
+.listing-toolbar{
   display:flex;
-  align-items:end;
   justify-content:space-between;
-  gap:20px;
+  align-items:center;
+  gap:15px;
+  margin-bottom:22px;
 }
 
-.page-title{
-  font-family:'Instrument Sans';
-  font-size:38px;
-  font-weight:700;
-  letter-spacing:-.035em;
-}
-
-.page-sub{
-  color:var(--stone);
-  font-size:14px;
-  margin-top:7px;
-}
-
-.filters{
+.filter-buttons{
   display:flex;
-  gap:8px;
+  gap:7px;
   flex-wrap:wrap;
-  margin:22px 0;
 }
 
 .filter{
+  padding:8px 12px;
   border:1px solid var(--border);
   background:var(--surface);
   border-radius:999px;
-  padding:8px 13px;
   font-size:12px;
+  cursor:pointer;
+  color:var(--stone);
+  transition:all var(--transition);
 }
 
-.filter.active{
+.filter.active,
+.filter:hover{
   border-color:var(--accent);
+  color:var(--accent-dark);
   background:var(--accent-tint);
-  color:var(--accent-ink);
+}
+
+.sort{
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:999px;
+  padding:8px 12px;
+  color:var(--stone);
+  outline:0;
 }
 
 .listing-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:16px;
-  padding-bottom:70px;
+  gap:15px;
 }
 
 .listing{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:17px;
+  border-radius:18px;
   overflow:hidden;
-  transition:.18s;
   cursor:pointer;
+  transition:all var(--transition);
 }
 
 .listing:hover{
-  transform:translateY(-3px);
+  transform:translateY(-5px);
   box-shadow:var(--shadow);
+  border-color:#D7D4CC;
 }
 
 .listing-photo{
-  height:210px;
-  background:linear-gradient(145deg,#e9e6df,#d8d5cd);
+  height:190px;
+  background:linear-gradient(145deg,#ECEBE7,#D8D6CF);
   position:relative;
-}
-
-.listing-photo.mac{
-  background:linear-gradient(145deg,#d9dde0,#aeb4b8);
-}
-
-.listing-photo.bike{
-  background:linear-gradient(145deg,#dce4dd,#aab8aa);
-}
-
-.listing-photo.sofa{
-  background:linear-gradient(145deg,#e5ded5,#b9a999);
-}
-
-.listing-photo.jacket{
-  background:linear-gradient(145deg,#dadde3,#8e949d);
-}
-
-.listing-photo:after{
-  content:"";
-  position:absolute;
-  inset:28% 23% 24%;
-  border-radius:13px;
-  background:rgba(30,32,35,.72);
-  box-shadow:0 15px 30px rgba(0,0,0,.12);
-}
-
-.listing-photo.bike:after{
-  inset:35% 20%;
-  border-radius:50%;
-  border:5px solid rgba(30,32,35,.75);
-  background:transparent;
-  box-shadow:50px 0 0 -5px transparent;
-}
-
-.listing-photo.sofa:after{
-  inset:43% 13% 20%;
-  border-radius:15px 15px 7px 7px;
-  background:#806f60;
-}
-
-.listing-photo.jacket:after{
-  inset:20% 30% 16%;
-  border-radius:18px 18px 8px 8px;
-  background:#3e454e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:46px;
 }
 
 .listing-heart{
   position:absolute;
   right:10px;
   top:10px;
-  width:34px;
-  height:34px;
-  border:1px solid rgba(0,0,0,.08);
+  width:35px;
+  height:35px;
   border-radius:50%;
-  background:#fff;
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(0,0,0,.06);
+  cursor:pointer;
   z-index:2;
 }
 
@@ -735,8 +939,9 @@ header{
 }
 
 .listing-name{
-  font-size:14px;
-  font-weight:650;
+  font-family:'Instrument Sans';
+  font-weight:700;
+  font-size:15px;
 }
 
 .listing-meta{
@@ -748,575 +953,74 @@ header{
 .listing-row{
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  align-items:end;
   margin-top:12px;
 }
 
-.listing-price{
+.listing-cost{
   font-family:'IBM Plex Mono';
-  font-size:15px;
+  font-size:16px;
 }
 
-.small-score{
+.deal{
   font-size:10px;
-  color:var(--accent-ink);
+  color:var(--accent-dark);
   background:var(--accent-tint);
-  padding:4px 6px;
-  border-radius:6px;
-  font-weight:700;
-}
-
-/* =========================
-   FAVORITES
-========================= */
-
-.empty{
-  text-align:center;
-  padding:90px 20px;
-  color:var(--stone);
-}
-
-.empty-icon{
-  font-size:42px;
-  margin-bottom:15px;
-}
-
-/* =========================
-   SELL
-========================= */
-
-.sell-wrap{
-  max-width:760px;
-  margin:auto;
-  padding:48px 0 80px;
-}
-
-.sell-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:30px;
-  box-shadow:var(--shadow);
-}
-
-.progress-label{
-  display:flex;
-  justify-content:space-between;
-  color:var(--stone-light);
-  font-size:11px;
-  margin-bottom:8px;
-}
-
-.progress{
-  display:flex;
-  gap:5px;
-  margin-bottom:25px;
-}
-
-.progress div{
-  flex:1;
-  height:4px;
-  border-radius:99px;
-  background:var(--border);
-}
-
-.progress div.active{
-  background:var(--accent);
-}
-
-.sell-title{
-  font-family:'Instrument Sans';
-  font-size:28px;
-  font-weight:700;
-}
-
-.sell-sub{
-  color:var(--stone);
-  font-size:14px;
-  line-height:1.5;
-  margin-top:8px;
-}
-
-.photo-upload{
-  margin-top:25px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-
-.photo-box{
-  aspect-ratio:1;
-  border:1.5px dashed var(--border);
-  border-radius:13px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--stone-light);
-  cursor:pointer;
-  overflow:hidden;
-  position:relative;
-}
-
-.photo-box:hover{
-  border-color:var(--accent);
-}
-
-.photo-box img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.ai-box{
-  margin-top:20px;
-  padding:14px;
-  border-radius:13px;
-  background:var(--accent-tint);
-  color:var(--accent-ink);
-  font-size:13px;
-}
-
-.form-group{
-  margin-top:19px;
-}
-
-.form-label{
-  font-size:12px;
-  font-weight:650;
-  color:var(--stone);
-  margin-bottom:6px;
-  display:block;
-}
-
-.input,
-.textarea,
-.select{
-  width:100%;
-  border:1px solid var(--border);
-  background:var(--surface);
-  border-radius:10px;
-  padding:11px 13px;
-  outline:none;
-}
-
-.input:focus,
-.textarea:focus,
-.select:focus{
-  border-color:var(--accent);
-}
-
-.textarea{
-  resize:vertical;
-  min-height:100px;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.price-options{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-}
-
-.price-choice{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:13px;
-  text-align:center;
-  cursor:pointer;
-}
-
-.price-choice.selected{
-  border-color:var(--accent);
-  background:var(--accent-tint);
-}
-
-.price-choice span{
-  display:block;
-  font-size:11px;
-  color:var(--stone);
-}
-
-.price-choice strong{
-  display:block;
-  font-family:'IBM Plex Mono';
-  margin-top:4px;
-}
-
-.sell-actions{
-  display:flex;
-  gap:9px;
-  margin-top:28px;
-}
-
-/* =========================
-   CHAT
-========================= */
-
-.chat-layout{
-  max-width:1100px;
-  height:calc(100vh - 108px);
-  min-height:600px;
-  margin:20px auto;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:20px;
-  overflow:hidden;
-  display:grid;
-  grid-template-columns:290px 1fr;
-  box-shadow:var(--shadow);
-}
-
-.chat-list{
-  border-right:1px solid var(--border);
-  overflow:auto;
-}
-
-.chat-list-head{
-  padding:19px;
-  font-family:'Instrument Sans';
-  font-size:18px;
-  font-weight:700;
-}
-
-.chat-person{
-  padding:13px 18px;
-  display:flex;
-  gap:10px;
-  border-left:3px solid transparent;
-  cursor:pointer;
-}
-
-.chat-person.active{
-  background:var(--accent-tint);
-  border-left-color:var(--accent);
-}
-
-.avatar{
-  width:38px;
-  height:38px;
-  flex-shrink:0;
-  border-radius:50%;
-  background:var(--surface-2);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:700;
-  color:var(--stone);
-}
-
-.person-name{
-  font-weight:650;
-  font-size:13px;
-}
-
-.person-preview{
-  color:var(--stone-light);
-  font-size:11.5px;
-  margin-top:3px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width:180px;
-}
-
-.chat-window{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-}
-
-.chat-head{
-  padding:14px 18px;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.chat-head-info{
-  flex:1;
-}
-
-.chat-messages{
-  flex:1;
-  overflow:auto;
-  padding:24px;
-  display:flex;
-  flex-direction:column;
-  gap:13px;
-}
-
-.message-wrap{
-  max-width:70%;
-}
-
-.message-wrap.out{
-  align-self:flex-end;
-}
-
-.message{
-  padding:10px 14px;
-  border-radius:16px;
-  background:var(--bg);
-  border:1px solid var(--border);
-  font-size:13.5px;
-  line-height:1.5;
-}
-
-.message-wrap.out .message{
-  background:var(--accent);
-  color:#fff;
-  border-color:var(--accent);
-}
-
-.message-time{
-  color:var(--stone-light);
-  font-size:10px;
-  margin-top:4px;
-}
-
-.message-wrap.out .message-time{
-  text-align:right;
-}
-
-.offer{
-  align-self:flex-start;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  width:240px;
-}
-
-.offer-label{
-  color:var(--stone-light);
-  text-transform:uppercase;
-  font-size:10px;
-  letter-spacing:.05em;
-}
-
-.offer-price{
-  font-family:'IBM Plex Mono';
-  font-size:20px;
-  margin-top:4px;
-}
-
-.offer-buttons{
-  display:flex;
-  gap:7px;
-  margin-top:10px;
-}
-
-.offer-buttons button{
-  flex:1;
-  border-radius:8px;
-  padding:7px;
-  border:1px solid var(--border);
-  background:var(--surface);
-  font-size:11px;
-}
-
-.offer-buttons .accept{
-  background:var(--accent);
-  color:#fff;
-  border-color:var(--accent);
-}
-
-.suggestions{
-  display:flex;
-  gap:7px;
-  padding:0 18px 10px;
-  flex-wrap:wrap;
-}
-
-.suggestion{
-  border:1px solid var(--border);
-  background:var(--bg);
-  border-radius:99px;
-  padding:7px 11px;
-  font-size:11px;
-}
-
-.composer{
-  border-top:1px solid var(--border);
-  padding:12px 18px;
-  display:flex;
-  gap:7px;
-}
-
-.composer input{
-  flex:1;
-  min-width:0;
-  border:1px solid var(--border);
-  border-radius:99px;
-  padding:10px 14px;
-  outline:none;
-}
-
-.composer button{
-  border:0;
-  border-radius:99px;
-  padding:0 18px;
-  background:var(--ink);
-  color:#fff;
-}
-
-/* =========================
-   PROFILE
-========================= */
-
-.profile{
-  max-width:760px;
-  margin:auto;
-  padding:60px 0;
-}
-
-.profile-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:30px;
-  box-shadow:var(--shadow);
-}
-
-.profile-top{
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
-
-.profile-avatar{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:var(--accent-tint);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:'Instrument Sans';
-  font-size:23px;
-  font-weight:700;
-  color:var(--accent-ink);
-}
-
-.profile-name{
-  font-family:'Instrument Sans';
-  font-size:25px;
-  font-weight:700;
-}
-
-.profile-location{
-  color:var(--stone);
-  font-size:13px;
-  margin-top:3px;
-}
-
-.profile-stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:28px;
-}
-
-.profile-stat{
-  background:var(--bg);
-  border-radius:12px;
-  padding:15px;
-}
-
-.profile-stat strong{
-  font-family:'Instrument Sans';
-  font-size:21px;
-}
-
-.profile-stat span{
-  display:block;
-  color:var(--stone);
-  font-size:11px;
-  margin-top:2px;
-}
-
-/* =========================
-   MODAL
-========================= */
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:200;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:rgba(21,23,27,.35);
-  backdrop-filter:blur(4px);
-}
-
-.modal.open{
-  display:flex;
-}
-
-.modal-card{
-  width:min(560px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:var(--surface);
-  border-radius:22px;
-  border:1px solid var(--border);
-  box-shadow:0 25px 70px rgba(0,0,0,.18);
-  padding:26px;
-}
-
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.modal-title{
-  font-family:'Instrument Sans';
-  font-size:24px;
-  font-weight:700;
-}
-
-.close{
-  border:1px solid var(--border);
-  background:var(--surface);
-  width:34px;
-  height:34px;
-  border-radius:50%;
-}
-
-/* =========================
-   TOAST
-========================= */
-
-.toast{
-  position:fixed;
-  z-index:300;
-  left:50%;
-  bottom:25px;
-  transform:translate(-50%,20px);
-  opacity:0;
-  pointer-events:none;
-  background:var(--ink);
-  color:#fff;
-  padding:11px 16px;
   border-radius:999px;
-  font-size:12px;
-  transition:.25s;
+  padding:4px 7px;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
+/* =========================
+   CTA
+========================= */
+
+.cta{
+  padding:0 0 92px;
+}
+
+.cta-box{
+  border-radius:26px;
+  background:var(--accent);
+  color:white;
+  padding:55px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+  position:relative;
+  overflow:hidden;
+}
+
+.cta-box::after{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);
+  right:-80px;
+  top:-100px;
+}
+
+.cta-title{
+  font-family:'Instrument Sans';
+  font-size:clamp(28px,4vw,43px);
+  font-weight:700;
+  line-height:1.05;
+}
+
+.cta-text{
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  max-width:520px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.cta .btn{
+  background:white;
+  color:var(--accent-dark);
+  flex-shrink:0;
 }
 
 /* =========================
@@ -1325,14 +1029,13 @@ header{
 
 footer{
   border-top:1px solid var(--border);
-  padding:45px 0;
-  margin-top:20px;
+  padding:40px 0;
 }
 
-.footer-inner{
+.footer{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   gap:20px;
   flex-wrap:wrap;
 }
@@ -1345,75 +1048,494 @@ footer{
   font-size:12px;
 }
 
+.footer-links a:hover{
+  color:var(--ink);
+}
+
+.copyright{
+  color:var(--stone-light);
+  font-size:11.5px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  background:rgba(15,17,18,.45);
+  backdrop-filter:blur(7px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .25s,visibility .25s;
+}
+
+.modal.open{
+  opacity:1;
+  visibility:visible;
+}
+
+.modal-card{
+  width:min(680px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:0 30px 80px rgba(0,0,0,.18);
+  transform:translateY(20px) scale(.98);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+}
+
+.modal.open .modal-card{
+  transform:translateY(0) scale(1);
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 22px;
+  border-bottom:1px solid var(--border);
+}
+
+.modal-title{
+  font-family:'Instrument Sans';
+  font-size:20px;
+  font-weight:700;
+}
+
+.modal-body{
+  padding:22px;
+}
+
+.close{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--surface-2);
+  color:var(--ink);
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* =========================
+   SEARCH MODAL
+========================= */
+
+.search-large{
+  display:flex;
+  gap:8px;
+}
+
+.search-large input{
+  flex:1;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:13px;
+  outline:0;
+  color:var(--ink);
+  background:var(--surface);
+}
+
+.search-result{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.result{
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  transition:all var(--transition);
+}
+
+.result:hover{
+  border-color:var(--accent);
+  background:var(--accent-tint);
+}
+
+.result-title{
+  font-weight:600;
+  font-size:13px;
+}
+
+.result-meta{
+  color:var(--stone-light);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.result-price{
+  font-family:'IBM Plex Mono';
+  font-size:13px;
+}
+
+/* =========================
+   SELL MODAL
+========================= */
+
+.sell-step{
+  display:none;
+}
+
+.sell-step.active{
+  display:block;
+  animation:fadeUp .35s ease;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.upload{
+  min-height:180px;
+  border:1.5px dashed var(--border);
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all var(--transition);
+  text-align:center;
+  padding:20px;
+}
+
+.upload:hover{
+  border-color:var(--accent);
+  background:var(--accent-tint);
+}
+
+.upload-icon{
+  font-size:32px;
+  margin-bottom:8px;
+}
+
+.upload-title{
+  font-weight:600;
+  font-size:14px;
+}
+
+.upload-text{
+  color:var(--stone);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.photo-preview{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.preview{
+  aspect-ratio:1;
+  border-radius:10px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+
+.preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.form-group{
+  margin-top:17px;
+}
+
+.form-label{
+  display:block;
+  font-size:12px;
+  color:var(--stone);
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+.form-input{
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--ink);
+  border-radius:11px;
+  padding:11px 13px;
+  outline:0;
+  transition:border-color var(--transition),box-shadow var(--transition);
+}
+
+.form-input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-tint);
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.ai-box{
+  margin-top:18px;
+  padding:13px;
+  border-radius:13px;
+  background:var(--accent-tint);
+  color:var(--accent-dark);
+  font-size:12.5px;
+  line-height:1.5;
+}
+
+.price-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.price-choice{
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:12px 8px;
+  text-align:center;
+  cursor:pointer;
+  transition:all var(--transition);
+}
+
+.price-choice:hover,
+.price-choice.selected{
+  border-color:var(--accent);
+  background:var(--accent-tint);
+}
+
+.price-choice small{
+  display:block;
+  color:var(--stone);
+  font-size:10px;
+}
+
+.price-choice strong{
+  display:block;
+  margin-top:5px;
+  font-family:'IBM Plex Mono';
+}
+
+.modal-actions{
+  display:flex;
+  gap:9px;
+  margin-top:24px;
+  justify-content:flex-end;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:15px;
+}
+
+.avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:var(--accent-tint);
+  color:var(--accent-dark);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+
+.profile-name{
+  font-weight:700;
+}
+
+.profile-meta{
+  color:var(--stone);
+  font-size:12px;
+  margin-top:3px;
+}
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+.notifications{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.notification{
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  display:flex;
+  gap:10px;
+}
+
+.notification-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:var(--accent-tint);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.notification-text{
+  font-size:12.5px;
+  line-height:1.45;
+}
+
+.notification-time{
+  color:var(--stone-light);
+  font-size:10.5px;
+  margin-top:3px;
+}
+
+/* =========================
+   DETAIL
+========================= */
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.detail-image{
+  min-height:360px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#ECEBE7,#D8D6CF);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+}
+
+.detail-info h2{
+  font-family:'Instrument Sans';
+  font-size:28px;
+}
+
+.detail-price{
+  font-family:'IBM Plex Mono';
+  font-size:23px;
+  margin-top:14px;
+}
+
+.detail-meta{
+  color:var(--stone);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.detail-description{
+  color:var(--stone);
+  line-height:1.6;
+  font-size:14px;
+  margin-top:20px;
+}
+
+.detail-actions{
+  display:flex;
+  gap:8px;
+  margin-top:22px;
+}
+
+/* =========================
+   REVEAL
+========================= */
+
+.reveal{
+  opacity:0;
+  transform:translateY(22px);
+  transition:
+    opacity .7s ease,
+    transform .7s cubic-bezier(.2,.8,.2,1);
+}
+
+.reveal.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media(max-width:950px){
+@media(max-width:1000px){
   .header-search{
+    width:170px;
+  }
+
+  .hero-grid{
+    gap:40px;
+  }
+
+  .category-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .listing-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:820px){
+  .nav,
+  .header-search,
+  .header-actions .btn{
     display:none;
+  }
+
+  .header{
+    justify-content:space-between;
+  }
+
+  .mobile-menu{
+    display:flex;
+  }
+
+  .hero{
+    padding-top:55px;
   }
 
   .hero-grid{
     grid-template-columns:1fr;
   }
 
-  .hero-card{
-    max-width:500px;
-  }
-
-  .listing-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .category-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-}
-
-@media(max-width:720px){
-
-  .wrap{
-    width:min(100% - 28px,1180px);
-  }
-
-  .nav,
-  .header-actions .btn{
-    display:none;
-  }
-
-  .mobile-menu{
-    display:block;
-    border:1px solid var(--border);
-    background:var(--surface);
-    width:38px;
-    height:38px;
-    border-radius:50%;
-  }
-
-  .header-inner{
-    justify-content:space-between;
-  }
-
-  .hero{
-    padding:50px 0;
-  }
-
-  .hero h1{
-    font-size:45px;
-  }
-
-  .hero-sub{
-    font-size:15px;
-  }
-
-  .search-box{
-    flex-direction:column;
-    padding:8px;
-  }
-
-  .search-button{
-    height:45px;
+  .market-card{
+    max-width:550px;
+    margin:auto;
   }
 
   .stats-grid{
@@ -1424,89 +1546,113 @@ footer{
     border-right:0;
   }
 
-  .stat{
-    border-bottom:1px solid var(--border);
+  .flow{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .cta-box{
+    padding:38px 28px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+
+@media(max-width:600px){
+  .hero h1{
+    font-size:43px;
+  }
+
+  .hero-text{
+    font-size:15px;
+  }
+
+  .hero-search{
+    flex-direction:column;
+    padding:7px;
+  }
+
+  .hero-search button{
+    height:44px;
+  }
+
+  .trust{
+    gap:9px 16px;
+  }
+
+  .product-image{
+    height:260px;
   }
 
   .section{
-    padding:58px 0;
-  }
-
-  .category-grid{
-    grid-template-columns:1fr 1fr;
+    padding:65px 0;
   }
 
   .flow{
     grid-template-columns:1fr;
   }
 
+  .category-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
   .listing-grid{
     grid-template-columns:1fr 1fr;
-    gap:10px;
+    gap:9px;
   }
 
   .listing-photo{
-    height:170px;
+    height:150px;
   }
 
-  .chat-layout{
-    margin:0;
-    border-radius:0;
-    border-left:0;
-    border-right:0;
-    height:calc(100vh - 68px);
+  .listing-content{
+    padding:11px;
+  }
+
+  .listing-name{
+    font-size:13px;
+  }
+
+  .listing-cost{
+    font-size:13px;
+  }
+
+  .listing-meta{
+    font-size:10px;
+  }
+
+  .detail-grid{
     grid-template-columns:1fr;
   }
 
-  .chat-list{
-    display:none;
+  .detail-image{
+    min-height:250px;
   }
 
-  .sell-wrap{
-    padding:25px 0 50px;
+  .modal{
+    padding:10px;
   }
 
-  .sell-card{
-    padding:20px;
-    border-radius:17px;
+  .modal-card{
+    border-radius:18px;
   }
 
-  .form-grid{
-    grid-template-columns:1fr;
+  .modal-actions{
+    flex-direction:column-reverse;
   }
 
-  .photo-upload{
-    grid-template-columns:repeat(2,1fr);
+  .modal-actions .btn{
+    width:100%;
   }
 
-  .price-options{
-    grid-template-columns:1fr;
+  .toast-wrap{
+    left:12px;
+    right:12px;
+    top:75px;
   }
 
-  .profile{
-    padding:30px 0;
-  }
-}
-
-@media(max-width:430px){
-  .listing-grid{
-    grid-template-columns:1fr;
-  }
-
-  .listing-photo{
-    height:220px;
-  }
-
-  .hero-card{
-    padding:14px;
-  }
-
-  .product-image{
-    height:240px;
-  }
-
-  .profile-stats{
-    grid-template-columns:1fr;
+  .toast{
+    min-width:0;
+    width:100%;
   }
 }
 </style>
@@ -1514,134 +1660,164 @@ footer{
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-inner">
+    <div class="loader-logo">
+      <span class="loader-dot"></span>
+      Livo
+    </div>
+    <div class="loader-line"><span></span></div>
+  </div>
+</div>
 
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- HEADER -->
 <header>
-  <div class="wrap header-inner">
+  <div class="container header">
 
-    <button class="logo" onclick="showView('home')" style="background:none;border:0;">
+    <a href="#" class="logo" onclick="goHome(event)">
       <span class="logo-dot"></span>
       Livo
-    </button>
+    </a>
 
     <nav class="nav">
-      <button onclick="showView('discover')">Entdecken</button>
-      <button onclick="scrollToCategories()">Kategorien</button>
-      <button onclick="showView('sell')">Verkaufen</button>
+      <a href="#entdecken" class="active">Entdecken</a>
+      <a href="#kategorien">Kategorien</a>
+      <a href="#so-funktionierts">So funktioniert's</a>
     </nav>
 
-    <div class="header-search">
+    <label class="header-search">
       <span>⌕</span>
-      <input id="headerSearch" placeholder="Suchen…" onkeydown="headerSearch(event)">
-    </div>
+      <input
+        id="headerSearch"
+        type="search"
+        placeholder="Suchen…"
+        onkeydown="if(event.key==='Enter')performSearch(this.value)"
+      >
+    </label>
 
     <div class="header-actions">
-
-      <button class="icon-btn" onclick="showView('favorites')" title="Favoriten">
+      <button class="icon-btn" onclick="openNotifications()" aria-label="Benachrichtigungen">
         ♡
-        <span class="badge" id="favoriteCount">0</span>
-      </button>
-
-      <button class="icon-btn" onclick="showView('chat')" title="Nachrichten">
-        ♧
         <span class="badge">2</span>
       </button>
 
-      <button class="btn btn-ghost" onclick="showView('profile')">
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Darstellung wechseln">
+        ◐
+      </button>
+
+      <button class="btn btn-ghost" onclick="openProfile()">
         Profil
       </button>
 
-      <button class="btn btn-primary" onclick="showView('sell')">
+      <button class="btn btn-primary" onclick="openSell()">
         + Verkaufen
       </button>
-
-      <button class="mobile-menu" onclick="openMobileMenu()">☰</button>
-
     </div>
+
+    <button class="icon-btn mobile-menu" onclick="openMobileMenu()" aria-label="Menü">
+      ☰
+    </button>
 
   </div>
 </header>
 
-<!-- ================= HOME ================= -->
+<!-- HERO -->
+<main id="home">
 
-<main id="home" class="view active">
+<section class="hero" id="entdecken">
+  <div class="container hero-grid">
 
-<section class="hero">
-  <div class="wrap hero-grid">
-
-    <div>
+    <div class="reveal">
 
       <div class="eyebrow">
-        <span class="flag"></span>
+        <span class="eyebrow-dot"></span>
         Für die Schweiz gebaut
       </div>
 
       <h1>
         Finde, was<br>
-        wirklich zu <em>dir</em> passt.
+        wirklich zu <span>dir</span> passt.
       </h1>
 
-      <p class="hero-sub">
-        Ein moderner Schweizer Marktplatz mit intelligenter Suche,
-        fairen Preisvorschlägen und sicherem Handeln.
+      <p class="hero-text">
+        Livo macht Kaufen und Verkaufen einfacher:
+        intelligente Suche, faire Preisvorschläge und
+        ein Deal Score, der dir bei Entscheidungen hilft.
       </p>
 
-      <div class="search-box">
+      <form class="hero-search" onsubmit="heroSearch(event)">
         <input
-          id="mainSearch"
+          id="heroSearchInput"
+          type="search"
           placeholder="z.B. MacBook unter 800 CHF in Bern…"
-          onkeydown="mainSearchKey(event)"
         >
-        <button class="search-button" onclick="performSearch()">
+        <button type="submit">
           Suchen
         </button>
+      </form>
+
+      <div class="search-tags">
+        <span>Beliebt:</span>
+        <button class="search-tag" onclick="quickSearch('MacBook')">MacBook</button>
+        <button class="search-tag" onclick="quickSearch('Velo')">Velo</button>
+        <button class="search-tag" onclick="quickSearch('Sofa')">Sofa</button>
+        <button class="search-tag" onclick="quickSearch('iPhone')">iPhone</button>
       </div>
 
-      <div class="search-hint">
-        Beispiel: <b>MacBook</b> · unter <b>CHF 800</b> · <b>Bern</b>
-      </div>
-
-      <div class="hero-buttons">
-        <button class="btn btn-primary" onclick="performSearch()">
-          Jetzt entdecken
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="scrollToListings()">
+          Jetzt entdecken →
         </button>
 
-        <button class="btn btn-ghost" onclick="showView('sell')">
+        <button class="btn btn-ghost" onclick="openSell()">
           Etwas verkaufen
         </button>
       </div>
 
-      <div class="hero-trust">
-        <span>✓ Verifizierte Verkäufer</span>
-        <span>✓ Sicher bezahlen</span>
+      <div class="trust">
+        <span>✓ Verifizierte Profile</span>
+        <span>✓ Deal Score</span>
         <span>✓ Schweizer Marktplatz</span>
       </div>
 
     </div>
 
-    <div class="hero-card">
+    <div class="market-card reveal">
 
-      <button class="favorite" onclick="toggleFavorite(1,this)">
-        ♡
-      </button>
+      <div class="product-image">
+        <div class="score">
+          <div class="score-number">91</div>
+          <div class="score-label">Deal Score</div>
+        </div>
+      </div>
 
-      <div class="product-image"></div>
-
-      <div class="product-info">
-
-        <div class="product-title">
+      <div class="card-info">
+        <div class="card-title">
           MacBook Air M2, 256GB
         </div>
 
-        <div class="product-location">
+        <div class="card-location">
           Bern · vor 2 Stunden
         </div>
 
-        <div class="product-bottom">
-          <div class="price">CHF 699.–</div>
-          <div class="score">91 Deal Score</div>
-        </div>
+        <div class="card-bottom">
+          <div class="card-price">
+            CHF 699.–
+          </div>
 
+          <button
+            class="fav"
+            id="heroFav"
+            onclick="toggleFavorite(this,'MacBook Air M2')"
+            aria-label="Favorisieren"
+          >
+            ♡
+          </button>
+        </div>
       </div>
 
     </div>
@@ -1649,25 +1825,26 @@ footer{
   </div>
 </section>
 
+<!-- STATS -->
 <section class="stats">
-  <div class="wrap stats-grid">
+  <div class="container stats-grid">
 
-    <div class="stat">
+    <div class="stat reveal">
       <div class="stat-number">120k+</div>
-      <div class="stat-label">aktive Inserate</div>
+      <div class="stat-label">Inserate</div>
     </div>
 
-    <div class="stat">
+    <div class="stat reveal">
       <div class="stat-number">26</div>
       <div class="stat-label">Kantone</div>
     </div>
 
-    <div class="stat">
+    <div class="stat reveal">
       <div class="stat-number">4.8/5</div>
-      <div class="stat-label">Verkäufer-Bewertung</div>
+      <div class="stat-label">Bewertung</div>
     </div>
 
-    <div class="stat">
+    <div class="stat reveal">
       <div class="stat-number">&lt;60s</div>
       <div class="stat-label">Inserat erstellen</div>
     </div>
@@ -1675,52 +1852,60 @@ footer{
   </div>
 </section>
 
-<section class="section">
-  <div class="wrap">
+<!-- SO FUNKTIONIERTS -->
+<section class="section" id="so-funktionierts">
 
-    <div class="section-head">
+  <div class="container">
+
+    <div class="section-header reveal">
       <div class="section-eyebrow">So funktioniert's</div>
 
       <h2 class="section-title">
-        Kaufen und verkaufen, ohne Umwege.
+        Einfacher verkaufen.<br>
+        Besser kaufen.
       </h2>
 
-      <p class="section-desc">
-        Livo macht die wichtigsten Schritte einfacher.
+      <p class="section-description">
+        Livo nimmt dir unnötige Schritte ab und macht
+        den Marktplatz übersichtlicher.
       </p>
     </div>
 
     <div class="flow">
 
-      <div class="flow-item">
+      <div class="flow-item reveal">
         <div class="flow-number">01</div>
         <div class="flow-title">Suchen</div>
         <div class="flow-text">
-          Beschreibe einfach, was du suchst.
+          Schreib einfach, was du suchst.
+          Livo versteht Budget, Ort und Produkt.
         </div>
       </div>
 
-      <div class="flow-item">
+      <div class="flow-item reveal">
         <div class="flow-number">02</div>
         <div class="flow-title">Vergleichen</div>
         <div class="flow-text">
-          Preis, Zustand und Deal Score auf einen Blick.
+          Preise, Zustand und Deal Score
+          helfen dir bei der Auswahl.
         </div>
       </div>
 
-      <div class="flow-item">
+      <div class="flow-item reveal">
         <div class="flow-number">03</div>
         <div class="flow-title">Kontaktieren</div>
         <div class="flow-text">
-          Direkt mit dem Verkäufer schreiben.
+          Schreib dem Verkäufer direkt über
+          den integrierten Chat.
         </div>
       </div>
 
-      <div class="flow-item">
+      <div class="flow-item reveal">
         <div class="flow-number">04</div>
-        <div class="flow-title">Deal machen</div>
+        <div class="flow-title">Handeln</div>
         <div class="flow-text">
-          Sicher und unkompliziert abschliessen.
+          Mach ein faires Angebot und
+          schliesse den Deal ab.
         </div>
       </div>
 
@@ -1729,50 +1914,52 @@ footer{
   </div>
 </section>
 
-<section class="section" id="categoriesSection" style="padding-top:0;">
-  <div class="wrap">
+<!-- KATEGORIEN -->
+<section class="section" id="kategorien">
 
-    <div class="section-head">
+  <div class="container">
+
+    <div class="section-header reveal">
       <div class="section-eyebrow">Kategorien</div>
 
       <h2 class="section-title">
-        Was möchtest du entdecken?
+        Was suchst du heute?
       </h2>
     </div>
 
     <div class="category-grid">
 
-      <div class="category" onclick="filterCategory('Elektronik')">
+      <div class="category reveal" onclick="filterCategory('Elektronik')">
         <div class="category-icon">💻</div>
         <div class="category-name">Elektronik</div>
         <div class="category-count">18'200 Inserate</div>
       </div>
 
-      <div class="category" onclick="filterCategory('Velos')">
+      <div class="category reveal" onclick="filterCategory('Velos')">
         <div class="category-icon">🚲</div>
         <div class="category-name">Velos</div>
         <div class="category-count">9'400 Inserate</div>
       </div>
 
-      <div class="category" onclick="filterCategory('Mode')">
+      <div class="category reveal" onclick="filterCategory('Mode')">
         <div class="category-icon">👕</div>
         <div class="category-name">Mode</div>
         <div class="category-count">31'700 Inserate</div>
       </div>
 
-      <div class="category" onclick="filterCategory('Möbel')">
+      <div class="category reveal" onclick="filterCategory('Möbel')">
         <div class="category-icon">🛋️</div>
         <div class="category-name">Möbel</div>
         <div class="category-count">12'100 Inserate</div>
       </div>
 
-      <div class="category" onclick="filterCategory('Sport')">
+      <div class="category reveal" onclick="filterCategory('Sport')">
         <div class="category-icon">⚽</div>
         <div class="category-name">Sport</div>
         <div class="category-count">7'850 Inserate</div>
       </div>
 
-      <div class="category" onclick="filterCategory('Immobilien')">
+      <div class="category reveal" onclick="filterCategory('Immobilien')">
         <div class="category-icon">🏠</div>
         <div class="category-name">Immobilien</div>
         <div class="category-count">2'300 Inserate</div>
@@ -1783,369 +1970,253 @@ footer{
   </div>
 </section>
 
-<footer>
-  <div class="wrap footer-inner">
+<!-- INSERATE -->
+<section class="section" id="inserate">
 
-    <button class="logo" onclick="showView('home')" style="background:none;border:0;">
-      <span class="logo-dot"></span>
-      Livo
-    </button>
+  <div class="container">
 
-    <div class="footer-links">
-      <a href="#" onclick="showToast('Impressum folgt')">Impressum</a>
-      <a href="#" onclick="showToast('AGB folgen')">AGB</a>
-      <a href="#" onclick="showToast('Datenschutz folgt')">Datenschutz</a>
-      <a href="#" onclick="showToast('Hilfe geöffnet')">Hilfe</a>
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Entdecken</div>
+
+      <h2 class="section-title">
+        Interessante Angebote
+      </h2>
+
+      <p class="section-description" id="resultDescription">
+        Ausgewählte Inserate aus der Schweiz.
+      </p>
     </div>
 
-    <div style="color:var(--stone-light);font-size:11px;">
-      © 2026 Livo Schweiz
-    </div>
+    <div class="listing-toolbar">
 
-  </div>
-</footer>
+      <div class="filter-buttons">
 
-</main>
-
-<!-- ================= DISCOVER ================= -->
-
-<section id="discover" class="view">
-
-  <div class="wrap">
-
-    <div class="page-top">
-
-      <div class="page-top-row">
-
-        <div>
-          <div class="section-eyebrow">Marktplatz</div>
-          <div class="page-title">Entdecken</div>
-          <div class="page-sub" id="discoverSub">
-            Gute Angebote in deiner Nähe.
-          </div>
-        </div>
-
-        <button class="btn btn-primary" onclick="showView('sell')">
-          + Inserat erstellen
-        </button>
-
-      </div>
-
-      <div class="search-box" style="max-width:100%;margin-top:24px;">
-        <input
-          id="discoverSearch"
-          placeholder="Was suchst du?"
-          oninput="filterListings()"
-        >
-        <button class="search-button" onclick="filterListings()">
-          Suchen
-        </button>
-      </div>
-
-      <div class="filters">
-
-        <button class="filter active" onclick="setFilter('Alle',this)">
+        <button class="filter active" onclick="setFilter(this,'Alle')">
           Alle
         </button>
 
-        <button class="filter" onclick="setFilter('Elektronik',this)">
+        <button class="filter" onclick="setFilter(this,'Elektronik')">
           Elektronik
         </button>
 
-        <button class="filter" onclick="setFilter('Velos',this)">
+        <button class="filter" onclick="setFilter(this,'Velos')">
           Velos
         </button>
 
-        <button class="filter" onclick="setFilter('Mode',this)">
+        <button class="filter" onclick="setFilter(this,'Mode')">
           Mode
         </button>
 
-        <button class="filter" onclick="setFilter('Möbel',this)">
+        <button class="filter" onclick="setFilter(this,'Möbel')">
           Möbel
         </button>
 
-        <button class="filter" onclick="setFilter('Sport',this)">
-          Sport
-        </button>
-
       </div>
+
+      <select class="sort" onchange="sortListings(this.value)">
+        <option value="recommended">Empfohlen</option>
+        <option value="price-low">Preis aufsteigend</option>
+        <option value="price-high">Preis absteigend</option>
+      </select>
 
     </div>
 
     <div class="listing-grid" id="listingGrid"></div>
 
   </div>
-
 </section>
 
-<!-- ================= FAVORITES ================= -->
+<!-- CTA -->
+<section class="cta">
 
-<section id="favorites" class="view">
+  <div class="container">
 
-  <div class="wrap">
+    <div class="cta-box reveal">
 
-    <div class="page-top">
+      <div>
+        <div class="cta-title">
+          Du hast etwas,<br>
+          das jemand sucht?
+        </div>
 
-      <div class="section-eyebrow">Gespeichert</div>
-      <div class="page-title">Meine Favoriten</div>
-      <div class="page-sub">
-        Inserate, die du später wiederfinden möchtest.
+        <div class="cta-text">
+          Erstelle dein Inserat in weniger als einer Minute.
+          Livo hilft dir bei Titel, Beschreibung und Preis.
+        </div>
       </div>
 
-    </div>
+      <button class="btn" onclick="openSell()">
+        Inserat erstellen →
+      </button>
 
-    <div class="listing-grid" id="favoriteGrid"></div>
+    </div>
 
   </div>
-
 </section>
 
-<!-- ================= CHAT ================= -->
+</main>
 
-<section id="chat" class="view">
+<!-- FOOTER -->
+<footer>
+  <div class="container footer">
 
-  <div class="chat-layout">
+    <a href="#" class="logo" onclick="goHome(event)">
+      <span class="logo-dot"></span>
+      Livo
+    </a>
 
-    <div class="chat-list">
+    <div class="footer-links">
+      <a href="#" onclick="showInfo('Über Livo')">Über Livo</a>
+      <a href="#" onclick="showInfo('Datenschutz')">Datenschutz</a>
+      <a href="#" onclick="showInfo('AGB')">AGB</a>
+      <a href="#" onclick="showInfo('Hilfe')">Hilfe</a>
+    </div>
 
-      <div class="chat-list-head">
-        Nachrichten
-      </div>
+    <div class="copyright">
+      © 2026 Livo Schweiz
+    </div>
 
-      <div class="chat-person active">
-        <div class="avatar">DK</div>
-        <div>
-          <div class="person-name">David K.</div>
-          <div class="person-preview">Ist das noch verfügbar?</div>
+  </div>
+</footer>
+
+<!-- SEARCH MODAL -->
+<div class="modal" id="searchModal" onclick="closeOnBackdrop(event,'searchModal')">
+
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <div class="modal-title">Suchen</div>
+      <button class="close" onclick="closeModal('searchModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <form class="search-large" onsubmit="modalSearch(event)">
+        <input id="modalSearchInput" placeholder="Was suchst du?">
+        <button class="btn btn-primary">Suchen</button>
+      </form>
+
+      <div class="search-result" id="searchResults">
+        <div class="result" onclick="quickSearch('MacBook')">
+          <div>
+            <div class="result-title">MacBook Air M2</div>
+            <div class="result-meta">Bern · Elektronik</div>
+          </div>
+          <div class="result-price">CHF 699</div>
         </div>
-      </div>
 
-      <div class="chat-person">
-        <div class="avatar">LM</div>
-        <div>
-          <div class="person-name">Laura M.</div>
-          <div class="person-preview">Perfekt, bis morgen dann 👍</div>
-        </div>
-      </div>
-
-      <div class="chat-person">
-        <div class="avatar">SF</div>
-        <div>
-          <div class="person-name">Stefan F.</div>
-          <div class="person-preview">Danke für die schnelle Lieferung!</div>
+        <div class="result" onclick="quickSearch('Velo')">
+          <div>
+            <div class="result-title">Trekking Velo</div>
+            <div class="result-meta">Zürich · Velos</div>
+          </div>
+          <div class="result-price">CHF 850</div>
         </div>
       </div>
 
     </div>
+  </div>
+</div>
 
-    <div class="chat-window">
+<!-- SELL MODAL -->
+<div class="modal" id="sellModal" onclick="closeOnBackdrop(event,'sellModal')">
 
-      <div class="chat-head">
+  <div class="modal-card">
 
-        <div class="avatar">DK</div>
-
-        <div class="chat-head-info">
-          <div class="person-name">David K.</div>
-          <div class="person-preview">
-            Antwortet meist in 2 Std.
-          </div>
-        </div>
-
-        <div class="score">
-          MacBook · CHF 699
-        </div>
-
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Inserat erstellen</div>
       </div>
 
-      <div class="chat-messages" id="chatMessages">
+      <button class="close" onclick="closeModal('sellModal')">×</button>
+    </div>
 
-        <div class="message-wrap">
-          <div class="message">
-            Hoi! Ist das MacBook noch verfügbar?
-          </div>
-          <div class="message-time">14:02</div>
-        </div>
+    <div class="modal-body">
 
-        <div class="message-wrap out">
-          <div class="message">
-            Ja klar, steht noch! 🙂
-          </div>
-          <div class="message-time">14:05</div>
-        </div>
+      <!-- STEP 1 -->
+      <div class="sell-step active" id="sellStep1">
 
-        <div class="message-wrap">
-          <div class="message">
-            Top. Würdest du auf 650 runtergehen?
-          </div>
-          <div class="message-time">14:06</div>
-        </div>
+        <div class="upload" onclick="document.getElementById('photoInput').click()">
 
-        <div class="offer">
+          <div class="upload-icon">＋</div>
 
-          <div class="offer-label">
-            Angebot erhalten
+          <div class="upload-title">
+            Fotos hinzufügen
           </div>
 
-          <div class="offer-price">
-            CHF 650.–
-          </div>
-
-          <div class="offer-buttons">
-            <button class="accept" onclick="acceptOffer()">
-              Annehmen
-            </button>
-
-            <button onclick="declineOffer()">
-              Ablehnen
-            </button>
+          <div class="upload-text">
+            Mehrere Bilder möglich · JPG, PNG
           </div>
 
         </div>
-
-      </div>
-
-      <div class="suggestions">
-
-        <button class="suggestion" onclick="useSuggestion('Ja, passt für mich')">
-          Ja, passt für mich
-        </button>
-
-        <button class="suggestion" onclick="useSuggestion('Kann ich morgen abholen?')">
-          Kann ich morgen abholen?
-        </button>
-
-        <button class="suggestion" onclick="useSuggestion('Versand möglich?')">
-          Versand möglich?
-        </button>
-
-      </div>
-
-      <div class="composer">
 
         <input
-          id="messageInput"
-          placeholder="Nachricht schreiben…"
-          onkeydown="messageKey(event)"
+          type="file"
+          id="photoInput"
+          accept="image/*"
+          multiple
+          hidden
+          onchange="previewPhotos(this)"
         >
 
-        <button onclick="sendMessage()">
-          Senden
-        </button>
+        <div class="photo-preview" id="photoPreview"></div>
+
+        <div class="modal-actions">
+
+          <button class="btn btn-ghost" onclick="closeModal('sellModal')">
+            Abbrechen
+          </button>
+
+          <button class="btn btn-primary" onclick="nextSellStep()">
+            Weiter →
+          </button>
+
+        </div>
 
       </div>
 
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ================= SELL ================= -->
-
-<section id="sell" class="view">
-
-  <div class="sell-wrap">
-
-    <div class="progress-label">
-      <span id="sellStepLabel">Schritt 1 von 3</span>
-      <span id="sellStepName">Inserat erstellen</span>
-    </div>
-
-    <div class="progress">
-      <div id="progress1" class="active"></div>
-      <div id="progress2"></div>
-      <div id="progress3"></div>
-    </div>
-
-    <div class="sell-card">
-
-      <div id="sellStep1">
-
-        <div class="section-eyebrow">
-          Neues Inserat
-        </div>
-
-        <div class="sell-title">
-          Was möchtest du verkaufen?
-        </div>
-
-        <div class="sell-sub">
-          Lade Fotos hoch. Livo hilft dir anschliessend bei Titel,
-          Beschreibung und Preis.
-        </div>
-
-        <div class="photo-upload">
-
-          <label class="photo-box">
-            <input
-              id="photoInput"
-              type="file"
-              accept="image/*"
-              multiple
-              hidden
-              onchange="previewPhotos(event)"
-            >
-            + Fotos
-          </label>
-
-          <div class="photo-box" id="photo2">+</div>
-          <div class="photo-box" id="photo3">+</div>
-          <div class="photo-box" id="photo4">+</div>
-
-        </div>
+      <!-- STEP 2 -->
+      <div class="sell-step" id="sellStep2">
 
         <div class="ai-box">
-          ✨ <b>Livo KI</b> erkennt dein Produkt automatisch und macht
-          dir passende Vorschläge.
+          ✨ <strong>Livo KI</strong><br>
+          Wir erstellen automatisch einen Vorschlag.
+          Du kannst alles jederzeit ändern.
         </div>
 
         <div class="form-group">
-
-          <label class="form-label">
-            Titel
-          </label>
-
+          <label class="form-label">Titel</label>
           <input
+            class="form-input"
             id="sellTitle"
-            class="input"
-            value="MacBook Air M2, 256GB, Space Grau"
+            value="MacBook Air M2, 256GB"
           >
-
         </div>
 
-        <div class="form-grid">
+        <div class="form-row">
 
           <div class="form-group">
+            <label class="form-label">Kategorie</label>
 
-            <label class="form-label">
-              Kategorie
-            </label>
-
-            <select id="sellCategory" class="select">
+            <select class="form-input" id="sellCategory">
               <option>Elektronik</option>
               <option>Velos</option>
               <option>Mode</option>
               <option>Möbel</option>
               <option>Sport</option>
-              <option>Immobilien</option>
-              <option>Sonstiges</option>
+              <option>Andere</option>
             </select>
-
           </div>
 
           <div class="form-group">
+            <label class="form-label">Zustand</label>
 
-            <label class="form-label">
-              Zustand
-            </label>
-
-            <select id="sellCondition" class="select">
+            <select class="form-input">
               <option>Wie neu</option>
               <option>Sehr gut</option>
               <option>Gut</option>
               <option>Akzeptabel</option>
             </select>
-
           </div>
 
         </div>
@@ -2156,21 +2227,11 @@ footer{
             Beschreibung
           </label>
 
-          <textarea id="sellDescription" class="textarea">MacBook Air M2 mit 256GB Speicher. Sehr guter, gepflegter Zustand mit leichten Gebrauchsspuren. Funktioniert einwandfrei.</textarea>
-
-        </div>
-
-        <div class="form-group">
-
-          <label class="form-label">
-            Standort
-          </label>
-
-          <input
-            id="sellLocation"
-            class="input"
-            value="Bern"
-          >
+          <textarea
+            class="form-input"
+            id="sellDescription"
+            rows="4"
+          >Sehr guter und gepflegter Zustand. Funktioniert einwandfrei. Verkauf wegen Neuanschaffung.</textarea>
 
         </div>
 
@@ -2182,93 +2243,41 @@ footer{
 
           <div class="price-options">
 
-            <div class="price-choice" onclick="selectPrice(649,this)">
-              <span>Schnell verkaufen</span>
-              <strong>CHF 649</strong>
+            <div class="price-choice" onclick="choosePrice(this,649)">
+              <small>Schnell</small>
+              <strong>649</strong>
             </div>
 
-            <div class="price-choice selected" onclick="selectPrice(699,this)">
-              <span>Empfohlen</span>
-              <strong>CHF 699</strong>
+            <div class="price-choice selected" onclick="choosePrice(this,699)">
+              <small>Empfohlen</small>
+              <strong>699</strong>
             </div>
 
-            <div class="price-choice" onclick="selectPrice(749,this)">
-              <span>Maximal</span>
-              <strong>CHF 749</strong>
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="sell-actions">
-
-          <button class="btn btn-ghost" onclick="showView('home')">
-            Abbrechen
-          </button>
-
-          <button class="btn btn-primary" style="flex:1" onclick="nextSellStep()">
-            Weiter zur Vorschau →
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- STEP 2 -->
-
-      <div id="sellStep2" style="display:none;">
-
-        <div class="section-eyebrow">
-          Vorschau
-        </div>
-
-        <div class="sell-title">
-          So sieht dein Inserat aus.
-        </div>
-
-        <div class="sell-sub">
-          Prüfe alles noch einmal, bevor du es veröffentlichst.
-        </div>
-
-        <div style="margin-top:25px;border:1px solid var(--border);border-radius:16px;overflow:hidden;">
-
-          <div class="product-image" id="previewImage"></div>
-
-          <div style="padding:18px;">
-
-            <div id="previewTitle" class="product-title">
-              MacBook Air M2
-            </div>
-
-            <div id="previewMeta" class="product-location">
-              Bern · Wie neu
-            </div>
-
-            <div id="previewDescription" style="color:var(--stone);font-size:13px;line-height:1.5;margin-top:12px;">
-            </div>
-
-            <div class="product-bottom">
-              <div id="previewPrice" class="price">
-                CHF 699.–
-              </div>
-
-              <div class="score">
-                91 Deal Score
-              </div>
+            <div class="price-choice" onclick="choosePrice(this,749)">
+              <small>Maximum</small>
+              <strong>749</strong>
             </div>
 
           </div>
 
+          <input
+            class="form-input"
+            id="sellPrice"
+            style="margin-top:8px"
+            value="699"
+            type="number"
+            min="0"
+          >
+
         </div>
 
-        <div class="sell-actions">
+        <div class="modal-actions">
 
           <button class="btn btn-ghost" onclick="previousSellStep()">
             ← Zurück
           </button>
 
-          <button class="btn btn-primary" style="flex:1" onclick="publishListing()">
+          <button class="btn btn-primary" onclick="publishListing()">
             Inserat veröffentlichen
           </button>
 
@@ -2277,32 +2286,49 @@ footer{
       </div>
 
       <!-- STEP 3 -->
+      <div class="sell-step" id="sellStep3">
 
-      <div id="sellStep3" style="display:none;text-align:center;">
+        <div style="text-align:center;padding:20px 0">
 
-        <div style="font-size:55px;margin-top:20px;">
-          ✓
+          <div style="
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            background:var(--accent-tint);
+            color:var(--accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:auto;
+            font-size:30px;
+          ">
+            ✓
+          </div>
+
+          <h2
+            class="display"
+            style="font-size:27px;margin-top:18px"
+          >
+            Inserat ist bereit!
+          </h2>
+
+          <p
+            style="
+              color:var(--stone);
+              font-size:14px;
+              line-height:1.6;
+              margin-top:8px
+            "
+          >
+            Dein Inserat wurde als Demo veröffentlicht.
+            In der echten Version würde es jetzt live auf Livo erscheinen.
+          </p>
+
         </div>
 
-        <div class="section-eyebrow" style="margin-top:20px;">
-          Erfolgreich
-        </div>
+        <div class="modal-actions">
 
-        <div class="sell-title">
-          Dein Inserat ist online.
-        </div>
-
-        <div class="sell-sub">
-          Käufer können dein Inserat jetzt entdecken und dich kontaktieren.
-        </div>
-
-        <div class="sell-actions">
-
-          <button class="btn btn-ghost" style="flex:1" onclick="showView('home')">
-            Zur Startseite
-          </button>
-
-          <button class="btn btn-primary" style="flex:1" onclick="showView('discover')">
+          <button class="btn btn-primary" onclick="closeModal('sellModal');scrollToListings()">
             Inserate ansehen
           </button>
 
@@ -2311,68 +2337,66 @@ footer{
       </div>
 
     </div>
-
   </div>
+</div>
 
-</section>
+<!-- PROFILE MODAL -->
+<div class="modal" id="profileModal" onclick="closeOnBackdrop(event,'profileModal')">
 
-<!-- ================= PROFILE ================= -->
+  <div class="modal-card">
 
-<section id="profile" class="view">
+    <div class="modal-header">
+      <div class="modal-title">Mein Profil</div>
+      <button class="close" onclick="closeModal('profileModal')">×</button>
+    </div>
 
-  <div class="profile">
+    <div class="modal-body">
 
-    <div class="profile-card">
+      <div class="profile">
 
-      <div class="profile-top">
-
-        <div class="profile-avatar">
-          M
+        <div class="avatar">
+          MK
         </div>
 
         <div>
           <div class="profile-name">
-            Marko
+            Mein Livo-Profil
           </div>
 
-          <div class="profile-location">
-            📍 Schweiz · Mitglied seit 2026
+          <div class="profile-meta">
+            Mitglied seit 2026 · Bern
           </div>
         </div>
 
       </div>
 
-      <div class="profile-stats">
+      <div
+        style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:9px;
+          margin-top:14px
+        "
+      >
 
-        <div class="profile-stat">
-          <strong>4.9</strong>
-          <span>Bewertung</span>
-        </div>
+        <button class="btn btn-ghost" onclick="showInfo('Meine Favoriten')">
+          ♡ Favoriten
+        </button>
 
-        <div class="profile-stat">
-          <strong>12</strong>
-          <span>Verkäufe</span>
-        </div>
-
-        <div class="profile-stat">
-          <strong>8</strong>
-          <span>Favoriten</span>
-        </div>
+        <button class="btn btn-ghost" onclick="showInfo('Meine Inserate')">
+          ▣ Inserate
+        </button>
 
       </div>
 
-      <div style="margin-top:28px;display:grid;gap:10px;">
+      <div style="margin-top:18px">
 
-        <button class="btn btn-ghost" onclick="showView('favorites')">
-          ♡ Meine Favoriten
-        </button>
-
-        <button class="btn btn-ghost" onclick="showView('chat')">
-          ♧ Meine Nachrichten
-        </button>
-
-        <button class="btn btn-primary" onclick="showView('sell')">
-          + Neues Inserat
+        <button
+          class="btn btn-primary"
+          style="width:100%"
+          onclick="showToast('Profil ist als Demo aktiv.','success')"
+        >
+          Profil bearbeiten
         </button>
 
       </div>
@@ -2380,67 +2404,150 @@ footer{
     </div>
 
   </div>
+</div>
 
-</section>
-
-<!-- ================= MOBILE MENU ================= -->
-
-<div class="modal" id="mobileModal">
+<!-- NOTIFICATION MODAL -->
+<div class="modal" id="notificationModal" onclick="closeOnBackdrop(event,'notificationModal')">
 
   <div class="modal-card">
 
-    <div class="modal-head">
-
-      <div class="modal-title">
-        Livo
-      </div>
-
-      <button class="close" onclick="closeMobileMenu()">
-        ×
-      </button>
-
+    <div class="modal-header">
+      <div class="modal-title">Benachrichtigungen</div>
+      <button class="close" onclick="closeModal('notificationModal')">×</button>
     </div>
 
-    <div style="display:grid;gap:8px;">
+    <div class="modal-body">
 
-      <button class="btn btn-ghost" onclick="mobileNavigate('home')">
-        🏠 Startseite
-      </button>
+      <div class="notifications">
 
-      <button class="btn btn-ghost" onclick="mobileNavigate('discover')">
-        🔎 Entdecken
-      </button>
+        <div class="notification">
+          <div class="notification-icon">♡</div>
+          <div class="notification-text">
+            Dein gespeichertes Inserat wurde aktualisiert.
+            <div class="notification-time">vor 12 Min.</div>
+          </div>
+        </div>
 
-      <button class="btn btn-ghost" onclick="mobileNavigate('favorites')">
-        ♡ Favoriten
-      </button>
+        <div class="notification">
+          <div class="notification-icon">€</div>
+          <div class="notification-text">
+            Ein ähnliches Angebot ist jetzt günstiger.
+            <div class="notification-time">vor 38 Min.</div>
+          </div>
+        </div>
 
-      <button class="btn btn-ghost" onclick="mobileNavigate('chat')">
-        💬 Nachrichten
-      </button>
-
-      <button class="btn btn-primary" onclick="mobileNavigate('sell')">
-        + Verkaufen
-      </button>
-
-      <button class="btn btn-ghost" onclick="mobileNavigate('profile')">
-        👤 Profil
-      </button>
+      </div>
 
     </div>
 
   </div>
-
 </div>
 
-<!-- ================= TOAST ================= -->
+<!-- DETAIL MODAL -->
+<div class="modal" id="detailModal" onclick="closeOnBackdrop(event,'detailModal')">
 
-<div class="toast" id="toast"></div>
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <div class="modal-title">Inserat</div>
+      <button class="close" onclick="closeModal('detailModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="detail-grid">
+
+        <div class="detail-image" id="detailImage">
+          💻
+        </div>
+
+        <div class="detail-info">
+
+          <h2 id="detailTitle">
+            MacBook Air M2
+          </h2>
+
+          <div class="detail-price" id="detailPrice">
+            CHF 699.–
+          </div>
+
+          <div class="detail-meta" id="detailMeta">
+            Bern · Elektronik · Wie neu
+          </div>
+
+          <div class="detail-description" id="detailDescription">
+            Sehr gepflegtes Gerät in sehr gutem Zustand.
+            Funktioniert einwandfrei und ist sofort verfügbar.
+          </div>
+
+          <div class="detail-actions">
+
+            <button
+              class="btn btn-primary"
+              onclick="contactSeller()"
+            >
+              Nachricht schreiben
+            </button>
+
+            <button
+              class="btn btn-ghost"
+              onclick="showToast('Inserat gespeichert.','success')"
+            >
+              ♡
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="modal" id="mobileModal" onclick="closeOnBackdrop(event,'mobileModal')">
+
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <div class="modal-title">Livo</div>
+      <button class="close" onclick="closeModal('mobileModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+
+        <button class="btn btn-ghost" onclick="closeModal('mobileModal');scrollToListings()">
+          Entdecken
+        </button>
+
+        <button class="btn btn-ghost" onclick="closeModal('mobileModal');document.getElementById('kategorien').scrollIntoView({behavior:'smooth'})">
+          Kategorien
+        </button>
+
+        <button class="btn btn-primary" onclick="closeModal('mobileModal');openSell()">
+          + Verkaufen
+        </button>
+
+        <button class="btn btn-ghost" onclick="closeModal('mobileModal');openProfile()">
+          Profil
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
 <script>
 
 /* =========================================
-   DATEN
+   LIVO APP
 ========================================= */
 
 const listings = [
@@ -2449,188 +2556,288 @@ const listings = [
     id:1,
     title:"MacBook Air M2, 256GB",
     category:"Elektronik",
-    location:"Bern",
     price:699,
+    location:"Bern",
+    condition:"Wie neu",
     score:91,
-    type:"mac"
+    icon:"💻",
+    description:"Sehr gepflegtes MacBook Air M2 mit 256GB Speicher. Funktioniert einwandfrei."
   },
 
   {
     id:2,
-    title:"Trek Rennvelo Carbon",
+    title:"Trekking Velo",
     category:"Velos",
+    price:850,
     location:"Zürich",
-    price:1450,
-    score:88,
-    type:"bike"
+    condition:"Sehr gut",
+    score:87,
+    icon:"🚲",
+    description:"Komfortables Trekking Velo für Alltag und längere Touren."
   },
 
   {
     id:3,
-    title:"Vintage Sofa Beige",
-    category:"Möbel",
-    location:"Bern",
-    price:280,
-    score:84,
-    type:"sofa"
+    title:"iPhone 15 Pro",
+    category:"Elektronik",
+    price:799,
+    location:"Basel",
+    condition:"Sehr gut",
+    score:94,
+    icon:"📱",
+    description:"iPhone 15 Pro in sehr gutem Zustand. Akku und Display gepflegt."
   },
 
   {
     id:4,
-    title:"Patagonia Jacke",
-    category:"Mode",
-    location:"Luzern",
-    price:120,
-    score:93,
-    type:"jacket"
+    title:"Vintage Sofa",
+    category:"Möbel",
+    price:420,
+    location:"Bern",
+    condition:"Gut",
+    score:82,
+    icon:"🛋️",
+    description:"Schönes Vintage-Sofa mit charakteristischem Stoff."
   },
 
   {
     id:5,
-    title:"Sony Kopfhörer WH-1000XM5",
-    category:"Elektronik",
-    location:"Basel",
-    price:249,
-    score:90,
-    type:"mac"
+    title:"Nike Sneaker",
+    category:"Mode",
+    price:120,
+    location:"Luzern",
+    condition:"Wie neu",
+    score:89,
+    icon:"👟",
+    description:"Kaum getragene Sneaker in sehr gutem Zustand."
   },
 
   {
     id:6,
-    title:"Mountainbike Scott",
+    title:"Mountainbike",
     category:"Velos",
+    price:1450,
     location:"Bern",
-    price:890,
-    score:87,
-    type:"bike"
+    condition:"Sehr gut",
+    score:92,
+    icon:"🚵",
+    description:"Modernes Mountainbike, frisch gewartet und sofort fahrbereit."
   },
 
   {
     id:7,
-    title:"Nike Sneaker Air Max",
-    category:"Mode",
-    location:"Zürich",
-    price:95,
-    score:82,
-    type:"jacket"
+    title:"PlayStation 5",
+    category:"Elektronik",
+    price:399,
+    location:"St. Gallen",
+    condition:"Gut",
+    score:88,
+    icon:"🎮",
+    description:"PS5 mit Controller. Voll funktionsfähig."
   },
 
   {
     id:8,
-    title:"Fussballschuhe Adidas",
-    category:"Sport",
-    location:"Bern",
-    price:75,
-    score:89,
-    type:"jacket"
+    title:"Designer Lampe",
+    category:"Möbel",
+    price:180,
+    location:"Zürich",
+    condition:"Wie neu",
+    score:86,
+    icon:"💡",
+    description:"Elegante Designer-Lampe für moderne Wohnräume."
   }
 
 ];
 
-let currentFilter = "Alle";
-let selectedPrice = 699;
-let uploadedImage = null;
+let currentListings = [...listings];
+let selectedSellPrice = 699;
+let sellStep = 1;
 
 /* =========================================
-   NAVIGATION
+   LOADING
 ========================================= */
 
-function showView(id){
-
-  document.querySelectorAll(".view").forEach(view=>{
-    view.classList.remove("active");
-  });
-
-  const target = document.getElementById(id);
-
-  if(target){
-    target.classList.add("active");
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-  if(id==="discover"){
-    renderListings();
-  }
-
-  if(id==="favorites"){
-    renderFavorites();
-  }
-
-  closeMobileMenu();
-}
-
-function scrollToCategories(){
-
-  showView("home");
+window.addEventListener("load",()=>{
 
   setTimeout(()=>{
+
     document
-      .getElementById("categoriesSection")
-      .scrollIntoView({behavior:"smooth"});
-  },100);
+      .getElementById("loader")
+      .classList.add("hide");
+
+    initReveal();
+
+    renderListings();
+
+  },700);
+
+});
+
+/* =========================================
+   REVEAL
+========================================= */
+
+function initReveal(){
+
+  const elements =
+    document.querySelectorAll(".reveal");
+
+  const observer =
+    new IntersectionObserver(
+      entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold:.12
+      }
+    );
+
+  elements.forEach(el=>observer.observe(el));
+}
+
+/* =========================================
+   TOAST
+========================================= */
+
+function showToast(message,type="success"){
+
+  const wrap =
+    document.getElementById("toastWrap");
+
+  const toast =
+    document.createElement("div");
+
+  toast.className =
+    `toast ${type}`;
+
+  toast.textContent =
+    message;
+
+  wrap.appendChild(toast);
+
+  setTimeout(()=>{
+
+    toast.style.opacity="0";
+    toast.style.transform="translateY(-8px)";
+
+    setTimeout(()=>{
+      toast.remove();
+    },300);
+
+  },3000);
+}
+
+/* =========================================
+   MODALS
+========================================= */
+
+function openModal(id){
+  document.getElementById(id).classList.add("open");
+  document.body.style.overflow="hidden";
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("open");
+
+  const anyOpen =
+    document.querySelector(".modal.open");
+
+  if(!anyOpen){
+    document.body.style.overflow="";
+  }
+}
+
+function closeOnBackdrop(event,id){
+
+  if(event.target.id===id){
+    closeModal(id);
+  }
 
 }
 
 /* =========================================
-   MOBILE
+   SEARCH
 ========================================= */
 
-function openMobileMenu(){
-  document.getElementById("mobileModal").classList.add("open");
+function heroSearch(event){
+
+  event.preventDefault();
+
+  const value =
+    document.getElementById("heroSearchInput").value.trim();
+
+  if(!value){
+    showToast("Gib zuerst einen Suchbegriff ein.","error");
+    return;
+  }
+
+  performSearch(value);
 }
 
-function closeMobileMenu(){
-  document.getElementById("mobileModal").classList.remove("open");
-}
+function performSearch(value){
 
-function mobileNavigate(view){
-  closeMobileMenu();
-  showView(view);
-}
+  const query =
+    value.toLowerCase();
 
-/* =========================================
-   SUCHE
-========================================= */
+  currentListings =
+    listings.filter(item =>
+      `${item.title} ${item.category} ${item.location}`
+      .toLowerCase()
+      .includes(query)
+    );
 
-function performSearch(){
+  if(currentListings.length===0){
 
-  const input = document.getElementById("mainSearch");
-  const value = input.value.trim();
+    currentListings =
+      listings.filter(item =>
+        item.category.toLowerCase().includes(query)
+      );
 
-  document.getElementById("discoverSearch").value = value;
+  }
 
-  showView("discover");
+  document.getElementById("resultDescription").textContent =
+    currentListings.length
+      ? `${currentListings.length} passende Inserate für „${value}“.`
+      : `Keine exakten Treffer – hier sind ähnliche Angebote.`;
 
   renderListings();
 
-  if(value){
-    showToast("Suche nach „" + value + "“");
-  }
+  scrollToListings();
 
+  showToast(
+    currentListings.length
+      ? `${currentListings.length} Inserate gefunden.`
+      : "Keine exakten Treffer gefunden.",
+    currentListings.length ? "success" : "error"
+  );
 }
 
-function mainSearchKey(event){
+function quickSearch(value){
 
-  if(event.key==="Enter"){
-    performSearch();
-  }
+  const input =
+    document.getElementById("heroSearchInput");
 
+  input.value=value;
+
+  performSearch(value);
 }
 
-function headerSearch(event){
+function modalSearch(event){
 
-  if(event.key==="Enter"){
+  event.preventDefault();
 
-    const value = event.target.value.trim();
+  const value =
+    document.getElementById("modalSearchInput").value;
 
-    document.getElementById("mainSearch").value = value;
-
-    performSearch();
-
+  if(value.trim()){
+    closeModal("searchModal");
+    performSearch(value);
   }
 
 }
@@ -2641,258 +2848,32 @@ function headerSearch(event){
 
 function renderListings(){
 
-  const grid = document.getElementById("listingGrid");
+  const grid =
+    document.getElementById("listingGrid");
 
-  if(!grid) return;
+  grid.innerHTML="";
 
-  const query =
-    document
-      .getElementById("discoverSearch")
-      .value
-      .toLowerCase()
-      .trim();
+  currentListings.forEach(item=>{
 
-  const favorites =
-    JSON.parse(localStorage.getItem("livoFavorites") || "[]");
+    const card =
+      document.createElement("div");
 
-  let filtered = listings.filter(item=>{
+    card.className="listing reveal";
 
-    const matchesFilter =
-      currentFilter==="Alle" ||
-      item.category===currentFilter;
+    card.onclick =
+      ()=>openListing(item.id);
 
-    const matchesSearch =
-      !query ||
-      item.title.toLowerCase().includes(query) ||
-      item.category.toLowerCase().includes(query) ||
-      item.location.toLowerCase().includes(query);
+    card.innerHTML=`
 
-    return matchesFilter && matchesSearch;
+      <div class="listing-photo">
 
-  });
-
-  if(filtered.length===0){
-
-    grid.innerHTML = `
-      <div class="empty" style="grid-column:1/-1;">
-        <div class="empty-icon">⌕</div>
-        <h2 class="display" style="color:var(--ink);">
-          Keine passenden Inserate
-        </h2>
-        <p style="margin-top:8px;">
-          Versuch einen anderen Suchbegriff.
-        </p>
-      </div>
-    `;
-
-    return;
-
-  }
-
-  grid.innerHTML = filtered.map(item=>{
-
-    const isFav = favorites.includes(item.id);
-
-    return `
-      <article class="listing" onclick="openListing(${item.id})">
-
-        <div class="listing-photo ${item.type}">
-
-          <button
-            class="listing-heart"
-            onclick="event.stopPropagation();toggleFavorite(${item.id},this)"
-          >
-            ${isFav ? "♥" : "♡"}
-          </button>
-
-        </div>
-
-        <div class="listing-content">
-
-          <div class="listing-name">
-            ${item.title}
-          </div>
-
-          <div class="listing-meta">
-            ${item.location} · ${item.category}
-          </div>
-
-          <div class="listing-row">
-
-            <div class="listing-price">
-              CHF ${item.price}.–
-            </div>
-
-            <div class="small-score">
-              ${item.score}
-            </div>
-
-          </div>
-
-        </div>
-
-      </article>
-    `;
-
-  }).join("");
-
-}
-
-function filterListings(){
-  renderListings();
-}
-
-function setFilter(filter,button){
-
-  currentFilter = filter;
-
-  document.querySelectorAll(".filter").forEach(item=>{
-    item.classList.remove("active");
-  });
-
-  button.classList.add("active");
-
-  renderListings();
-
-}
-
-function filterCategory(category){
-
-  currentFilter = category;
-
-  showView("discover");
-
-  document
-    .querySelectorAll(".filter")
-    .forEach(button=>{
-
-      button.classList.toggle(
-        "active",
-        button.textContent.trim()===category
-      );
-
-    });
-
-  renderListings();
-
-}
-
-/* =========================================
-   FAVORITEN
-========================================= */
-
-function getFavorites(){
-
-  return JSON.parse(
-    localStorage.getItem("livoFavorites") || "[]"
-  );
-
-}
-
-function saveFavorites(data){
-
-  localStorage.setItem(
-    "livoFavorites",
-    JSON.stringify(data)
-  );
-
-}
-
-function toggleFavorite(id,button){
-
-  let favorites = getFavorites();
-
-  if(favorites.includes(id)){
-
-    favorites = favorites.filter(item=>item!==id);
-
-    if(button){
-      button.classList.remove("active");
-      button.innerHTML="♡";
-    }
-
-    showToast("Aus Favoriten entfernt");
-
-  }else{
-
-    favorites.push(id);
-
-    if(button){
-      button.classList.add("active");
-      button.innerHTML="♥";
-    }
-
-    showToast("Zu Favoriten hinzugefügt");
-
-  }
-
-  saveFavorites(favorites);
-
-  updateFavoriteCount();
-
-  if(document.getElementById("favorites").classList.contains("active")){
-    renderFavorites();
-  }
-
-}
-
-function updateFavoriteCount(){
-
-  document.getElementById("favoriteCount").textContent =
-    getFavorites().length;
-
-}
-
-function renderFavorites(){
-
-  const grid = document.getElementById("favoriteGrid");
-
-  if(!grid) return;
-
-  const favorites = getFavorites();
-
-  const data =
-    listings.filter(item=>favorites.includes(item.id));
-
-  if(data.length===0){
-
-    grid.innerHTML=`
-      <div class="empty" style="grid-column:1/-1;">
-        <div class="empty-icon">♡</div>
-
-        <h2 class="display" style="color:var(--ink);">
-          Noch keine Favoriten
-        </h2>
-
-        <p style="margin-top:8px;">
-          Speichere interessante Inserate und finde sie später wieder.
-        </p>
-
-        <button
-          class="btn btn-primary"
-          style="margin-top:18px;"
-          onclick="showView('discover')"
-        >
-          Inserate entdecken
-        </button>
-      </div>
-    `;
-
-    return;
-
-  }
-
-  grid.innerHTML=data.map(item=>`
-
-    <article class="listing" onclick="openListing(${item.id})">
-
-      <div class="listing-photo ${item.type}">
+        ${item.icon}
 
         <button
           class="listing-heart"
-          onclick="event.stopPropagation();toggleFavorite(${item.id},this)"
+          onclick="event.stopPropagation();toggleListingFavorite(this,${item.id})"
         >
-          ♥
+          ♡
         </button>
 
       </div>
@@ -2904,94 +2885,192 @@ function renderFavorites(){
         </div>
 
         <div class="listing-meta">
-          ${item.location} · ${item.category}
+          ${item.location} · ${item.condition}
         </div>
 
         <div class="listing-row">
 
-          <div class="listing-price">
-            CHF ${item.price}.–
+          <div class="listing-cost">
+            CHF ${item.price.toLocaleString("de-CH")}.–
           </div>
 
-          <div class="small-score">
-            ${item.score}
+          <div class="deal">
+            Score ${item.score}
           </div>
 
         </div>
 
       </div>
+    `;
 
-    </article>
+    grid.appendChild(card);
 
-  `).join("");
+  });
+
+  initReveal();
+}
+
+function openListing(id){
+
+  const item =
+    listings.find(x=>x.id===id);
+
+  if(!item)return;
+
+  document.getElementById("detailTitle").textContent =
+    item.title;
+
+  document.getElementById("detailPrice").textContent =
+    `CHF ${item.price.toLocaleString("de-CH")}.–`;
+
+  document.getElementById("detailMeta").textContent =
+    `${item.location} · ${item.category} · ${item.condition}`;
+
+  document.getElementById("detailDescription").textContent =
+    item.description;
+
+  document.getElementById("detailImage").textContent =
+    item.icon;
+
+  openModal("detailModal");
+}
+
+function scrollToListings(){
+
+  document
+    .getElementById("inserate")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
 
 }
 
 /* =========================================
-   INSERAT
+   FILTER
 ========================================= */
 
-function openListing(id){
+function setFilter(button,category){
 
-  const item = listings.find(x=>x.id===id);
+  document
+    .querySelectorAll(".filter")
+    .forEach(btn=>btn.classList.remove("active"));
 
-  if(!item) return;
+  button.classList.add("active");
 
-  const favorites = getFavorites();
+  if(category==="Alle"){
+    currentListings=[...listings];
+  }else{
+    currentListings =
+      listings.filter(item=>item.category===category);
+  }
 
-  const saved = favorites.includes(id);
+  document.getElementById("resultDescription").textContent =
+    category==="Alle"
+      ? "Ausgewählte Inserate aus der Schweiz."
+      : `Inserate aus der Kategorie „${category}“.`;
 
-  openModal(`
-    <div class="modal-head">
-      <div class="modal-title">${item.title}</div>
-      <button class="close" onclick="closeModal()">×</button>
-    </div>
+  renderListings();
+}
 
-    <div class="listing-photo ${item.type}" style="height:280px;border-radius:15px;"></div>
+function filterCategory(category){
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;">
+  const matching =
+    [...document.querySelectorAll(".filter")]
+      .find(btn=>btn.textContent.trim()===category);
 
-      <div>
-        <div style="font-family:'IBM Plex Mono';font-size:22px;">
-          CHF ${item.price}.–
-        </div>
+  if(matching){
+    setFilter(matching,category);
+  }
 
-        <div style="color:var(--stone);font-size:12px;margin-top:4px;">
-          ${item.location} · ${item.category}
-        </div>
-      </div>
+  scrollToListings();
 
-      <div class="score">
-        ${item.score} Deal Score
-      </div>
+}
 
-    </div>
+function sortListings(type){
 
-    <div style="margin-top:20px;color:var(--stone);font-size:14px;line-height:1.6;">
-      Sehr gepflegtes Angebot. Der Verkäufer wurde von Livo
-      verifiziert. Abholung oder Versand nach Absprache möglich.
-    </div>
+  currentListings =
+    [...currentListings];
 
-    <div style="display:flex;gap:8px;margin-top:22px;">
+  if(type==="price-low"){
+    currentListings.sort((a,b)=>a.price-b.price);
+  }
 
-      <button
-        class="btn btn-ghost"
-        style="flex:1"
-        onclick="toggleFavorite(${item.id},this)"
-      >
-        ${saved ? "♥ Gespeichert" : "♡ Favorisieren"}
-      </button>
+  if(type==="price-high"){
+    currentListings.sort((a,b)=>b.price-a.price);
+  }
 
-      <button
-        class="btn btn-primary"
-        style="flex:1"
-        onclick="closeModal();showView('chat');showToast('Nachricht geöffnet')"
-      >
-        Verkäufer kontaktieren
-      </button>
+  if(type==="recommended"){
+    currentListings.sort((a,b)=>b.score-a.score);
+  }
 
-    </div>
-  `);
+  renderListings();
+}
+
+/* =========================================
+   FAVORITES
+========================================= */
+
+function toggleFavorite(button,name){
+
+  button.classList.toggle("active");
+
+  const active =
+    button.classList.contains("active");
+
+  button.textContent =
+    active ? "♥" : "♡";
+
+  const favorites =
+    JSON.parse(
+      localStorage.getItem("livoFavorites") || "[]"
+    );
+
+  if(active){
+
+    if(!favorites.includes(name)){
+      favorites.push(name);
+    }
+
+    showToast(`${name} gespeichert.`,"success");
+
+  }else{
+
+    const index =
+      favorites.indexOf(name);
+
+    if(index>-1){
+      favorites.splice(index,1);
+    }
+
+    showToast(`${name} entfernt.`,"success");
+  }
+
+  localStorage.setItem(
+    "livoFavorites",
+    JSON.stringify(favorites)
+  );
+}
+
+function toggleListingFavorite(button,id){
+
+  const item =
+    listings.find(x=>x.id===id);
+
+  if(!item)return;
+
+  const active =
+    button.classList.toggle("active");
+
+  button.textContent =
+    active ? "♥" : "♡";
+
+  showToast(
+    active
+      ? `${item.title} gespeichert.`
+      : `${item.title} entfernt.`,
+    "success"
+  );
 
 }
 
@@ -2999,9 +3078,100 @@ function openListing(id){
    SELL FLOW
 ========================================= */
 
-function selectPrice(price,element){
+function openSell(){
 
-  selectedPrice = price;
+  sellStep=1;
+
+  document
+    .querySelectorAll(".sell-step")
+    .forEach(step=>step.classList.remove("active"));
+
+  document
+    .getElementById("sellStep1")
+    .classList.add("active");
+
+  openModal("sellModal");
+}
+
+function nextSellStep(){
+
+  if(sellStep===1){
+
+    sellStep=2;
+
+    document
+      .getElementById("sellStep1")
+      .classList.remove("active");
+
+    document
+      .getElementById("sellStep2")
+      .classList.add("active");
+
+  }
+
+}
+
+function previousSellStep(){
+
+  if(sellStep===2){
+
+    sellStep=1;
+
+    document
+      .getElementById("sellStep2")
+      .classList.remove("active");
+
+    document
+      .getElementById("sellStep1")
+      .classList.add("active");
+
+  }
+
+}
+
+function previewPhotos(input){
+
+  const preview =
+    document.getElementById("photoPreview");
+
+  preview.innerHTML="";
+
+  [...input.files].slice(0,8).forEach(file=>{
+
+    const reader =
+      new FileReader();
+
+    reader.onload =
+      event=>{
+
+        const div =
+          document.createElement("div");
+
+        div.className="preview";
+
+        div.innerHTML =
+          `<img src="${event.target.result}" alt="Vorschau">`;
+
+        preview.appendChild(div);
+
+      };
+
+    reader.readAsDataURL(file);
+
+  });
+
+  if(input.files.length){
+
+    showToast(
+      `${Math.min(input.files.length,8)} Foto(s) hinzugefügt.`,
+      "success"
+    );
+
+  }
+
+}
+
+function choosePrice(element,price){
 
   document
     .querySelectorAll(".price-choice")
@@ -3009,297 +3179,260 @@ function selectPrice(price,element){
 
   element.classList.add("selected");
 
-}
+  selectedSellPrice=price;
 
-function nextSellStep(){
-
-  document.getElementById("sellStep1").style.display="none";
-  document.getElementById("sellStep2").style.display="block";
-
-  document.getElementById("progress1").classList.add("active");
-  document.getElementById("progress2").classList.add("active");
-
-  document.getElementById("sellStepLabel").textContent="Schritt 2 von 3";
-  document.getElementById("sellStepName").textContent="Vorschau";
-
-  const title =
-    document.getElementById("sellTitle").value;
-
-  const condition =
-    document.getElementById("sellCondition").value;
-
-  const location =
-    document.getElementById("sellLocation").value;
-
-  const description =
-    document.getElementById("sellDescription").value;
-
-  document.getElementById("previewTitle").textContent =
-    title;
-
-  document.getElementById("previewMeta").textContent =
-    location + " · " + condition;
-
-  document.getElementById("previewDescription").textContent =
-    description;
-
-  document.getElementById("previewPrice").textContent =
-    "CHF " + selectedPrice + ".–";
-
-  window.scrollTo({top:0,behavior:"smooth"});
-
-}
-
-function previousSellStep(){
-
-  document.getElementById("sellStep1").style.display="block";
-  document.getElementById("sellStep2").style.display="none";
-
-  document.getElementById("progress2").classList.remove("active");
-
-  document.getElementById("sellStepLabel").textContent="Schritt 1 von 3";
-  document.getElementById("sellStepName").textContent="Inserat erstellen";
-
+  document.getElementById("sellPrice").value=price;
 }
 
 function publishListing(){
 
-  document.getElementById("sellStep2").style.display="none";
-  document.getElementById("sellStep3").style.display="block";
+  const title =
+    document.getElementById("sellTitle").value.trim();
 
-  document.getElementById("progress3").classList.add("active");
+  const price =
+    document.getElementById("sellPrice").value;
 
-  document.getElementById("sellStepLabel").textContent="Schritt 3 von 3";
-  document.getElementById("sellStepName").textContent="Veröffentlicht";
+  if(!title){
 
-  localStorage.setItem(
-    "livoLastListing",
-    JSON.stringify({
-      title:document.getElementById("sellTitle").value,
-      category:document.getElementById("sellCategory").value,
-      price:selectedPrice
-    })
+    showToast(
+      "Bitte gib einen Titel ein.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(!price || Number(price)<=0){
+
+    showToast(
+      "Bitte gib einen gültigen Preis ein.",
+      "error"
+    );
+
+    return;
+  }
+
+  document
+    .getElementById("sellStep2")
+    .classList.remove("active");
+
+  document
+    .getElementById("sellStep3")
+    .classList.add("active");
+
+  showToast(
+    "Inserat erfolgreich veröffentlicht.",
+    "success"
   );
+}
 
-  showToast("Inserat erfolgreich veröffentlicht");
+/* =========================================
+   PROFILE
+========================================= */
+
+function openProfile(){
+  openModal("profileModal");
+}
+
+function contactSeller(){
+
+  closeModal("detailModal");
+
+  showToast(
+    "Chat mit dem Verkäufer geöffnet.",
+    "success"
+  );
 
 }
 
 /* =========================================
-   FOTO-UPLOAD
+   NOTIFICATIONS
 ========================================= */
 
-function previewPhotos(event){
+function openNotifications(){
+  openModal("notificationModal");
+}
 
-  const files = [...event.target.files].slice(0,4);
+/* =========================================
+   THEME
+========================================= */
 
-  files.forEach((file,index)=>{
+function toggleTheme(){
 
-    const reader = new FileReader();
+  const current =
+    document.documentElement.getAttribute("data-theme");
 
-    reader.onload=function(e){
+  const next =
+    current==="dark" ? "light" : "dark";
 
-      if(index===0){
+  if(next==="dark"){
+    document.documentElement.setAttribute("data-theme","dark");
+  }else{
+    document.documentElement.removeAttribute("data-theme");
+  }
 
-        const box=document.querySelector(".photo-box");
+  localStorage.setItem(
+    "livoTheme",
+    next
+  );
 
-        box.innerHTML=
-          `<img src="${e.target.result}" alt="Foto">`;
+  showToast(
+    next==="dark"
+      ? "Dark Mode aktiviert."
+      : "Light Mode aktiviert.",
+    "success"
+  );
+}
 
-        uploadedImage=e.target.result;
+(function(){
 
-        document.getElementById("previewImage").style.backgroundImage=
-          `url("${e.target.result}")`;
+  const theme =
+    localStorage.getItem("livoTheme");
 
-        document.getElementById("previewImage").style.backgroundSize=
-          "cover";
+  if(theme==="dark"){
+    document.documentElement.setAttribute("data-theme","dark");
+  }
 
-        document.getElementById("previewImage").style.backgroundPosition=
-          "center";
+})();
 
-      }else{
+/* =========================================
+   INFO
+========================================= */
 
-        const box=
-          document.getElementById("photo"+(index+1));
+function showInfo(title){
 
-        if(box){
+  showToast(
+    `${title}: Dieser Bereich ist in der Demo vorbereitet.`,
+    "success"
+  );
 
-          box.innerHTML=
-            `<img src="${e.target.result}" alt="Foto">`;
+}
 
-        }
+/* =========================================
+   HOME
+========================================= */
 
-      }
+function goHome(event){
 
-    };
+  if(event){
+    event.preventDefault();
+  }
 
-    reader.readAsDataURL(file);
-
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
   });
 
 }
 
 /* =========================================
-   CHAT
+   MOBILE
 ========================================= */
 
-function sendMessage(){
+function openMobileMenu(){
+  openModal("mobileModal");
+}
 
-  const input=document.getElementById("messageInput");
+/* =========================================
+   ESCAPE
+========================================= */
 
-  const text=input.value.trim();
+document.addEventListener("keydown",event=>{
 
-  if(!text) return;
+  if(event.key==="Escape"){
 
-  const messages=document.getElementById("chatMessages");
+    document
+      .querySelectorAll(".modal.open")
+      .forEach(modal=>{
+        closeModal(modal.id);
+      });
 
-  const wrap=document.createElement("div");
+  }
 
-  wrap.className="message-wrap out";
+});
 
-  wrap.innerHTML=`
-    <div class="message"></div>
-    <div class="message-time">jetzt</div>
-  `;
+/* =========================================
+   ACTIVE NAV
+========================================= */
 
-  wrap.querySelector(".message").textContent=text;
+const sections =
+  document.querySelectorAll("section[id]");
 
-  messages.appendChild(wrap);
+const navLinks =
+  document.querySelectorAll(".nav a");
 
-  input.value="";
+window.addEventListener("scroll",()=>{
 
-  messages.scrollTop=messages.scrollHeight;
+  let current="";
+
+  sections.forEach(section=>{
+
+    const top =
+      section.offsetTop - 120;
+
+    if(window.scrollY>=top){
+      current=section.id;
+    }
+
+  });
+
+  navLinks.forEach(link=>{
+
+    link.classList.remove("active");
+
+    if(
+      link.getAttribute("href")==="#"+current
+    ){
+      link.classList.add("active");
+    }
+
+  });
+
+});
+
+/* =========================================
+   KEYBOARD SEARCH SHORTCUT
+========================================= */
+
+document.addEventListener("keydown",event=>{
+
+  if(
+    (event.ctrlKey || event.metaKey) &&
+    event.key.toLowerCase()==="k"
+  ){
+
+    event.preventDefault();
+
+    openModal("searchModal");
+
+    setTimeout(()=>{
+      document
+        .getElementById("modalSearchInput")
+        .focus();
+    },100);
+
+  }
+
+});
+
+/* =========================================
+   SMOOTH BUTTON FEEDBACK
+========================================= */
+
+document.addEventListener("click",event=>{
+
+  const button =
+    event.target.closest("button");
+
+  if(!button)return;
+
+  button.style.transition="transform .08s";
+
+  button.style.transform="scale(.97)";
 
   setTimeout(()=>{
-
-    const reply=document.createElement("div");
-
-    reply.className="message-wrap";
-
-    reply.innerHTML=`
-      <div class="message">
-        Danke! Ich melde mich gleich bei dir. 🙂
-      </div>
-      <div class="message-time">jetzt</div>
-    `;
-
-    messages.appendChild(reply);
-
-    messages.scrollTop=messages.scrollHeight;
-
-  },900);
-
-}
-
-function messageKey(event){
-
-  if(event.key==="Enter"){
-    sendMessage();
-  }
-
-}
-
-function useSuggestion(text){
-
-  document.getElementById("messageInput").value=text;
-
-  sendMessage();
-
-}
-
-function acceptOffer(){
-
-  showToast("Angebot angenommen ✓");
-
-}
-
-function declineOffer(){
-
-  showToast("Angebot abgelehnt");
-
-}
-
-/* =========================================
-   MODAL
-========================================= */
-
-function openModal(content){
-
-  let modal=document.getElementById("genericModal");
-
-  if(!modal){
-
-    modal=document.createElement("div");
-
-    modal.id="genericModal";
-    modal.className="modal";
-
-    modal.innerHTML=`
-      <div class="modal-card" id="genericModalCard"></div>
-    `;
-
-    document.body.appendChild(modal);
-
-  }
-
-  document.getElementById("genericModalCard").innerHTML=content;
-
-  modal.classList.add("open");
-
-}
-
-function closeModal(){
-
-  const modal=document.getElementById("genericModal");
-
-  if(modal){
-    modal.classList.remove("open");
-  }
-
-}
-
-/* =========================================
-   TOAST
-========================================= */
-
-let toastTimer;
-
-function showToast(text){
-
-  const toast=document.getElementById("toast");
-
-  toast.textContent=text;
-  toast.classList.add("show");
-
-  clearTimeout(toastTimer);
-
-  toastTimer=setTimeout(()=>{
-    toast.classList.remove("show");
-  },2200);
-
-}
-
-/* =========================================
-   START
-========================================= */
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-  updateFavoriteCount();
-
-  renderListings();
-
-  const savedListing =
-    localStorage.getItem("livoLastListing");
-
-  if(savedListing){
-
-    console.log(
-      "Letztes Inserat:",
-      JSON.parse(savedListing)
-    );
-
-  }
+    button.style.transform="";
+  },90);
 
 });
 
